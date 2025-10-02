@@ -1,5 +1,6 @@
 # IMS.ARMY
-Building an IMS software for the EME in collabration with glyptika
+You will create your respective bracnh name as follows:
 
-
-
+```bash
+Deptname/[yourname]
+```
