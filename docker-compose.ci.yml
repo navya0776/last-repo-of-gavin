@@ -1,0 +1,19 @@
+services:
+  dotnet-build:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dotnet
+    image: ims-ci-dotnet:latest
+    volumes:
+      - ./:/workspace:cached
+    working_dir: /workspace
+
+  python-build:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.python
+    image: ims-ci-python:latest
+    volumes:
+      - ./:/workspace:cached
+    working_dir: /workspace
+

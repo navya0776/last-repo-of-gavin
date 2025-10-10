@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
+WORKDIR /workspace
+# copy only dependency manifests first for caching (optional)
+COPY . /workspace
+
+# restore, build, test (entrypoint will run these)
+ENTRYPOINT [ "bash", "-lc", "dotnet restore --verbosity minimal && dotnet build --no-restore --configuration Release && dotnet test --no-build --verbosity normal --configuration Release" ]
+
