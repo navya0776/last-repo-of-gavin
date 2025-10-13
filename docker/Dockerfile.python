@@ -6,5 +6,9 @@ COPY . /workspace
 RUN python -m pip install --upgrade pip setuptools wheel \
  && pip install flake8 pytest || true
 
-ENTRYPOINT [ "bash", "-lc", "if [ -f requirements.txt ]; then pip install -r requirements.txt; fi && flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true && flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics || true && pytest -q" ]
+ENTRYPOINT [ "bash", "-lc", "\
+if [ -f requirements.txt ]; then pip install -r requirements.txt; fi && \
+flake8 backend tests --count --select=E9,F63,F7,F82 --show-source --statistics || true && \
+flake8 backend tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics || true && \
+pytest -q" ]
 
