@@ -78,7 +78,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel flake8 pytest alembic
+          python -m pip install --upgrade pip setuptools wheel
           if [ "${ACT}" == "true" ] ; then
           echo "Skipping wheel installation (running with act or no dist folder found)"
           else
