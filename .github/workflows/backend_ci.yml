@@ -59,7 +59,7 @@ jobs:
           --health-cmd="pg_isready -U ims_user"
           --health-interval=5s
           --health-timeout=2s
-          --health-retries=10
+          --health-retries=5
 
     env:
       DATABASE_URL: postgresql://ims_user:ims_pw@localhost:5432/ims
@@ -90,6 +90,7 @@ jobs:
           for i in {1..30}; do pg_isready -h localhost -p 5432 -U ims_user && break || sleep 1; done
 
       - name: Apply migrations
+        working-directory: data
         run: |
           alembic upgrade head
 
