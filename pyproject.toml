@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest>=8.4", "flake8>=7.3"]
+test = ["pytest>=8.4", "flake8>=7.3","psycopg2-binary>=2.9"]
 
 [tool.setuptools.packages.find]
 where = ["backend"]
