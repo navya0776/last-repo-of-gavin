@@ -3,4 +3,3 @@ class Sample:
         if isinstance(word ,str):
             return word
         return None
-
