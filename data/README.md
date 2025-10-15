@@ -72,7 +72,7 @@ This reverts the most recent schema change.
 
 ### 4. Start database
 ```
-make database
+make dbstart
 ```
 Start the postgres Database
 
@@ -81,7 +81,7 @@ Start the postgres Database
 ### 5. Stop Database
 
 ```
-make database_stop
+make dbstop
 ```
 Stop the postgres Database
 

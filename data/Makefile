@@ -1,7 +1,7 @@
-database:
+dbstart:
 	@echo "Starting postgres databse"
 	@docker-compose up -d
 
-database_stop:
+dbstop:
 	@echo "Stopping postgres database"
 	@docker-compose down -v

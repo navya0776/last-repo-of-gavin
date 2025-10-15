@@ -30,7 +30,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip build
-          if [ -s backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
 
       - name: Build
         run: python -m build
