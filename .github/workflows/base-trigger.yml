@@ -1,0 +1,21 @@
+name: Base Trigger
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'backend/**'
+      - 'data/**'
+      - 'test/**'
+      - 'pyproject.toml'
+
+  pull_request:
+    paths:
+      - 'backend/**'
+      - 'data/**'
+      - 'test/**'
+      - 'pyproject.toml'
+
+jobs:
+  backend-pipeline:
+    uses: ./.github/workflows/backend-workflow.yml

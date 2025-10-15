@@ -1,12 +1,7 @@
 name: Backend-and-database-Integration-Testing
 
 on:
-  pull_request:
-    paths:
-      - 'backend/**'
-      - 'data/**'
-  push:
-    branches: [ "main" ]
+  workflow_call:
 
 jobs:
   build:
@@ -121,4 +116,3 @@ jobs:
           severity: CRITICAL,HIGH
           exit-code: '1'
           scan-ref: .
-
