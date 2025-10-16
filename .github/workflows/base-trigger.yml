@@ -2,18 +2,20 @@ name: Base Trigger
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
-      - 'data/**'
-      - 'test/**'
-      - 'pyproject.toml'
 
 permissions:
   contents: read
 
 jobs:
   run:
-    uses: ./.github/workflows/backend-workflow.yml
+    uses: ./.github/workflows/pr-ci/backend.yml
+    with:
+      pr_repo: ${{ github.repository }}
+      pr_ref:  ${{ github.ref_name }}
+
+jobs:
+  run:
+    uses: ./.github/workflows/pr-ci/frontend.yml
     with:
       pr_repo: ${{ github.repository }}
       pr_ref:  ${{ github.ref_name }}

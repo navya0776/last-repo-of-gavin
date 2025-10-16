@@ -1,0 +1,17 @@
+name: PR CI - Frontend (fork-safe)
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+    paths:
+      - 'frontend/**'
+
+permissions:
+  contents: read
+
+jobs:
+  call-frontend:
+    uses: ./.github/workflows/actions/frontend-action.yml
+    with:
+      pr_repo: ${{ github.event.pull_request.head.repo.full_name }}
+      pr_ref:  ${{ github.event.pull_request.head.ref }}
+
