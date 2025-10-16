@@ -5,7 +5,8 @@ on:
     paths:
       - 'backend/**'
       - 'data/**'
-      - 'test/**'
+      - 'test/backend_tests/**'
+      - 'test/data_tests/**'
       - 'pyproject.toml'
 
 permissions:

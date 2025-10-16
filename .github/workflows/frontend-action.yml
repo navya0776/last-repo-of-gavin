@@ -9,7 +9,7 @@ on:
 
 env:
   Solution_Name: frontend/IMS.sln
-  Test_Project_Path: frontend/tests/IMS.Tests/IMS.Tests.csproj
+  Test_Project_Path: test/frontend_tests/IMS.Tests.csproj
   Wap_Project_Directory: frontend/IMS.Package
   Wap_Project_Path: frontend/IMS.Package/IMS.Package.wapproj
   Configuration: Release

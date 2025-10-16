@@ -4,6 +4,7 @@ on:
     types: [opened, reopened, synchronize]
     paths:
       - 'frontend/**'
+      - 'test/frontend_tests/**'
 
 permissions:
   contents: read
