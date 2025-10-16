@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   run:
-    uses: ./.github/workflows/actions/backend-action.yml
+    uses: ./.github/workflows/backend-action.yml
     with:
       pr_repo: ${{ github.event.pull_request.head.repo.full_name }}
       pr_ref:  ${{ github.event.pull_request.head.ref }}

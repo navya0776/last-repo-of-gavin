@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   call-frontend:
-    uses: ./.github/workflows/actions/frontend-action.yml
+    uses: ./.github/workflows/frontend-action.yml
     with:
       pr_repo: ${{ github.event.pull_request.head.repo.full_name }}
       pr_ref:  ${{ github.event.pull_request.head.ref }}
