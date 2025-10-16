@@ -93,3 +93,4 @@ Stop the postgres Database
 - Use Alembic commands to keep your database in sync with your models.
 - Commit migration scripts in `alembic/versions/` to version control along with your code.
 - Use the `Makefile` to start/stop the PostgreSQL database conveniently.
+
