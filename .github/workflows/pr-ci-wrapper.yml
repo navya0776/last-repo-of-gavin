@@ -1,0 +1,19 @@
+name: PR CI (fork-safe wrapper)
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+    paths:
+      - 'backend/**'
+      - 'data/**'
+      - 'test/**'
+      - 'pyproject.toml'
+
+permissions:
+  contents: read        # least privilege; do NOT add secrets
+
+jobs:
+  run:
+    uses: ./.github/workflows/backend-workflow.yml
+    with:
+      pr_repo: ${{ github.event.pull_request.head.repo.full_name }}
+      pr_ref:  ${{ github.event.pull_request.head.ref }}
