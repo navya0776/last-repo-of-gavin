@@ -1,4 +1,4 @@
-name: Backend-and-database-Integration-Testing
+name: Backend-Integration-Testing
 
 on:
   workflow_call:
