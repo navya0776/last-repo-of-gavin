@@ -1,0 +1,131 @@
+name: Backend-workflow
+
+on:
+  workflow_call:
+    inputs:
+      pr_repo: { type: string, required: true }
+      pr_ref:  { type: string, required: true }
+    secrets: {}
+
+env:
+  PYTHON_VERSION: '3.11'
+  DIST_ARTIFACT_NAME: backend-dist
+
+jobs:
+  cache:
+    name: Cache pip
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache pip
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+  build:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    needs: cache
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install base tools
+        run: python -m pip install --upgrade pip setuptools wheel build
+      - name: Build wheel
+        run: python -m build
+      - name: Upload wheel
+        if: ${{ env.ACT != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.DIST_ARTIFACT_NAME }}
+          path: dist/*.whl
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install lint deps
+        run: python -m pip install flake8
+      - name: Run flake8 (strict)
+        run: |
+          flake8 backend data --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 backend data --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  test:
+    name: Test (pytest)
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Download built wheel artifact
+        if: ${{ env.ACT != 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.DIST_ARTIFACT_NAME }}
+          path: dist
+
+      - name: Install package and test extras
+        run: |
+          python -m pip install --upgrade pip
+          if [ "${ACT}" = "true" ]; then
+            echo "Running in ACT mode; skipping wheel install"
+          else
+            pip install dist/*.whl
+            pip install "ims-backend[test]"
+          fi
+
+      - name: Start Mongo via docker compose
+        working-directory: data
+        run: |
+          make dbstart
+          for i in {1..60}; do
+            docker compose exec -T mongo mongo --quiet --eval 'db.adminCommand({ ping: 1 })' && break
+            sleep 1
+          done
+
+      - name: Run migrations
+        run: python data/run_migrations.py
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Teardown
+        working-directory: data
+        if: always()
+        run: make dbstop
+
+  trivy_scan:
+    name: Trivy Scan (security)
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy vulnerability scanner
+        if: ${{ env.ACT != 'true' }}
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          scan-type: fs
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+          scan-ref: .

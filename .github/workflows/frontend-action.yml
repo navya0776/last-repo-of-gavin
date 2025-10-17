@@ -1,0 +1,138 @@
+name: Frontend-Integration
+
+on:
+  workflow_call:
+    inputs:
+      pr_repo: { type: string, required: true }
+      pr_ref:  { type: string, required: true }
+    secrets: {}  # do NOT inherit secrets
+
+env:
+  Solution_Name: frontend/IMS.sln
+  Test_Project_Path: test/frontend_tests/IMS.Tests.csproj
+  Wap_Project_Directory: frontend/IMS.Package
+  Wap_Project_Path: frontend/IMS.Package/IMS.Package.wapproj
+  Configuration: Release
+
+jobs:
+  cache:
+    name: Cache NuGet
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: C:/Users/runneradmin/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj','**/*.fsproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+  setup:
+    name: Setup .NET 8
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+  restore:
+    name: Restore
+    needs: [cache, setup]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET (safe)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Restore
+        run: dotnet restore ${{ env.Solution_Name }}
+
+  build:
+    name: Build (no-restore)
+    needs: restore
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Build
+        run: dotnet build ${{ env.Solution_Name }} -c ${{ env.Configuration }} --no-restore
+
+  unit_test:
+    name: Unit Tests
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Run Unit Tests
+        run: dotnet test ${{ env.Test_Project_Path }} -c ${{ env.Configuration }} --no-build --verbosity minimal
+
+  build_wap:
+    name: Build WAP Package
+    needs: [build, unit_test]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Build WAP Project (package)
+        working-directory: ${{ env.Wap_Project_Directory }}
+        run: |
+          dotnet msbuild ${{ env.Wap_Project_Path }} /p:Configuration=${{ env.Configuration }} /t:Restore,Build,Publish
+
+  collect:
+    name: Collect Artifacts
+    needs: build_wap
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Collect MSIX/MSIXBundle artifacts
+        if: ${{ env.ACT != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ims-windows-artifacts
+          path: |
+            ${{ env.Wap_Project_Directory }}/bin/${{ env.Configuration }}/**/*.msix*
+            ${{ env.Wap_Project_Directory }}/bin/${{ env.Configuration }}/**/*.appx*
+            ${{ env.Wap_Project_Directory }}/bin/${{ env.Configuration }}/**/*.msi
+
+  output:
+    name: List Artifacts
+    needs: collect
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Output artifact list
+        run: dir /s /b "${{ env.Wap_Project_Directory }}\bin\${{ env.Configuration }}" || echo "No artifacts found"

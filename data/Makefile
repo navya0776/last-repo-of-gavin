@@ -1,7 +1,7 @@
 dbstart:
-	@echo "Starting postgres databse"
-	@docker-compose up -d
+	@echo "Starting mongo databse"
+	@docker compose up -d
 
 dbstop:
-	@echo "Stopping postgres database"
-	@docker-compose down -v
+	@echo "Stopping mongo database"
+	@docker compose down -v
