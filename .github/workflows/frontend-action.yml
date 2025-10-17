@@ -18,8 +18,6 @@ jobs:
   cache:
     name: Cache NuGet
     runs-on: windows-latest
-    outputs:
-      cache-key: ${{ steps.cachekey.outputs.key }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
