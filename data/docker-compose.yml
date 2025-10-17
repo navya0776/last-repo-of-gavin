@@ -5,8 +5,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE:  ims
-      ports:
+      MONGO_INITDB_DATABASE: ims
+    ports:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
