@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "disable_existing_loggers": true,
+  "formatters": {
+    "colored": {
+      "()": "loggers.loggers.ColorFormatter"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "colored",
+      "stream": "ext://sys.stdout"
+    },
+    "file": {
+      "class": "logging.FileHandler",
+      "level": "WARNING",
+      "formatter": "colored",
+      "filename": "app.log",
+      "mode": "w",
+      "encoding": "utf-8"
+    },
+    "database": {}
+  },
+  "loggers": {
+    "uvicorn.error": {
+      "level": "ERROR",
+      "handlers": [
+        "console"
+      ],
+      "propagate": false
+    },
+    "uvicorn.access": {
+      "level": "INFO",
+      "handlers": [
+        "console"
+      ],
+      "propagate": false
+    },
+    "fastapi": {
+      "level": "INFO",
+      "handlers": [
+        "console"
+      ],
+      "propagate": false
+    },
+    "audit_logs": {
+      "level": "INFO",
+      "handlers": [
+        "database"
+      ],
+      "propagate": false
+    }
+  },
+  "root": {
+    "level": "DEBUG",
+    "handlers": [
+      "console",
+      "file"
+    ],
+    "propagate": false
+  }
+}
