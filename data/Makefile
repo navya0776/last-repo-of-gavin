@@ -1,7 +1,7 @@
 dbstart:
 	@echo "Starting mongo databse"
-	@docker-compose up -d
+	@docker compose up -d
 
 dbstop:
 	@echo "Stopping mongo database"
-	@docker-compose down -v
+	@docker compose down -v
