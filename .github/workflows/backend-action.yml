@@ -1,118 +1,178 @@
-name: Backend-Integration-Testing
+name: Backend-workflow
 
 on:
   workflow_call:
     inputs:
       pr_repo: { type: string, required: true }
       pr_ref:  { type: string, required: true }
-    secrets: {}  # do NOT inherit secrets
+    secrets: {}
+
+env:
+  PYTHON_VERSION: '3.11'
+  DIST_ARTIFACT_NAME: backend-dist
+  MIGRATIONS_DIR: data/migrations
+  DATABASE_URL: mongodb://localhost:27017/ims
 
 jobs:
-  build:
-    name: Build (Python backend)
+  cache:
+    name: Cache pip
     runs-on: ubuntu-latest
-
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - uses: actions/cache@v4
+      - name: Cache pip
+        id: cache
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/backend/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip build
-
-      - name: Build
-        run: python -m build
-
-      - if: ${{ env.ACT != 'true' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-dist
-          path: dist/*.whl
-
-  test:
-    name: Test (Python backend)
-    needs: build
+  install_deps:
+    name: Install dependencies
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: ims
-          POSTGRES_USER: ims_user
-          POSTGRES_PASSWORD: ims_pw
-        ports: [ "5432:5432" ]
-        options: >-
-          --health-cmd="pg_isready -U ims_user"
-          --health-interval=5s
-          --health-timeout=2s
-          --health-retries=5
-
-    env:
-      DATABASE_URL: postgresql://ims_user:ims_pw@localhost:5432/ims
-
+    needs: cache
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install base tools
+        run: |
+          python -m pip install --upgrade pip setuptools wheel build
 
-      - if: ${{ env.ACT != 'true' }}
+  build:
+    name: Build (wheel)
+    runs-on: ubuntu-latest
+    needs: install_deps
+    outputs:
+      dist-path: dist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Build wheel
+        run: |
+          python -m build
+      - name: Show dist
+        run: ls -la dist || true
+
+  upload_artifact:
+    name: Upload dist artifact
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ env.ACT != 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.DIST_ARTIFACT_NAME }}
+          path: dist/*.whl
+
+  setup_mongo:
+    name: Setup MongoDB (replica set)
+    runs-on: ubuntu-latest
+    needs: install_deps
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup MongoDB on runner (replica set)
+        uses: mongodb/setup-mongodb@v1
+        with:
+          mongodb-version: '6.0'
+          start: true
+          args: --replSet rs0 --bind_ip_all
+      - name: Wait for mongod
+        run: |
+          for i in {1..60}; do mongosh --eval "db.adminCommand({ping:1})" && break || sleep 1; done
+      - name: Initiate replica set
+        run: |
+          mongosh --eval 'rs.initiate({_id: "rs0", members: [{ _id: 0, host: "localhost:27017" }]});' || true
+          for i in {1..60}; do ROLE=$(mongosh --quiet --eval 'rs.status().myState'); [ "$ROLE" = "1" ] && break || sleep 1; done
+
+  migrate:
+    name: Run migrations
+    runs-on: ubuntu-latest
+    needs: [setup_mongo, install_deps]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install migration dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pymongo
+      - name: Run PyMongo migrations (transaction-aware)
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        run: |
+          python data/run_migrations.py
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: install_deps
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install lint deps
+        run: python -m pip install flake8
+      - name: Run flake8 (strict)
+        run: |
+          flake8 backend data --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 backend data --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  test:
+    name: Test (pytest)
+    runs-on: ubuntu-latest
+    needs: [build, migrate]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Download built wheel artifact
+        if: ${{ env.ACT != 'true' }}
         uses: actions/download-artifact@v4
         with:
-          name: backend-dist
+          name: ${{ env.DIST_ARTIFACT_NAME }}
           path: dist
 
-      - name: Install dependencies
+      - name: Install package and test extras
         run: |
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade pip
           if [ "${ACT}" == "true" ] ; then
-          echo "Skipping wheel installation (running with act or no dist folder found)"
+            echo "Running in ACT mode; skipping wheel install"
           else
             pip install dist/*.whl
             pip install "ims-backend[test]"
           fi
 
-      - name: Wait for Postgres
+      - name: Run pytest
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
         run: |
-          for i in {1..30}; do pg_isready -h localhost -p 5432 -U ims_user && break || sleep 1; done
+          pytest -q
 
-      - name: Apply migrations
-        working-directory: data
-        run: |
-          alembic upgrade head
-
-      - name: Lint
-        run: |
-          flake8 backend data --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 backend data --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
-      - name: Run tests
-        run: |
-          pytest
-
-  trivy-scan:
+  trivy_scan:
     name: Trivy Scan (security)
-    needs: test
     runs-on: ubuntu-latest
-
+    needs: test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Run Trivy vulnerability scanner
         if: ${{ env.ACT != 'true' }}
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.33.1
         with:
           scan-type: fs
           ignore-unfixed: true
