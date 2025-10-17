@@ -10,8 +10,6 @@ on:
 env:
   PYTHON_VERSION: '3.11'
   DIST_ARTIFACT_NAME: backend-dist
-  MIGRATIONS_DIR: data/migrations
-  DATABASE_URL: mongodb://localhost:27017/ims
 
 jobs:
   cache:
@@ -40,8 +38,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Install base tools
-        run: |
-          python -m pip install --upgrade pip setuptools wheel build
+        run: python -m pip install --upgrade pip setuptools wheel build
 
   build:
     name: Build (wheel)
@@ -55,8 +52,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Build wheel
-        run: |
-          python -m build
+        run: python -m build
       - name: Show dist
         run: ls -la dist || true
 
@@ -65,52 +61,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
-      - if: ${{ env.ACT != 'true' }}
       - name: Upload wheel
+        if: ${{ env.ACT != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.DIST_ARTIFACT_NAME }}
           path: dist/*.whl
-
-  setup_mongo:
-    name: Setup MongoDB (replica set)
-    runs-on: ubuntu-latest
-    needs: install_deps
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup MongoDB on runner (replica set)
-        uses: mongodb/setup-mongodb@v1
-        with:
-          mongodb-version: '6.0'
-          start: true
-          args: --replSet rs0 --bind_ip_all
-      - name: Wait for mongod
-        run: |
-          for i in {1..60}; do mongosh --eval "db.adminCommand({ping:1})" && break || sleep 1; done
-      - name: Initiate replica set
-        run: |
-          mongosh --eval 'rs.initiate({_id: "rs0", members: [{ _id: 0, host: "localhost:27017" }]});' || true
-          for i in {1..60}; do ROLE=$(mongosh --quiet --eval 'rs.status().myState'); [ "$ROLE" = "1" ] && break || sleep 1; done
-
-  migrate:
-    name: Run migrations
-    runs-on: ubuntu-latest
-    needs: [setup_mongo, install_deps]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Install migration dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pymongo
-      - name: Run PyMongo migrations (transaction-aware)
-        env:
-          DATABASE_URL: ${{ env.DATABASE_URL }}
-        run: |
-          python data/run_migrations.py
 
   lint:
     name: Lint
@@ -131,7 +87,12 @@ jobs:
   test:
     name: Test (pytest)
     runs-on: ubuntu-latest
-    needs: [build, migrate]
+    needs: [build, lint]
+    env:
+      MONGO_ROOT_USER: ${{ secrets.MONGO_ROOT_USER }}
+      MONGO_ROOT_PASS: ${{ secrets.MONGO_ROOT_PASS }}
+      APP_DB: ${{ secrets.APP_DB }}
+      DATABASE_URL: mongodb://${{ secrets.MONGO_ROOT_USER }}:${{ secrets.MONGO_ROOT_PASS }}@localhost:27017/${{ secrets.APP_DB }}?authSource=admin
     steps:
       - uses: actions/checkout@v4
 
@@ -150,26 +111,42 @@ jobs:
       - name: Install package and test extras
         run: |
           python -m pip install --upgrade pip
-          if [ "${ACT}" == "true" ] ; then
+          if [ "${ACT}" = "true" ]; then
             echo "Running in ACT mode; skipping wheel install"
           else
             pip install dist/*.whl
             pip install "ims-backend[test]"
           fi
 
-      - name: Run pytest
+      - name: Start Mongo via docker compose
+        working-directory: data
+        run: |
+          docker compose up -d
+          for i in {1..60}; do
+            docker compose exec -T mongo mongo --quiet --eval 'db.adminCommand({ ping: 1 })' && break
+            sleep 1
+          done
+
+      - name: Run migrations
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
-        run: |
-          pytest -q
+        run: python data/run_migrations.py
+
+      - name: Run tests
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        run: pytest -q
+
+      - name: Teardown
+        if: always()
+        run: docker compose down -v
 
   trivy_scan:
     name: Trivy Scan (security)
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Run Trivy vulnerability scanner
         if: ${{ env.ACT != 'true' }}
         uses: aquasecurity/trivy-action@v0.33.1
