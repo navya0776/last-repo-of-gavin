@@ -57,7 +57,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    needs: install_deps
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
