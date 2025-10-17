@@ -8,17 +8,17 @@ version = "0.1.0"
 description = "IMS backend and database integration"
 requires-python = ">=3.11"
 dependencies = [
-  "SQLAlchemy>=2.0",
   "alembic>=1.17",
   "python-dotenv>=1.1",
   "fastapi>=0.118.3",
-  "pymongo>=4.15.3",
+  "motor>=3.7.1",
+  "uvicorn>=0.37.0",
 ]
 
 [project.optional-dependencies]
-test = ["pytest>=8.4", "flake8>=7.3","psycopg2-binary>=2.9"]
+test = ["pytest>=8.4", "flake8>=7.3"]
+deploy = ["gunicorn>=23.0.0"]
 
 [tool.setuptools.packages.find]
 where = ["backend"]
 include = ["*"]
-
