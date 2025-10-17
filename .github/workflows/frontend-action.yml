@@ -26,7 +26,8 @@ jobs:
 
       - name: Compute cache key
         id: cachekey
-        run: echo "key=${{ runner.os }}-nuget-$(git rev-parse --short HEAD)-$(hashFiles '**/*.csproj' '**/*.fsproj')" >> $GITHUB_OUTPUT
+        run: |
+          key="Windows-nuget-$(git rev-parse --short HEAD)-${{ hashFiles('**/*.csproj') }}"
 
       - name: Cache NuGet
         uses: actions/cache@v4
