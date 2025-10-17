@@ -3,11 +3,11 @@ import os
 import sys
 from pymongo import MongoClient
 from pymongo.errors import OperationFailure
-from dotenv import load_dotenv
 
-load_dotenv()
 
 MIGRATIONS_DIR = os.path.join(os.path.dirname(__file__), "migrations")
+
+DATABASE_URL= "mongodb://admin:admin@localhost:27017/ims?authSource=admin"
 
 URI = os.getenv("DATABASE_URL", "mongodb://localhost:27017/ims")
 client = MongoClient(URI)

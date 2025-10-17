@@ -3,10 +3,10 @@ services:
     image: mongo:4.4.6
     container_name: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
-      MONGO_INITDB_DATABASE: ${APP_DB}
-    ports:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE:  ims
+      ports:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
