@@ -5,6 +5,7 @@ Run by data/run_migrations.py
 
 from pymongo import ASCENDING
 
+
 async def upgrade(db, session=None):
     """
     Apply this migration.
@@ -20,10 +21,7 @@ async def upgrade(db, session=None):
 
     # Add unique email index
     await users.create_index(
-        [("email", ASCENDING)],
-        unique=True,
-        name="email_unique_idx",
-        session=session
+        [("email", ASCENDING)], unique=True, name="email_unique_idx", session=session
     )
     print("Created 'users' collection with unique email index.")
 

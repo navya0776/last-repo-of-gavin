@@ -1,0 +1,67 @@
+# .pre-commit-config.yaml
+default_stages: [pre-commit]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: check-yaml
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.0
+    hooks:
+      - id: pyupgrade
+        args: ["--py311-plus"]
+
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        files: ^(backend|data)/
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        files: ^(backend|data)/
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        stages: [pre-commit]
+        files: ^(backend|data)/
+        args: ["--select=E9,F63,F7,F82","--show-source","--statistics"]
+      - id: flake8
+        name: flake8-len-complexity
+        stages: [pre-commit]
+        files: ^(backend|data)/
+        args: ["--exit-zero","--max-complexity=10","--max-line-length=127"]
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        files: ^backend/
+        args: ["-q","-r","backend"]
+
+  - repo: local
+    hooks:
+      - id: pytest-pre-push
+        name: pytest (quick)
+        entry: pytest -q
+        language: python
+        additional_dependencies:
+          - pytest
+          - ims[test]   # optional if you have test extras
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true
+      - id: migrations-check
+        name: migrations run-check
+        entry: bash -c 'python data/run_migrations.py || exit 1'
+        language: system
+        stages: [pre-push]

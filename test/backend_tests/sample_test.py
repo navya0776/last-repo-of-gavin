@@ -9,4 +9,3 @@ def test_testme_returns_none_for_non_strings():
     assert s.testme(123) is None           # explicit handling of invalid input
     assert s.testme(['a']) is None
     assert s.testme(None) is None
-

@@ -1,12 +1,15 @@
 import asyncio
 import importlib.util
 import os
+
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.errors import OperationFailure
 
 MIGRATIONS_DIR = os.path.join(os.path.dirname(__file__), "migrations")
 
-URI = os.getenv("DATABASE_URL", "mongodb://admin:admin@localhost:27017/ims?authSource=admin")
+URI = os.getenv(
+    "DATABASE_URL", "mongodb://admin:admin@localhost:27017/ims?authSource=admin"
+)
 client = AsyncIOMotorClient(URI)
 db = client.get_default_database()
 migrations_col = db.get_collection("migrations")
