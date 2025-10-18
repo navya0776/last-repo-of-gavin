@@ -18,7 +18,12 @@ jobs:
     outputs:
       cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.pr_repo }}
+          ref: ${{ inputs.pr_ref }}
+          fetch-depth: 0
       - name: Cache pip
         id: cache
         uses: actions/cache@v4
@@ -33,7 +38,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: cache
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.pr_repo }}
+          ref: ${{ inputs.pr_ref }}
+          fetch-depth: 0
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -53,7 +63,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.pr_repo }}
+          ref: ${{ inputs.pr_ref }}
+          fetch-depth: 0
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -69,7 +84,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.pr_repo }}
+          ref: ${{ inputs.pr_ref }}
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -118,7 +138,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.pr_repo }}
+          ref: ${{ inputs.pr_ref }}
+          fetch-depth: 0
+
       - name: Run Trivy vulnerability scanner
         if: ${{ env.ACT != 'true' }}
         uses: aquasecurity/trivy-action@0.32.0
