@@ -50,18 +50,19 @@ repos:
 
   - repo: local
     hooks:
-      - id: pytest-pre-push
+      - id: pytest-pre-commit
         name: pytest (quick)
         entry: pytest -q
         language: python
         additional_dependencies:
           - pytest
           - ims[test]   # optional if you have test extras
-        stages: [pre-push]
+        stages: [pre-commit]
         pass_filenames: false
         always_run: true
+
       - id: migrations-check
         name: migrations run-check
         entry: bash -c 'python data/run_migrations.py || exit 1'
         language: system
-        stages: [pre-push]
+        stages: [pre-commit]
