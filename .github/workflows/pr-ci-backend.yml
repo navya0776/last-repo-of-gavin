@@ -16,5 +16,5 @@ jobs:
   run:
     uses: ./.github/workflows/backend-action.yml
     with:
-      pr_repo: ${{ github.event.pull_request.head.repo.full_name }}
-      pr_ref:  ${{ github.event.pull_request.head.ref }}
+      pr_repo: ${{ github.repository }}             # "owner/repo"
+      pr_ref:  refs/pull/${{ github.event.pull_request.number }}/head  # "refs/pull/42/head"
