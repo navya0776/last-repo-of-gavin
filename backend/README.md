@@ -13,15 +13,15 @@
 
 2. **Development Dependency Management**
 
-- During active development, install dependencies via `requirements.txt`:
+- During active development, install dependencies via `pyproject.toml`:
 
 ```bash
-pip install -r requirements.txt
+pip install -e ".[test]"
 ```
 
 - This allows quick iteration with exact pinned versions.
 - Add or update dependencies as development requires.
-- After modifying dependencies, regenerate `requirements.txt` to reflect changes.
+- After modifying dependencies, regenerate `pyproject.toml` to reflect changes.
 
 ***
 
@@ -37,10 +37,10 @@ Example snippet in `pyproject.toml`:
 ```toml
 [project]
 dependencies = [
-  "SQLAlchemy>=2.0",
-  "alembic>=1.17",
   "python-dotenv>=1.1",
   "fastapi>=0.118.3",
+  "motor>=3.7.1",
+  "uvicorn>=0.37.0",`
 ]
 ```
 
@@ -73,3 +73,50 @@ pip install dist/*.whl
 ```bash
 pip install "ims-backend[test]"
 ```
+
+6. During Deployment on main server, install deployment dependencies using:
+
+```bash
+pip install ".[deploy]"
+```
+
+This will install `gunicorn` which is used as a load balancer and a worker
+
+### Using `pre-commits`
+
+Pre-commits is a useful tool that will allow us to now mess this project up and is a replacement of `act`
+
+- Setup
+To setup the hooks of `pre-commits` we need to install the `test` dependencies. That can be done using
+
+```bash
+  pip install -e ".[test]"
+```
+
+There is also using `wheels/`
+
+```bash
+python -m pip install --upgrade pip build
+python -m build
+python -m pip install --upgrade pip setuptools wheel
+pip install dist/*.whl
+pip install "ims-backend[test]"
+```
+
+- Installing hooks
+To install the hooks, simply do:
+
+```bash
+pre-commit install
+```
+
+> [!NOTE]
+> This will only work where a `.pre-commit-config,yaml` file is present
+
+To run `pre-commit` every time you push your changes, run:
+
+```bash
+pre-commit run --all-files
+```
+
+Congratulations, we are now 1 step further from messing up this repo :)

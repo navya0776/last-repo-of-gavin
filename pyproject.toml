@@ -15,7 +15,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest>=8.4", "flake8>=7.3", "pre-commit>=4.3.0"]
+test = [
+  "pytest>=8.4",
+  "pytest-asyncio>=1.2.0",
+  "flake8>=7.3",
+  "pre-commit>=4.3.0",
+]
 deploy = ["gunicorn>=23.0.0"]
 
 [tool.setuptools.packages.find]
