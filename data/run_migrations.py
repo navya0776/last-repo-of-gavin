@@ -11,7 +11,8 @@ URI = os.getenv(
     "DATABASE_URL", "mongodb://admin:admin@localhost:27017/ims?authSource=admin"
 )
 client = AsyncIOMotorClient(URI)
-db = client.get_default_database()
+DB_NAME = os.getenv("MONGO_DB_NAME", "ims")
+db = client[DB_NAME]
 migrations_col = db.get_collection("migrations")
 
 
