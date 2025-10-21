@@ -1,14 +1,13 @@
-from pymongo.errors import DuplicateKeyError, CollectionInvalid
+from pymongo.errors import CollectionInvalid, DuplicateKeyError
 
-#Use this function, when a new store is being registered. 
+# Use this function, when a new store is being registered.
+
 
 async def register_new_store(db, store_id: str, location: str, authority: str):
     try:
-        await db["All_Stores"].insert_one({
-            "store_id": store_id,
-            "location": location,
-            "authority": authority
-        })
+        await db["All_Stores"].insert_one(
+            {"store_id": store_id, "location": location, "authority": authority}
+        )
     except DuplicateKeyError:
         print(f"Store {store_id} already exists in All_Stores.")
 

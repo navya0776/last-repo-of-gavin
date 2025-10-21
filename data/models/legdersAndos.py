@@ -1,19 +1,21 @@
-from pydantic import BaseModel, Field
 from typing import List, Optional
 
+from pydantic import BaseModel, Field
 
-#NOTE: I have written some comments to explain the models to who ever reads them for the first time.
+# NOTE: I have written some comments to explain the models to who ever reads them for the first time.
 # baad mei u can simply delete all the comments.
+
 
 class AllStores(BaseModel):
     # Collection for storing all stores and their specific data.
-    store_id : str
-    location : str
-    authority : str
-    # abhi pta nhi hai humei aur..but u can add more, when u go on site to understand how stores are stored. 
+    store_id: str
+    location: str
+    authority: str
+    # abhi pta nhi hai humei aur..but u can add more, when u go on site to understand how stores are stored.
+
 
 class LedgerMaintenance(BaseModel):
-    #Ledger model for each equiment in the ledger maintainence sheet.
+    # Ledger model for each equiment in the ledger maintainence sheet.
     ledger_page: str
     ohs_number: int
     isg_number: int
@@ -27,7 +29,7 @@ class LedgerMaintenance(BaseModel):
     rep_stock: int
     serv_stock: int
     msc: str
-    floor_msc: Optional[str] = None
+    floor_msc: str | None = None
     ved: str
     in_house: bool
     dues_in: int
@@ -41,25 +43,27 @@ class LedgerMaintenance(BaseModel):
 
 
 class StoreLedgerDocument(BaseModel):
-    # collection model for each store. dynamically created when a new store is added. 
+    # collection model for each store. dynamically created when a new store is added.
     equipment: str
     equipment_code: int
-    ledgers: List[LedgerMaintenance]
+    ledgers: list[LedgerMaintenance]
+
 
 class AllEquiments(BaseModel):
-    #collection model to store all equiments and in which store they are present. 
-    #this will make easy the tracking of equiments in other sections of the software. 
-    equipment : str
-    equipment_code : str
-    store_id : str
+    # collection model to store all equiments and in which store they are present.
+    # this will make easy the tracking of equiments in other sections of the software.
+    equipment: str
+    equipment_code: str
+    store_id: str
+
 
 class AllParts(BaseModel):
-    #collection model to store all parts, so that tracking of stock and demand eases out. 
-    part_number : int
-    nomenclature : str
-    total_stock : int
-    used_in_equipments : List[AllEquiments]
-    dues_in : int
-    dues_out : int
-    demanded : int
+    # collection model to store all parts, so that tracking of stock and demand eases out.
+    part_number: int
+    nomenclature: str
+    total_stock: int
+    used_in_equipments: list[AllEquiments]
+    dues_in: int
+    dues_out: int
+    demanded: int
     # the last 3 keys are guessed abhi. Replace them properly when On-Site.

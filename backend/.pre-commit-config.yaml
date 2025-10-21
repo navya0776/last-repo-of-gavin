@@ -55,8 +55,8 @@ repos:
         entry: pytest -q
         language: python
         additional_dependencies:
-          - pytest
-          - ims[test] # optional if you have test extras
+          - e
+          - .[test]
         stages: [pre-commit]
         pass_filenames: false
         always_run: true
