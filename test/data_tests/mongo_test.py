@@ -9,7 +9,7 @@ import sys
 import asyncio
 import motor.motor_asyncio
 
-MONGO_URL = os.getenv("DATABASE_URL", "mongodb://admin:admin@localhost:27017/ims?authSource=admin")
+MONGO_URL = "mongodb://admin:admin@localhost:27017/ims?authSource=admin"
 
 async def main():
     try:
