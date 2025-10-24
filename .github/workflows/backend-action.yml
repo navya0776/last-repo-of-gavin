@@ -117,13 +117,39 @@ jobs:
         working-directory: data
         run: |
           make dbstart
+          # wait for mongod
           for i in {1..60}; do
             docker compose exec -T mongo mongosh --quiet --eval 'db.adminCommand({ ping: 1 })' && break
             sleep 1
           done
+          if [ $i -eq 60 ]; then
+            echo "mongo did not become ready" >&2
+            docker compose logs mongo --tail=200
+            exit 1
+          fi
+
+          # wait for redis
+          for i in {1..60}; do
+            docker compose exec -T redis redis-cli ping >/dev/null 2>&1 && break
+            sleep 1
+          done
+          if [ $i -eq 60 ]; then
+            echo "redis did not become ready" >&2
+            docker compose logs redis --tail=200
+            exit 1
+          fi
+
+      - name: Run mongo smoke test
+        working-directory: data
+        run: make mongo_test
+
+      - name: Run redis smoke test
+        working-directory: data
+        run: make redis_test
 
       - name: Run migrations
-        run: python data/run_migrations.py
+        working-directory: data
+        run: python run_migrations.py
 
       - name: Run tests
         run: pytest -q

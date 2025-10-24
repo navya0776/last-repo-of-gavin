@@ -61,8 +61,14 @@ repos:
         pass_filenames: false
         always_run: true
 
-      - id: migrations-check
-        name: migrations run-check
-        entry: bash -c 'python data/run_migrations.py || exit 1'
+      - id: mongo-smoke-test
+        name: mongo run-test
+        entry: bash -c 'cd data && make mongo_test|| exit 1'
+        language: system
+        stages: [pre-commit]
+
+      - id: redis-smoke-test
+        name: redis run-test
+        entry: bash -c 'cd data && make redis_test|| exit 1'
         language: system
         stages: [pre-commit]
