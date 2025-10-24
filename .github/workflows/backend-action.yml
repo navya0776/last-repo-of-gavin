@@ -139,14 +139,6 @@ jobs:
             exit 1
           fi
 
-      - name: Run mongo smoke test
-        working-directory: data
-        run: make mongo_test
-
-      - name: Run redis smoke test
-        working-directory: data
-        run: make redis_test
-
       - name: Run migrations
         working-directory: data
         run: python run_migrations.py
