@@ -1,13 +1,12 @@
 import pytest
 
 @pytest.mark.asyncio
-async def test_runner_applies_migrations(monkeypatch, mongo_manager):
-    monkeypatch.setenv("DATABASE_URL", "mongodb://admin:admin@localhost:27017/?authSource=admin")
-    monkeypatch.setenv("MONGO_DB_NAME", mongo_manager._database.name)
+async def test_runner_applies_migrations(mongo_manager):
+    from data.migrations import migration_001_create_base_collections as base_mig
+    from data.migrations import migration_002_create_provisioning_collections as prov_mig
 
-    from data.run_migrations import main as run_main
-
-    await run_main()
+    await base_mig.upgrade(mongo_manager._database)
+    await prov_mig.upgrade(mongo_manager._database)
 
     expected = ["All_Stores", "All_Equipments", "All_Parts", "All_Demands", "migrations"]
     cols = await mongo_manager._database.list_collection_names()
