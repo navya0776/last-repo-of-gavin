@@ -7,7 +7,7 @@ from motor.motor_asyncio import (
 )
 MONGO_URI = os.getenv(
     "MONGO_URI",
-    "mongodb://admin:admin@mongo:27017/ims?authSource=admin"
+ "mongodb://admin:admin@localhost:27017/?authSource=admin"
 )
 
 
