@@ -7,6 +7,13 @@ sys.path.insert(0, project_root)
 from data.models.legdersAndos import AllStores, AllEquiments, AllParts
 from data.models.provisioning import Demand, Details
 
+@pytest.mark.asyncio
+async def test_redis_set_get(redis_client):
+    await redis_client.set("test_key", "value")
+    val = await redis_client.get("test_key")
+    assert val == "value"
+
+
 def test_allstores_schema_valid():
     schema = AllStores.model_json_schema()
     assert "properties" in schema

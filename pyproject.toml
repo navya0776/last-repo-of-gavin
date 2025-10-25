@@ -22,7 +22,6 @@ test = [
   "pytest-asyncio>=1.2.0",
   "flake8>=7.3",
   "pre-commit>=4.3.0",
-  "mongomock>=4.1.2",
 ]
 deploy = ["gunicorn>=23.0.0"]
 

@@ -1,11 +1,14 @@
 from typing import Optional
+import os
 from motor.motor_asyncio import (
     AsyncIOMotorClient,
     AsyncIOMotorDatabase,
     AsyncIOMotorCollection,
 )
-
-MONGO_URI = "mongodb://localhost:27017"
+MONGO_URI = os.getenv(
+    "MONGO_URI",
+    "mongodb://admin:admin@mongo:27017/ims?authSource=admin"
+)
 
 
 class MongoManager:
@@ -13,24 +16,29 @@ class MongoManager:
         self._client: Optional[AsyncIOMotorClient] = None
         self._database: Optional[AsyncIOMotorDatabase] = None
 
-        # Collections
         self.users: Optional[AsyncIOMotorCollection] = None
+        self.all_parts: Optional[AsyncIOMotorCollection] = None
+        self.all_equipments: Optional[AsyncIOMotorCollection] = None
+        self.all_stores: Optional[AsyncIOMotorCollection] = None
+        self.demands: Optional[AsyncIOMotorCollection] = None
 
-    # A function to initalize Mongo Client and database, which returns Mongo Client
-    # A `get_database()` function is not needed for this as mostly collections will be called
     async def init_client(self) -> AsyncIOMotorClient:
         self._client = AsyncIOMotorClient(MONGO_URI)
         self._database = self._client.get_database("ims")
 
         await self._init_collections()
-
-        return (
-            self._client
-        )  # Returning `client` to gracefully close the connection at shutdown
+        return self._client 
 
     async def _init_collections(self):
         if self._database is None:
-            raise RuntimeError("Database not initalized!")
+            raise RuntimeError("Database not initialized!")
 
-        # Initialize all collections here
-        self.users = self._database.get_collection("users")
+        self.users = self._database.get_collection("Users")
+        self.all_parts = self._database.get_collection("All_Parts")
+        self.all_equipments = self._database.get_collection("All_Equipments")
+        self.all_stores = self._database.get_collection("All_Stores")
+        self.demands = self._database.get_collection("Demands")
+
+    async def close(self):
+        if self._client:
+            self._client.close()

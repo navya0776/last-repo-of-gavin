@@ -1,22 +1,26 @@
 from typing import Optional
-from redis.asyncio import Redis
+from redis.asyncio import Redis as AsyncRedis
 
-redis: Optional[Redis] = None
-
-
-# A function that initializes Redis Client
-async def init_redis():
-    global redis
-    if redis is None:
-        redis = await Redis(decode_responses=True)
-
-    return redis  # Returning here as well so that we can gracefully close Redis connections at shutdown
+_redis: Optional[AsyncRedis] = None
 
 
-# Function to get redis client variable, this is done as each worker will have its own redis connection
-async def get_redis() -> Redis:
-    if redis is None:
+async def init_redis(url: str = "redis://localhost:6379/0") -> AsyncRedis:
+    global _redis
+    if _redis is None:
+        _redis = AsyncRedis.from_url(url, decode_responses=True)
+    return _redis
+
+
+async def get_redis() -> AsyncRedis:
+    if _redis is None:
         raise RuntimeError(
-            "Redis not initialized. Did you forget to call init_redis()?"
+            "Redis client not initialized. Did you forget to call init_redis()?"
         )
-    return redis
+    return _redis
+
+
+async def close_redis():
+    global _redis
+    if _redis is not None:
+        await _redis.close()
+        _redis = None
