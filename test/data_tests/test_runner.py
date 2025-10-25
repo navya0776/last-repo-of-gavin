@@ -9,7 +9,7 @@ async def test_runner_applies_migrations(mongo_manager, monkeypatch):
 
     await run_main()
 
-    expected = ["All_Stores", "All_Equiments", "All_Parts", "All_Demands", "migrations"]
+    expected = ["All_Stores", "All_Equipments", "All_Parts", "All_Demands", "migrations"]
     cols = await mongo_manager._database.list_collection_names()
     for c in expected:
         assert c in cols

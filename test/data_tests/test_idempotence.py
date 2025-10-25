@@ -8,10 +8,10 @@ async def test_upgrade_idempotent(mongo_manager):
     await base_mig.upgrade(db)
 
     cols = await db.list_collection_names()
-    for name in ["All_Stores", "All_Equiments", "All_Parts"]:
+    for name in ["All_Stores", "All_Equipments", "All_Parts"]:
         assert name in cols
 
     await base_mig.downgrade(db)
     cols_after = await db.list_collection_names()
-    for name in ["All_Stores", "All_Equiments", "All_Parts"]:
+    for name in ["All_Stores", "All_Equipments", "All_Parts"]:
         assert name not in cols_after

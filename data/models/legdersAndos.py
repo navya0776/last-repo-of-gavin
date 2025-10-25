@@ -49,7 +49,7 @@ class StoreLedgerDocument(BaseModel):
     ledgers: list[LedgerMaintenance]
 
 
-class AllEquiments(BaseModel):
+class AllEquipments(BaseModel):
     # collection model to store all equiments and in which store they are present.
     # this will make easy the tracking of equiments in other sections of the software.
     equipment: str
@@ -62,7 +62,7 @@ class AllParts(BaseModel):
     part_number: int
     nomenclature: str
     total_stock: int
-    used_in_equipments: list[AllEquiments]
+    used_in_equipments: list[AllEquipments]
     dues_in: int
     dues_out: int
     demanded: int

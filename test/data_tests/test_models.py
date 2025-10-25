@@ -4,7 +4,7 @@ import os
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 sys.path.insert(0, project_root)
-from data.models.legdersAndos import AllStores, AllEquiments, AllParts
+from data.models.legdersAndos import AllStores, AllEquipments, AllParts
 from data.models.provisioning import Demand, Details
 
 @pytest.mark.asyncio
@@ -24,7 +24,7 @@ def test_allstores_instantiation():
     assert store.store_id == "S001"
 
 def test_allequipments_instantiation():
-    eq = AllEquiments(equipment="Compressor", equipment_code="EQ01", store_id="S001")
+    eq = AllEquipments(equipment="Compressor", equipment_code="EQ01", store_id="S001")
     assert eq.equipment_code == "EQ01"
 
 def test_allparts_schema_valid():
