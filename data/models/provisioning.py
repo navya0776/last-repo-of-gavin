@@ -40,3 +40,4 @@ class Demand(BaseModel):
     outstanding: int
     percentage_recieved: int
     details: list[Details]
+    

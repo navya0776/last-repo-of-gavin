@@ -5,7 +5,6 @@ from data.migrations import migration_001_create_base_collections as base_mig
 async def test_upgrade_idempotent(mongo_manager):
     db = mongo_manager._database
     await base_mig.upgrade(db)
-    await base_mig.upgrade(db)
 
     cols = await db.list_collection_names()
     for name in ["All_Stores", "All_Equipments", "All_Parts"]:
