@@ -114,7 +114,6 @@ jobs:
           fi
 
       - name: Start Mongo via docker compose
-        working-directory: data
         run: |
           make dbstart
           # wait for mongod
@@ -147,7 +146,6 @@ jobs:
         run: pytest -q
 
       - name: Teardown
-        working-directory: data
         if: always()
         run: make dbstop
 
