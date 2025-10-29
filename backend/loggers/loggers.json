@@ -21,30 +21,15 @@
       "mode": "w",
       "encoding": "utf-8"
     },
-    "database": {}
+    "database": {
+      "class": "loggers.loggers.MongoHandler",
+      "level": "INFO",
+      "uri": "mongodb://localhost:27017",
+      "db_name": "ims",
+      "collection": "logs"
+    }
   },
   "loggers": {
-    "uvicorn.error": {
-      "level": "ERROR",
-      "handlers": [
-        "console"
-      ],
-      "propagate": false
-    },
-    "uvicorn.access": {
-      "level": "INFO",
-      "handlers": [
-        "console"
-      ],
-      "propagate": false
-    },
-    "fastapi": {
-      "level": "INFO",
-      "handlers": [
-        "console"
-      ],
-      "propagate": false
-    },
     "audit_logs": {
       "level": "INFO",
       "handlers": [

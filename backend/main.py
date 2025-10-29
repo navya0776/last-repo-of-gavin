@@ -1,11 +1,11 @@
 import asyncio
-from fastapi import FastAPI
-
 from contextlib import asynccontextmanager
 from logging import getLogger
-from dotenv import load_dotenv
 
-from data.database import init_redis, MongoManager
+from dotenv import load_dotenv
+from fastapi import FastAPI
+
+from data.database import init_mongo, init_redis
 
 load_dotenv()
 
@@ -16,12 +16,11 @@ DEBUG = True
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    redis, client = await asyncio.gather(init_redis(), MongoManager().init_client())
+    redis, client = await asyncio.gather(init_redis(), init_mongo())
 
     yield
 
-    await redis.close()
-    client.close()
+    await asyncio.gather(redis.close(), client.close())
 
 
 app = FastAPI(lifespan=lifespan)

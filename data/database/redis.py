@@ -1,7 +1,8 @@
 from typing import Optional
+
 from redis.asyncio import Redis as AsyncRedis
 
-_redis: Optional[AsyncRedis] = None
+_redis: AsyncRedis | None = None
 
 
 async def init_redis(url: str = "redis://localhost:6379/0") -> AsyncRedis:
@@ -22,5 +23,5 @@ async def get_redis() -> AsyncRedis:
 async def close_redis():
     global _redis
     if _redis is not None:
-        await _redis.close()
+        await _redis.aclose()
         _redis = None
