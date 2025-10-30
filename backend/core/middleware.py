@@ -3,8 +3,8 @@ from logging import getLogger
 from typing import Any
 
 from fastapi import Cookie, Depends, HTTPException, status
-from repositories import UserCollection
 
+from backend.repositories import UserCollection
 from data.database.redis import get_redis
 from data.models.users import User
 
@@ -121,9 +121,9 @@ async def get_admin_user(
         )
 
     curr_user = await users.find_one({"username": user_id})
-    assert curr_user is not None, (
-        f"{user_id} passed `get_current_user` function but failed `get_admin_user`"
-    )
+    assert (
+        curr_user is not None
+    ), f"{user_id} passed `get_current_user` function but failed `get_admin_user`"
 
     user_model = User(**curr_user)
 

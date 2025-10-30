@@ -17,7 +17,6 @@ async def upgrade(db, session=None):
     if "Users" not in existing:
         await db.create_collection(
             "Users",
-            validator={"$jsonSchema": clean_json_schema(User.model_json_schema())},
         )
 
         # Create unique index for username to ensure no duplicates
