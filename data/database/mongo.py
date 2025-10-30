@@ -58,6 +58,7 @@ async def get_mongo_manager() -> MongoManager:
     """
     global _mongo_manager
     if _mongo_manager is None:
+        _mongo_manager = None
         raise RuntimeError("MongoManager not initialized. Call init_mongo() first.")
     return _mongo_manager
 
