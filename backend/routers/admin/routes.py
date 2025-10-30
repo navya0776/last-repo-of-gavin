@@ -1,10 +1,9 @@
 from typing import Any
-from fastapi import APIRouter, Depends, HTTPException
 
-from repositories import LogsCollection, UserCollection
-
-from schemas.admin import LogFetchRequest, LogResponse
 from core.middleware import get_admin_user
+from fastapi import APIRouter, Depends, HTTPException
+from repositories import LogsCollection, UserCollection
+from schemas.admin import LogFetchRequest, LogResponse
 
 from data.models.users import User
 

@@ -10,7 +10,6 @@ from schemas.authentication import LoginRequest
 
 from backend.core.middleware import get_current_user
 from backend.repositories import UserCollection
-
 from data.database.redis import get_redis
 from data.models.users import User
 
@@ -54,7 +53,9 @@ async def login(credentials: LoginRequest, users: UserCollection):
     # Set session data
     session_data = {"user_id": username, "expired": expiry.isoformat()}
 
-    await redis.hset(f"session:{session_id}", mapping=session_data)  # pyright: ignore[reportGeneralTypeIssues]
+    await redis.hset(
+        f"session:{session_id}", mapping=session_data
+    )  # pyright: ignore[reportGeneralTypeIssues]
 
     response = JSONResponse(
         {

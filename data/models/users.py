@@ -1,6 +1,7 @@
 from typing import List
-from pydantic import BaseModel, Field
+
 from bson import ObjectId
+from pydantic import BaseModel, Field
 
 
 class RolePermissions(BaseModel):

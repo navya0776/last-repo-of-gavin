@@ -1,6 +1,8 @@
-from fastapi import Depends
 from typing import Annotated
+
+from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorCollection
+
 from data.database.mongo import get_mongo_manager
 
 
