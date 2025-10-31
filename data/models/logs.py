@@ -1,8 +1,7 @@
-from datetime import datetime, timedelta, timezone
-from enum import Enum
-from typing import Any, Dict, List, Optional
-
+from typing import List, Optional, Any, Dict
 from pydantic import BaseModel, Field
+from datetime import datetime, timezone, timedelta
+from enum import Enum
 
 # Define Indian Standard Time (UTC +5:30)
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -97,7 +96,7 @@ class ActionType(str, Enum):
 
 
 class ResourceType(str, Enum):
-    """Type of resource being logged."""
+    """Type of resource being logged"""
 
     STORE = "store"
     LEDGER = "ledger"
@@ -112,11 +111,8 @@ class ResourceType(str, Enum):
     SYSTEM = "system"
 
 
-# ------------------------------
-# BASE MODELS
-# ------------------------------
 class ChangeDetail(BaseModel):
-    """Details of what changed in an update action."""
+    """Details of what changed in an update action"""
 
     field_name: str
     old_value: Any
@@ -124,25 +120,27 @@ class ChangeDetail(BaseModel):
 
 
 class AuditLog(BaseModel):
-    """Base audit log schema for all activities."""
+    """Main audit log model - aligned with your existing schemas"""
 
-    activity_id: str
-    user_id: str
-    action: ActionType
-    resource_type: ResourceType
-    resource_id: str
+    activity_id: str  # Unique identifier for the log entry
+    user_id: str  # From User model
+    action: ActionType  # Type of action performed (using ActionType enum values)
+    resource_type: (
+        ResourceType  # Type of resource affected (using ResourceType enum values)
+    )
+    resource_id: str  # ID of the affected resource
     timestamp: str = Field(default_factory=lambda: datetime.now(IST).isoformat())
 
+    # Status and outcome
     status: str = "success"  # success, failed, pending, unauthorized
-    error_message: str | None = None
+    error_message: str | None = None  # If status is failed
+
+    # Request context
     session_id: str | None = None
 
 
-# ------------------------------
-# LEDGER AUDIT
-# ------------------------------
 class LedgerAuditLog(BaseModel):
-    """Audit log for ledger-related operations."""
+    """Specialized audit log for ledger operations - aligned with LedgerMaintenance"""
 
     activity_id: str
     user_id: str
@@ -156,6 +154,7 @@ class LedgerAuditLog(BaseModel):
     part_number: int
     nomenclature: str
 
+    # Store context
     store_id: str
     equipment: str | None = None
     equipment_code: int | None = None
@@ -167,11 +166,8 @@ class LedgerAuditLog(BaseModel):
     username: str | None = None
 
 
-# ------------------------------
-# DEMAND AUDIT
-# ------------------------------
 class DemandAuditLog(BaseModel):
-    """Audit log for demand operations."""
+    """Specialized audit log for demand operations - aligned with Demand and Details"""
 
     activity_id: str
     user_id: str
@@ -184,10 +180,12 @@ class DemandAuditLog(BaseModel):
     equipment: str
     financial_year: str
 
+    # Sub-demand (if applicable) - from Details model
     sub_demand_number: int | None = None
     part_number: int | None = None
     nomenclature: str | None = None
 
+    # Store context
     store_id: str
     location: str | None = None
 
@@ -211,11 +209,8 @@ class DemandAuditLog(BaseModel):
     full_name: str | None = None
 
 
-# ------------------------------
-# STOCK MOVEMENT AUDIT
-# ------------------------------
 class StockMovementLog(BaseModel):
-    """Audit log for stock movement events."""
+    """Specialized log for stock movements - aligned with LedgerMaintenance stock fields"""
 
     activity_id: str
     user_id: str
@@ -225,37 +220,45 @@ class StockMovementLog(BaseModel):
     nomenclature: str
     ledger_page: str
 
+    # Equipment context - from StoreLedgerDocument
     equipment: str | None = None
     equipment_code: int | None = None
+
+    # Store context - from AllStores
     store_id: str
     location: str | None = None
 
+    # Movement type
     movement_type: str  # "in", "out", "transfer", "adjustment"
     quantity: int
 
-    stock_category: str
+    # Stock category and changes - aligned with LedgerMaintenance fields
+    stock_category: str  # "unsv_stock", "rep_stock", "serv_stock", "cds_unsv_stock", "cds_rep_stock", "cds_serv_stock"
     stock_before: int
     stock_after: int
 
+    # Transfer details (if applicable)
     from_location: str | None = None
     to_location: str | None = None
 
+    # Context
     reason: str
-    reference_document: str | None = None
+    reference_document: str | None = None  # Demand number, receipt number, etc.
 
+    # OHS/ISG/SSG context from LedgerMaintenance
     ohs_number: int | None = None
     isg_number: int | None = None
     ssg_number: int | None = None
 
+    # Approval
     approved_by: str | None = None
+
+    # User details
     username: str | None = None
 
 
-# ------------------------------
-# PART AUDIT
-# ------------------------------
 class PartAuditLog(BaseModel):
-    """Audit log for part-level operations."""
+    """Audit log for part-level operations - aligned with AllParts"""
 
     activity_id: str
     user_id: str
@@ -265,12 +268,12 @@ class PartAuditLog(BaseModel):
     part_number: int
     nomenclature: str
 
-    total_stock: int | None = None
-    dues_in: int | None = None
-    dues_out: int | None = None
-    demanded: int | None = None
+    total_stock: Optional[int] = None
+    dues_in: Optional[int] = None
+    dues_out: Optional[int] = None
+    demanded: Optional[int] = None
 
-    used_in_equipments: list[dict[str, Any]] | None = None
-    changes: list[ChangeDetail] | None = None
-    details: dict[str, Any] = Field(default_factory=dict)
-    username: str | None = None
+    used_in_equipments: Optional[List[Dict[str, Any]]] = None
+    changes: Optional[List[ChangeDetail]] = None
+    details: Dict[str, Any] = Field(default_factory=dict)
+    username: Optional[str] = None

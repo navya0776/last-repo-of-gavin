@@ -1,6 +1,5 @@
 import pytest
 import pytest_asyncio
-from datetime import datetime, timezone, timedelta
 from hashlib import sha256
 from uuid import uuid4
 from httpx import ASGITransport, AsyncClient
@@ -9,7 +8,21 @@ from fastapi import FastAPI
 from backend.routers.authentication.routes import app as auth_router
 from backend.repositories import get_users_collection
 
-from data.models.users import BasePermissions, Permissions, User
+from data.models.users import Permissions, User
+from data.models.permissions import (
+    LocalPurchaseQuotation,
+    Ledger,
+    LocalPurchaseOrdinance,
+    LocalPurchasePay,
+    LocalPurchaseQuery,
+    LocalPurchaseRecieved,
+    LocalPurhcaseIndent,
+    LocalPurchaseAmmend,
+    AdvanceProvisionDemand,
+    RecieveVoucher,
+    OverhaulScale,
+    IssueVoucher,
+)
 
 
 def extract_session_id(response) -> str:
@@ -53,10 +66,18 @@ def valid_credentials():
         new_user=True,
         role="admin",
         permissions=Permissions(
-            ledger=BasePermissions(read=True, write=True, delete=True, update=False),
-            issue_voucher=BasePermissions(
-                read=True, write=True, delete=True, update=False
-            ),
+            ledger=Ledger(read=True, write=True),
+            apd=AdvanceProvisionDemand(read=True, write=True),
+            overhaul_scale=OverhaulScale(read=True, write=True),
+            recieve_voucher=RecieveVoucher(read=True, write=True),
+            issue_voucher=IssueVoucher(read=True, write=True),
+            local_purchase_indent=LocalPurhcaseIndent(read=True, write=True),
+            local_purchase_quotation=LocalPurchaseQuotation(read=True, write=True),
+            local_purchase_ordinance=LocalPurchaseOrdinance(read=True, write=True),
+            local_purchase_pay=LocalPurchasePay(read=True, write=True),
+            local_purchase_query=LocalPurchaseQuery(read=True, write=True),
+            local_purchase_recieved=LocalPurchaseRecieved(read=True, write=True),
+            local_purchase_ammend=LocalPurchaseAmmend(read=True, write=True),
         ),
     ).model_dump()
 
@@ -71,10 +92,18 @@ async def mock_user(mongo_manager, valid_credentials):
         new_user=True,
         role="admin",
         permissions=Permissions(
-            ledger=BasePermissions(read=True, write=True, delete=True, update=False),
-            issue_voucher=BasePermissions(
-                read=True, write=True, delete=True, update=False
-            ),
+            ledger=Ledger(read=True, write=True),
+            apd=AdvanceProvisionDemand(read=True, write=True),
+            overhaul_scale=OverhaulScale(read=True, write=True),
+            recieve_voucher=RecieveVoucher(read=True, write=True),
+            issue_voucher=IssueVoucher(read=True, write=True),
+            local_purchase_indent=LocalPurhcaseIndent(read=True, write=True),
+            local_purchase_quotation=LocalPurchaseQuotation(read=True, write=True),
+            local_purchase_ordinance=LocalPurchaseOrdinance(read=True, write=True),
+            local_purchase_pay=LocalPurchasePay(read=True, write=True),
+            local_purchase_query=LocalPurchaseQuery(read=True, write=True),
+            local_purchase_recieved=LocalPurchaseRecieved(read=True, write=True),
+            local_purchase_ammend=LocalPurchaseAmmend(read=True, write=True),
         ),
     ).model_dump()
     await mongo_manager.users.insert_one(user_doc)
@@ -358,12 +387,24 @@ class TestLoginLogoutIntegration:
                 password=sha256(password.encode()).hexdigest(),
                 role="admin",
                 permissions=Permissions(
-                    ledger=BasePermissions(
-                        read=True, write=True, delete=True, update=False
+                    ledger=Ledger(read=True, write=True),
+                    apd=AdvanceProvisionDemand(read=True, write=True),
+                    overhaul_scale=OverhaulScale(read=True, write=True),
+                    recieve_voucher=RecieveVoucher(read=True, write=True),
+                    issue_voucher=IssueVoucher(read=True, write=True),
+                    local_purchase_indent=LocalPurhcaseIndent(read=True, write=True),
+                    local_purchase_quotation=LocalPurchaseQuotation(
+                        read=True, write=True
                     ),
-                    issue_voucher=BasePermissions(
-                        read=True, write=True, delete=True, update=False
+                    local_purchase_ordinance=LocalPurchaseOrdinance(
+                        read=True, write=True
                     ),
+                    local_purchase_pay=LocalPurchasePay(read=True, write=True),
+                    local_purchase_query=LocalPurchaseQuery(read=True, write=True),
+                    local_purchase_recieved=LocalPurchaseRecieved(
+                        read=True, write=True
+                    ),
+                    local_purchase_ammend=LocalPurchaseAmmend(read=True, write=True),
                 ),
             ).model_dump()
             users_data.append((user_doc, password))

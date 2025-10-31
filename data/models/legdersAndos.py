@@ -1,6 +1,4 @@
-from typing import List, Optional
-
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 # NOTE: I have written some comments to explain the models to who ever reads them for the first time.
 # baad mei u can simply delete all the comments.

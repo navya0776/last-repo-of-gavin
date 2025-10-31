@@ -1,7 +1,13 @@
-from models.logs import (AuditLog, DemandAuditLog, LedgerAuditLog,
-                         PartAuditLog, StockMovementLog)
 from pymongo import ASCENDING
 from util_functions import clean_json_schema
+
+from models.logs import (
+    AuditLog,
+    LedgerAuditLog,
+    DemandAuditLog,
+    StockMovementLog,
+    PartAuditLog,
+)
 
 
 async def upgrade(db, session=None):
