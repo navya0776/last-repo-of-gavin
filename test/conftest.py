@@ -35,7 +35,7 @@ async def mongo_manager(monkeypatch):
 @pytest_asyncio.fixture
 async def redis_client(monkeypatch):
     """Provide a clean Redis instance for each test."""
-    redis = await init_redis("redis://localhost:6379/0")
+    redis = await init_redis()
 
     # Clean up any existing test data
     await redis.flushdb()

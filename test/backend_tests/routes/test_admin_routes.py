@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from backend.routers.authentication.routes import app as auth_router
 from backend.repositories import get_users_collection
 
-from data.models.users import Role, RolePermissions, User
+from data.models.users import BasePermissions, Permissions, User
 
 
 def extract_session_id(response) -> str:
@@ -50,9 +50,13 @@ def valid_credentials():
     return User(
         username="testuser",
         password="test_password_123",
-        role=Role(
-            role_name="user",
-            permissions=RolePermissions(read=True, write=True, delete=True),
+        new_user=False,
+        role="admin",
+        permissions=Permissions(
+            ledger=BasePermissions(read=True, write=True, delete=True, update=False),
+            issue_voucher=BasePermissions(
+                read=True, write=True, delete=True, update=False
+            ),
         ),
     ).model_dump()
 
@@ -63,10 +67,14 @@ async def mock_user(mongo_manager, valid_credentials):
     password: str = valid_credentials["password"]
     user_doc = User(
         username=valid_credentials["username"],
-        password=sha256(password.encode()).digest(),
-        role=Role(
-            role_name="user",
-            permissions=RolePermissions(read=True, write=True, delete=True),
+        password=sha256(password.encode()).hexdigest(),
+        role="admin",
+        new_user=False,
+        permissions=Permissions(
+            ledger=BasePermissions(read=True, write=True, delete=True, update=False),
+            issue_voucher=BasePermissions(
+                read=True, write=True, delete=True, update=False
+            ),
         ),
     ).model_dump()
     await mongo_manager.users.insert_one(user_doc)
@@ -109,13 +117,6 @@ class TestLoginRoute:
         # Verify session data
         session_data = await redis_client.hgetall(session_key)
         assert session_data["user_id"] == valid_credentials["username"]
-        assert "expired" in session_data
-
-        # Verify expiry is approximately 2 hours from now
-        expiry = datetime.fromisoformat(session_data["expired"])
-        expected_expiry = datetime.now(timezone.utc) + timedelta(hours=2)
-        time_diff = abs((expiry - expected_expiry).total_seconds())
-        assert time_diff < 5  # Allow 5 seconds tolerance
 
         # Cleanup
         await redis_client.delete(session_key)
@@ -288,26 +289,6 @@ class TestLogoutRoute:
 
         assert response.status_code == 401  # Should fail authentication
 
-    async def test_logout_with_expired_session(self, app, redis_client):
-        """Test logout with expired session."""
-        session_id = str(uuid4())
-
-        # Create an expired session
-        expired_time = datetime.now(timezone.utc) - timedelta(hours=1)
-        session_data = {"user_id": "testuser", "expired": expired_time.isoformat()}
-        await redis_client.hset(f"session:{session_id}", mapping=session_data)
-
-        async with AsyncClient(
-            transport=ASGITransport(app=app), base_url="http://test"
-        ) as client:
-            client.cookies.set("session_id", session_id)
-            response = await client.post("/logout")
-
-        assert response.status_code == 401  # Should fail authentication
-
-        # Session should have been cleaned up by get_current_user
-        assert await redis_client.exists(f"session:{session_id}") == 0
-
     async def test_multiple_logouts_same_session(
         self, app, mock_user, redis_client, valid_credentials
     ):
@@ -373,10 +354,16 @@ class TestLoginLogoutIntegration:
             password = f"password_{i}"
             user_doc = User(
                 username=f"user_{i}",
-                password=sha256(password.encode()).digest(),
-                role=Role(
-                    role_name="user",
-                    permissions=RolePermissions(read=True, write=True, delete=True),
+                password=sha256(password.encode()).hexdigest(),
+                role="admin",
+                new_user=False,
+                permissions=Permissions(
+                    ledger=BasePermissions(
+                        read=True, write=True, delete=True, update=False
+                    ),
+                    issue_voucher=BasePermissions(
+                        read=True, write=True, delete=True, update=False
+                    ),
                 ),
             ).model_dump()
             users_data.append((user_doc, password))

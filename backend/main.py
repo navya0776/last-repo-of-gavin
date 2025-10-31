@@ -5,6 +5,8 @@ from logging import getLogger
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
+from backend.routers.admin import admin_router
+from backend.routers.authentication import auth_router
 from data.database import init_mongo, init_redis
 
 load_dotenv()
@@ -24,6 +26,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(auth_router, prefix="/auth")
+app.include_router(admin_router, prefix="/admin")
 
 if __name__ == "__main__":
     import uvicorn

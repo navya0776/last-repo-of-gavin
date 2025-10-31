@@ -2,6 +2,8 @@ from typing import Any
 
 from pydantic import BaseModel, model_validator
 
+from data.models.users import User
+
 
 class LogFetchRequest(BaseModel):
     username: str | None
@@ -33,5 +35,17 @@ class LogResponse(BaseModel):
         return values
 
 
-class UserResponse(LogResponse):
-    pass
+class CreateUserRequest(User):
+    new_user = True
+
+    @model_validator(mode="after")
+    def assert_role_is_not_admin(self):
+        if self.role == "admin":
+            raise ValueError("Only 1 admin can exist!")
+        return self
+
+    @model_validator(mode="after")
+    def assert_new_user_is_true(self):
+        if not self.new_user:
+            raise ValueError("New User param must be true!")
+        return self

@@ -1,5 +1,14 @@
 import pytest
-
+from data.models.logs import (
+    AuditLog,
+    LedgerAuditLog,
+    DemandAuditLog,
+    StockMovementLog,
+    PartAuditLog,
+    ChangeDetail,
+    ActionType,
+    ResourceType,
+)
 from data.models.legdersAndos import AllStores, AllEquipments, AllParts
 from data.models.provisioning import Demand, Details
 
@@ -60,3 +69,138 @@ def test_details_optional_fields():
         d_e_l="L",
     )
     assert details.part_number == 101
+
+
+# -----------------Pytest for logs.py -----------------
+
+
+def test_auditlog_schema_valid():
+    """Ensure AuditLog schema generates correctly."""
+    schema = AuditLog.model_json_schema()
+    assert "properties" in schema
+    assert "activity_id" in schema["properties"]
+    assert "user_id" in schema["properties"]
+
+
+def test_auditlog_instantiation():
+    """Test creating a simple AuditLog instance."""
+    log = AuditLog(
+        activity_id="A001",
+        user_id="U001",
+        action=ActionType.STORE_CREATED,
+        resource_type=ResourceType.STORE,
+        resource_id="S001",
+    )
+    assert log.activity_id == "A001"
+    assert log.action == ActionType.STORE_CREATED
+    assert log.status == "success"
+    assert isinstance(log.timestamp, str)
+
+
+# ----------------- Ledger Audit Log -----------------
+
+
+def test_ledger_audit_log_instantiation():
+    """Test creating a LedgerAuditLog entry."""
+    log = LedgerAuditLog(
+        activity_id="L001",
+        user_id="U001",
+        action="ledger_created",
+        ledger_page="12A",
+        part_number=101,
+        nomenclature="Bolt",
+        store_id="S001",
+        changes=[ChangeDetail(field_name="stock", old_value=10, new_value=15)],
+        details={"remarks": "Initial entry"},
+    )
+    assert log.action == "ledger_created"
+    assert log.ledger_page == "12A"
+    assert log.details["remarks"] == "Initial entry"
+    assert isinstance(log.timestamp, str)
+
+
+# ----------------- Demand Audit Log -----------------
+
+
+def test_demand_audit_log_instantiation():
+    """Test DemandAuditLog with optional fields."""
+    log = DemandAuditLog(
+        activity_id="D001",
+        user_id="U001",
+        action="demand_created",
+        demand_number=1001,
+        demand_type="Normal",
+        equipment_code=501,
+        equipment="Compressor",
+        financial_year="2025-26",
+        store_id="S001",
+        changes=[
+            ChangeDetail(field_name="status", old_value="pending", new_value="approved")
+        ],
+    )
+    assert log.demand_number == 1001
+    assert log.financial_year == "2025-26"
+    assert log.action == "demand_created"
+    assert isinstance(log.timestamp, str)
+
+
+# ----------------- Stock Movement Log -----------------
+
+
+def test_stock_movement_log_instantiation():
+    """Test creating StockMovementLog."""
+    log = StockMovementLog(
+        activity_id="SM001",
+        user_id="U001",
+        part_number=202,
+        nomenclature="Bearing",
+        ledger_page="45B",
+        store_id="S001",
+        movement_type="in",
+        quantity=50,
+        stock_category="unsv_stock",
+        stock_before=100,
+        stock_after=150,
+        reason="Replenishment",
+    )
+    assert log.quantity == 50
+    assert log.movement_type == "in"
+    assert log.stock_after == 150
+    assert log.reason == "Replenishment"
+
+
+# ----------------- Part Audit Log -----------------
+
+
+def test_part_audit_log_instantiation():
+    """Test PartAuditLog basic fields."""
+    log = PartAuditLog(
+        activity_id="P001",
+        user_id="U001",
+        action="part_added",
+        part_number=303,
+        nomenclature="Gear",
+        total_stock=120,
+        dues_in=5,
+        dues_out=2,
+        demanded=10,
+        used_in_equipments=[
+            {"equipment": "Engine", "equipment_code": 501, "store_id": "S001"}
+        ],
+        changes=[ChangeDetail(field_name="total_stock", old_value=100, new_value=120)],
+    )
+    assert log.part_number == 303
+    assert log.total_stock == 120
+    assert log.used_in_equipments[0]["equipment"] == "Engine"
+    assert isinstance(log.timestamp, str)
+
+
+# ----------------- ChangeDetail -----------------
+
+
+def test_change_detail_model():
+    """Test ChangeDetail model standalone."""
+    change = ChangeDetail(field_name="quantity", old_value=10, new_value=15)
+    assert change.field_name == "quantity"
+    assert change.old_value == 10
+    assert change.new_value == 15

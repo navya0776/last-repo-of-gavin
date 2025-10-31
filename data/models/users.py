@@ -1,7 +1,4 @@
-from typing import List
-
-from bson import ObjectId
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class RolePermissions(BaseModel):
@@ -25,13 +22,26 @@ class Role(BaseModel):
     permissions: RolePermissions
 
 
+class BasePermissions(BaseModel):
+    read: bool
+    write: bool
+    delete: bool
+    update: bool
+
+
+class Permissions(BaseModel):
+    ledger: BasePermissions
+    issue_voucher: BasePermissions
+
+
 class User(BaseModel):
     """
     Collection model for storing all user accounts.
     This will likely be your 'users' collection.
     """
 
-    id: str = Field(default_factory=lambda: str(ObjectId()))
     username: str
-    password: str | bytes
-    role: Role
+    password: str
+    new_user: bool
+    role: str
+    permissions: Permissions

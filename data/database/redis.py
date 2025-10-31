@@ -1,13 +1,14 @@
-from typing import Optional
+from os import getenv
 
 from redis.asyncio import Redis as AsyncRedis
 
 _redis: AsyncRedis | None = None
 
 
-async def init_redis(url: str = "redis://localhost:6379/0") -> AsyncRedis:
+async def init_redis() -> AsyncRedis:
     global _redis
     if _redis is None:
+        url: str = getenv("REDIS_URI", "redis://localhost:6379/0")
         _redis = AsyncRedis.from_url(url, decode_responses=True)
     return _redis
 

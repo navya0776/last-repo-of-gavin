@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 from logging import getLogger
 from typing import Any
 
@@ -22,8 +21,7 @@ async def get_current_user(session_id: str = Cookie(...)) -> dict[str, str]:
             "user_id": str - "expires": ISO8601 datetime string
 
         3. If session is not found in Redis, raise 401 (session expired/not found).
-        4. If the session has expired (current time > "expires"), delete the session from Redis and raise 401 (session expired).
-        5. Return the "user_id" string from the session.
+        4. Return the "user_id" string from the session.
 
     Args:
         session_id (str, optional): The session ID from the client's cookie.
@@ -54,14 +52,6 @@ async def get_current_user(session_id: str = Cookie(...)) -> dict[str, str]:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Session not found or expired",
-        )
-
-    expired = session_info.get("expired")
-
-    if not expired or datetime.fromisoformat(expired) < datetime.now(timezone.utc):
-        await redis.delete(f"session:{session_id}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Session has Expired!"
         )
 
     user_id = session_info.get("user_id")
@@ -121,14 +111,19 @@ async def get_admin_user(
         )
 
     curr_user = await users.find_one({"username": user_id})
-    assert (
-        curr_user is not None
-    ), f"{user_id} passed `get_current_user` function but failed `get_admin_user`"
+
+    if curr_user is None:
+        logger.critical(
+            f"{user_id} passed `get_current_user` function but failed `get_admin_user`"
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found!"
+        )
 
     user_model = User(**curr_user)
 
     return {
         "user_id": user_model.username,
         "session_id": user["session_id"],
-        "is_admin": user_model.role.role_name == "admin",
+        "is_admin": user_model.role == "admin",
     }

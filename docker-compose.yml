@@ -1,4 +1,18 @@
 services:
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      MONGO_URI: mongodb://admin:admin@mongo:27017/ims?authSource=admin
+      REDIS_URL: redis://redis:6379/0
+      ENV: production
+    restart: always
+
   mongo:
     image: mongo:7.0-jammy
     container_name: mongo
