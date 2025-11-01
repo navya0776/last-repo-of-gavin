@@ -8,7 +8,7 @@ services:
       - db
       - redis
     environment:
-      MONGO_URI: mongodb://admin:admin@mongo:27017/ims?authSource=admin
+      POSTGRES_URI: postgresql+psycopg2://admin:pass@localhost:5432/ims
       REDIS_URL: redis://redis:6379/0
       ENV: production
     restart: always

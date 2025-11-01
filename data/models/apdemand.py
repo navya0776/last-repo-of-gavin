@@ -1,29 +1,22 @@
-from pydantic import BaseModel
-from typing import Optional
-from datetime import date
+from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy.orm import declarative_base
 
-class APDemandBase(BaseModel):
-    demand_no: str
-    demand_type: str  # "APD" or "SPD"
-    equipment_code: str
-    equipment_name: str
-    fin_year: str
-    demand_auth: Optional[str] = None
-    depot: Optional[str] = None
-    prefix: Optional[str] = None
-    city: Optional[str] = None
-    full_received: Optional[int] = 0
-    part_received: Optional[int] = 0
-    outstanding: Optional[int] = 0
-    percent_received: Optional[float] = 0.0
-    remarks: Optional[str] = None
+from .base import Base  # assuming you have Base = declarative_base() in base.py
 
-class APDemandCreate(APDemandBase):
-    pass
+class APDemand(Base):
+    __tablename__ = "APDemand"
 
-class APDemandUpdate(BaseModel):
-    full_received: Optional[int] = None
-    part_received: Optional[int] = None
-    outstanding: Optional[int] = None
-    percent_received: Optional[float] = None
-    remarks: Optional[str] = None
+    demand_no = Column(String, primary_key=True, nullable=False)
+    demand_type = Column(String(10), nullable=False)  # "APD" or "SPD"
+    equipment_code = Column(String(50), nullable=False)
+    equipment_name = Column(String(100), nullable=False)
+    fin_year = Column(String(10), nullable=False)
+    demand_auth = Column(String(100))
+    depot = Column(String(100))
+    prefix = Column(String(50))
+    city = Column(String(100))
+    full_received = Column(Integer, default=0)
+    part_received = Column(Integer, default=0)
+    outstanding = Column(Integer, default=0)
+    percent_received = Column(Float, default=0.0)
+    remarks = Column(String(255))

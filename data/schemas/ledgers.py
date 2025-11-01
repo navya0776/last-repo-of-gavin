@@ -1,18 +1,10 @@
 from typing import Literal
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from .base import Base
-
+from pydantic import BaseModel
 
 class AllStores(BaseModel):
     store_name: str
     store_id: str
-    Ledger_list: List[Ledger]
-
-class Ledger(Base):
-    __tablename__ = "Ledger"
-    Ledger_name = Column(Integer, primary_key=True, nullable=False)
-    Ledger_code = Column(String(50), primary_key=True, nullable=False)
+    Ledger_name: List[Ledger_no]
 
 class LedgerMaintenance(BaseModel):
     ledger_page: str
