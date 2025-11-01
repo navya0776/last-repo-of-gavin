@@ -1,33 +1,33 @@
+from typing import List, Optional
 from pydantic import BaseModel
+from datetime import date
 
+class Demand_Details(BaseModel):
+    ohs_number: int #
+    part_number: int#
+    nomenclature: str#
+    a_u: str#
+    scl_auth: int#
+    page_number:str #
+    curr_stk_bal:int#
+    dues_in:int#
+    outs_reqd:int#
+    stk_n_yr:int#
+    reqd_as_OHS:int#
+    cons_pattern_qty_eq:str#
+    reqd_as_per_cons:int#
+    qty_dem:int#
+    recd:int#
+    depot_control: str#
+    depot_control_dt: str#
+    d_e_l: Optional[bool]=None#
+    sub_dem_no:int
 
-class Details(BaseModel):
-    sub_demand_number: int
-    ledger_page_number: str
-    ohs_number: int | None = None
-    isg_number: int | None = None
-    ssg_number: int | None = None
-    part_number: int
-    nomenclature: str
-    A_U: str
-    auth: int
-    current_stock_balance: int
-    dues_in: int
-    outstanding_requested: int
-    stock_n_yr: int  # iska sahi name nhi mila, correct it when u find the right name.
-    requested_as_ohs: int
-    consumption_pattern: str  # qty/eqpt
-    requested_as_per_consumption: int
-    quantity_demanded: int
-    recieved: int
-    depot_control: str
-    depot_control_dt: str
-    d_e_l: str
-
-
-class Demand(BaseModel):
-    demand_number: int
-    demand_type: str
+class AP_Demand(BaseModel):
+    #all must except select
+    demand_number: int #Must field for validator 
+    demand_date:date#must
+    demand_type: str 
     equipment_code: int
     equipment: str
     financial_year: str
@@ -37,4 +37,5 @@ class Demand(BaseModel):
     partial_recieved: int
     outstanding: int
     percentage_recieved: int
-    details: list[Details]
+    select:Optional[bool]=None
+    details: list[Demand_Details]

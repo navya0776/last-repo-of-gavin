@@ -1,0 +1,50 @@
+import os
+import sys
+from pymongo import ASCENDING
+from util_functions import clean_json_schema
+
+# Add parent directory to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from models.provisioning import Auth_signatory  # import your model
+
+
+# ---------------- UPGRADE ----------------
+async def upgrade(db, session=None):
+    """
+    Creates the Auth_Signatory collection with strict JSON Schema validation
+    automatically derived from the Auth_signatory Pydantic model.
+    """
+
+    existing = await db.list_collection_names()
+
+    if "Auth_Signatory" not in existing:
+        # Convert model to MongoDB-compatible JSON schema
+        schema = {
+            "$jsonSchema": clean_json_schema(Auth_signatory.model_json_schema())
+        }
+
+        await db.create_collection(
+            "Auth_Signatory",
+            validator=schema,
+            validationLevel="strict",   # enforce schema validation
+            validationAction="error",   # reject invalid documents
+        )
+
+    # Create useful indexes (based on possible query fields)
+    await db["Auth_Signatory"].create_index(
+        [("document", ASCENDING)], unique=True
+    )
+    await db["Auth_Signatory"].create_index(
+        [("signed_for", ASCENDING)]
+    )
+
+
+# ---------------- DOWNGRADE ----------------
+async def downgrade(db, session=None):
+    """
+    Drops the Auth_Signatory collection if it exists.
+    """
+    existing = await db.list_collection_names()
+    if "Auth_Signatory" in existing:
+        await db.drop_collection("Auth_Signatory")
