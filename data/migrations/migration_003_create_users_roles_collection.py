@@ -1,7 +1,3 @@
-import os
-import sys
-
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from models.users import User  # adjust path if needed
 from pymongo import ASCENDING
 from util_functions import clean_json_schema

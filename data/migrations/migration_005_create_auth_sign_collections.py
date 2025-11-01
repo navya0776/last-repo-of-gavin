@@ -1,11 +1,7 @@
-import os
-import sys
 from pymongo import ASCENDING
 from util_functions import clean_json_schema
 
 # Add parent directory to sys.path
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
 from models.provisioning import Auth_signatory  # import your model
 
 
