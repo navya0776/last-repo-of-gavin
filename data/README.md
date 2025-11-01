@@ -1,162 +1,95 @@
-# Project Directory Structure and MongoDB Migration Guide
+# Project Directory Structure and Alembic Usage Guide
 
-This document describes the backend data directory structure and explains how to manage **MongoDB schema and data migrations** using the custom migration runner (`run_migrations.py`).
+This document provides an overview of the directory structure and explains how to manage database schema migrations using Alembic.
 
 ---
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```
 data/
 │
-├── migrations/                     # Migration scripts (Python files) applied in order
-│   ├── __pycache__/                # Python bytecode cache (ignore)
-│   └── 001_create_users_collection.py  # Example migration script
+├── alembic/                     # Alembic migration environment
+│   ├── versions/                # Migration scripts that track schema changes
+│   │   └── 9584caadb170_create_account_table.py  # Example migration script
+│   ├── env.py                   # Alembic environment configuration (modify only if integrating with models)
+│   ├── README                   # Alembic-related documentation
+│   └── script.py.mako           # Alembic internal template (do not modify)
 │
-├── run_migrations.py               # Migration runner (applies migrations to MongoDB)
-│
-├── .env                            # Environment variables (MongoDB connection string, not committed)
-├── .gitignore                      # Files ignored by git
-├── Makefile                        # Utility commands to start/stop MongoDB service via Docker
-├── README.md                       # This documentation file
-└── docker-compose.yml              # Docker Compose configuration for MongoDB
+├── models.py                    # Python ORM models defining database schema
+├── .env                        # Environment variables (database credentials, not committed)
+├── .gitignore                  # Files to be ignored by git
+├── Makefile                    # Utility commands to manage PostgreSQL service
+├── README.md                   # This documentation file
+├── alembic.ini                 # Alembic configuration file (do not modify)
+└── docker-compose.yml          # Docker Compose configuration for PostgreSQL (do not modify)
 ```
 
 ---
 
-## ⚙️ Overview
+## Overview
 
-* **`migrations/`**
-  Contains numbered Python scripts defining database changes (e.g. creating collections, indexes, seeding data).
-  Each file defines:
-
-  ```python
-  def upgrade(db, session=None):
-      # Apply this migration
-
-  def downgrade(db, session=None):
-      # Revert this migration
-  ```
-
-* **`run_migrations.py`**
-  Orchestrates migrations:
-
-  * Connects to MongoDB using the URI from `.env` (`DATABASE_URL`).
-  * Tracks applied migrations in a `migrations` collection.
-  * Runs new migration scripts in ascending order.
-  * Supports transactions when running on a **replica set**.
-
-* **`.env`**
-  Stores environment variables such as the MongoDB URI. Example:
-
-  ```
-  DATABASE_URL=mongodb://ims_root:ims_root_pw@localhost:27017/ims?authSource=admin
-  ```
-
-* **`docker-compose.yml`**
-  Defines a local MongoDB container environment for development and testing.
-
-* **`Makefile`**
-  Provides short commands to control the MongoDB service.
+- **`models.py`**: Contains Python classes representing database tables and relationships.
+- **`alembic/versions/`**: Contains migration scripts generated to modify database schema.
+- **`.env`**: Stores database credentials and other environment variables; keep this file secure.
+- Files like `alembic.ini` and `docker-compose.yml` are config files and should not be edited unless necessary.
 
 ---
 
-## 🧩 Common Commands
+## Common Alembic Commands
 
-All commands are run from the `data/` directory.
+Run these commands from the directory containing `alembic.ini`:
 
-### 1. Run migrations
+### 1. Generate a new migration script after modifying models
 
-Apply all pending migrations in order:
-
-```bash
-python run_migrations.py
+```
+alembic revision --autogenerate -m "describe your change"
 ```
 
-This connects to MongoDB and applies any new scripts found in `data/migrations/`.
+This compares your current models in `models.py` with the database schema and creates a migration script in `alembic/versions/`.
 
 ---
 
-### 2. Create a new migration file
+### 2. Apply migrations to update your database schema
 
-Create a new migration under `data/migrations/` with the next sequential number:
-
-```bash
-touch data/migrations/002_add_roles_index.py
+```
+alembic upgrade head
 ```
 
-Example content:
-
-```python
-from pymongo import ASCENDING
-
-def upgrade(db, session=None):
-    db.users.create_index([("role", ASCENDING)], name="role_idx")
-
-def downgrade(db, session=None):
-    db.users.drop_index("role_idx")
-```
+This runs all pending migrations in order, updating your database to the latest schema.
 
 ---
 
-### 3. View applied migrations
+### 3. Rollback (downgrade) the last migration
 
-Run a quick check in MongoDB:
-
-```bash
-mongosh ims --eval "db.migrations.find().pretty()"
+```
+alembic downgrade -1
 ```
 
-Each document represents a migration applied by `run_migrations.py`.
+This reverts the most recent schema change.
 
 ---
 
-### 4. Start MongoDB (Docker)
-
-```bash
+### 4. Start database
+```
 make dbstart
 ```
-
-Starts MongoDB using `docker-compose`.
+Start the postgres Database
 
 ---
 
-### 5. Stop MongoDB
+### 5. Stop Database
 
-```bash
+```
 make dbstop
 ```
-
-Stops the MongoDB container.
-
----
-
-## 🧠 Notes
-
-* Define your database collections and indexes inside migration scripts, not manually in the DB.
-* `run_migrations.py` ensures every migration runs only once.
-* Migration filenames must start with a zero-padded number (e.g., `001_`, `002_`) for ordering.
-* For replica set support (transactions), ensure MongoDB is started with `--replSet` and initialized with `rs.initiate()`.
-* Do **not** modify or delete already applied migration files — instead, create a new one to change schema or data.
-* Keep `.env` and credentials secure.
+Stop the postgres Database
 
 ---
 
-## ✅ Example Migration History
+### Notes:
 
-After running two migrations, your database `ims` will contain:
-
-```
-migrations/
- ├── 001_create_users_collection.py
- └── 002_add_roles_index.py
-```
-
-and the MongoDB `migrations` collection will show:
-
-```json
-[
-  { "name": "001_create_users_collection.py", "applied_at": "2025-10-17T21:00:00Z" },
-  { "name": "002_add_roles_index.py", "applied_at": "2025-10-17T21:05:00Z" }
-]
-```
+- Always define or update your database structure in `models.py`.
+- Use Alembic commands to keep your database in sync with your models.
+- Commit migration scripts in `alembic/versions/` to version control along with your code.
+- Use the `Makefile` to start/stop the PostgreSQL database conveniently.
