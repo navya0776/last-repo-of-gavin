@@ -1,5 +1,4 @@
 from os import getenv
-
 from redis.asyncio import Redis as AsyncRedis
 
 _redis: AsyncRedis | None = None
