@@ -1,40 +1,60 @@
-from typing import Literal
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, Enum, ForeignKey
+from sqlalchemy.orm import relationship
 from .base import Base
 
+# 1️⃣ AllStores table
+class AllStores(Base):
+    __tablename__ = "all_stores"
 
-class AllStores(BaseModel):
-    store_name: str
-    store_id: str
-    Ledger_list: List[Ledger]
+    store_id = Column(Integer, primary_key=True, autoincrement=True)
+    store_name = Column(String(50), nullable=False, unique=True, default="Store")
+
+    # One store has many ledgers
+    ledgers = relationship("Ledger", back_populates="store", cascade="all, delete")
 
 class Ledger(Base):
-    __tablename__ = "Ledger"
-    Ledger_name = Column(Integer, primary_key=True, nullable=False)
+    __tablename__ = "ledger"
+
+    store_id = Column(Integer, ForeignKey("all_stores.store_id"), nullable=False)
+    Ledger_name = Column(Integer, nullable=False)
     Ledger_code = Column(String(50), primary_key=True, nullable=False)
 
-class LedgerMaintenance(BaseModel):
-    ledger_page: str
-    ohs_number: str | None = None
-    isg_number: str | None = None
-    ssg_number: str | None = None
-    part_number: str
-    nomenclature: str
-    a_u: str
-    no_off: int
-    scl_auth: int
-    unsv_stock: int
-    rep_stock: int
-    serv_stock: int
-    msc: Literal["M", "S", "C"]
-    ved: Literal["V", "E", "D"]
-    in_house: Literal["in_house", "ORD"]
-    dues_in: int | None = None
-    consumption: int | None = None
-    bin_number: str | None = None
-    group: str | None = None
-    cds_unsv_stock: int
-    cds_rep_stock: int
-    cds_serv_stock: int
-    lpp: str | None = None
+    store = relationship("AllStores", back_populates="ledgers")
+    maintenance_records = relationship("LedgerMaintenance", back_populates="ledger", cascade="all, delete")
+
+class LedgerMaintenance(Base):
+    __tablename__ = "ledger_maintenance"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    # Foreign key — links to parent Ledger
+    ledger_code = Column(String(50), ForeignKey("ledger.Ledger_code"), nullable=False)
+
+    ledger_page = Column(String(20), nullable=False)
+    ohs_number = Column(String(50))
+    isg_number = Column(String(50))
+    ssg_number = Column(String(50))
+    part_number = Column(String(50), nullable=False)
+    nomenclature = Column(String(255), nullable=False)
+    a_u = Column(String(10), nullable=False)
+    no_off = Column(Integer, nullable=False)
+    scl_auth = Column(Integer, nullable=False)
+    unsv_stock = Column(Integer, default=0)
+    rep_stock = Column(Integer, default=0)
+    serv_stock = Column(Integer, default=0)
+    msc = Column(Enum("M", "S", "C", name="msc_enum"), nullable=False)
+    ved = Column(Enum("V", "E", "D", name="ved_enum"), nullable=False)
+    in_house = Column(Enum("in_house", "ORD", name="in_house_enum"), nullable=False)
+    dues_in = Column(Integer)
+    consumption = Column(Integer)
+    bin_number = Column(String(50))
+    group = Column(String(50))
+    cds_unsv_stock = Column(Integer, default=0)
+    cds_rep_stock = Column(Integer, default=0)
+    cds_serv_stock = Column(Integer, default=0)
+    cds_serv_stock = Column(Integer, default=0)
+    cds_serv_stock = Column(Integer, default=0)
+    lpp = Column(String(50))
+
+    # Relationship back to Ledger
+    ledger = relationship("Ledger", back_populates="maintenance_records")
