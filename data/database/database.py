@@ -1,19 +1,29 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-from ..models.base import Base
+from typing import Annotated
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://admin:pass@localhost:5432/ims"
+DATABASE_URL = "postgresql+asyncpg://user:password@localhost/dbname"
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    pool_pre_ping=True,  # automatically checks stale connections
+# Create async engine
+engine = create_async_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
 )
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Create async session factory
+AsyncSessionLocal = async_sessionmaker(
+    engine=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+    autoflush=False,
+    autocommit=False,
+)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+
+# Dependency
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session
+
+
+DBSession: Annotated[AsyncSession, Depends(get_db)]
