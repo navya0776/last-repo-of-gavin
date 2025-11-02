@@ -118,6 +118,7 @@ class LedgerMaintanenceUpdate(LedgerMaintenanceBase):
             "group",
             "part_number",
         }
+
         for name, value in self.model_dump().items():
             if name in skip_fields:
                 continue
