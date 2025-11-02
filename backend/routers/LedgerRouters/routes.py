@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends
 
-from backend.services.ledger import get_all_ledgers
-from backend.repositories import UserCollection
-from backend.core.middleware import get_current_user
+from backend.schemas.ledger import StoreWithLedgers
+from backend.schemas.users import User
 
-from data.models.users import User
+from backend.services.ledger import AllStores
+from backend.core.middleware import get_current_user
 
 router = APIRouter()
 
 
 @router.get("/")
-async def get_all_ledger(users: UserCollection, user=Depends(get_current_user)):
-    get_all_ledgers()
+async def get_all_ledgers_with_stores(user: dict[str, str] = Depends(get_current_user)):
+    username = user["user_id"]

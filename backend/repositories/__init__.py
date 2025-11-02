@@ -3,12 +3,12 @@ from typing import Annotated
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorCollection
 
-from data.database.mongo import get_mongo_manager
+from data.database.database import get_db
 
 
 async def get_users_collection() -> AsyncIOMotorCollection:
     """Get the users collection with proper type hints."""
-    mongo_manager = await get_mongo_manager()
+    mongo_manag = await get_db()
     return mongo_manager.users
 
 

@@ -37,6 +37,7 @@ async def get_db():
 
 async def init_db():
     loggers.info("Starting db session")
+    from ..models
     async with engine.begin() as conn:
         from data.models.base import Base
 
