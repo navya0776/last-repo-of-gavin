@@ -1,12 +1,10 @@
-# data/database/__init__.py
-from .mongo import MongoManager, close_mongo, get_mongo_manager, init_mongo
+from .database import DBSession, init_db, close_db
 from .redis import close_redis, get_redis, init_redis
 
 __all__ = [
-    "get_mongo_manager",
-    "MongoManager",
-    "init_mongo",
-    "close_mongo",
+    "DBSession",
+    "init_db",
+    "close_db",
     "get_redis",
     "init_redis",
     "close_redis",

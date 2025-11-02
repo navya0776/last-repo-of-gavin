@@ -1,13 +1,22 @@
 from typing import Annotated
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from logging import getLogger
 
-DATABASE_URL = "postgresql+asyncpg://user:password@localhost/dbname"
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
+DATABASE_URL = "postgresql+psycopg://admin:pass@localhost/ims"
+loggers = getLogger(__name__)
 
 # Create async engine
+# NOTE: Set this as the total pgadmin
+# max_connections : (num of gunicorn workers) * (pool_size + max_overflow)
+# For this cause, max_connections: (num of gunicorn workers (most prob between 2-4) * 10)
 engine = create_async_engine(
     DATABASE_URL,
-    pool_pre_ping=True,
+    pool_size=8,  # steady concurrent connections per worker
+    max_overflow=2,  # temporary burst connections
+    pool_pre_ping=True,  # detect broken connections
+    echo=False,
 )
 
 # Create async session factory
@@ -24,6 +33,19 @@ AsyncSessionLocal = async_sessionmaker(
 async def get_db():
     async with AsyncSessionLocal() as session:
         yield session
+
+
+async def init_db():
+    loggers.info("Starting db session")
+    async with engine.begin() as conn:
+        from data.models.base import Base
+
+        await conn.run_sync(Base.metadata.create_all)
+
+
+async def close_db():
+    loggers.info("Ending db session")
+    await engine.dispose()
 
 
 DBSession: Annotated[AsyncSession, Depends(get_db)]
