@@ -24,9 +24,10 @@ class Ledger(Base):
     store_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("all_stores.store_id"), nullable=False
     )
-    Ledger_code: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    Ledger_code: Mapped[int] = mapped_column(Integer, primary_key=True,
+                                             nullable=False)
     Ledger_name: Mapped[str] = mapped_column(
-        String(50), primary_key=True, nullable=False
+        String(50), nullable=False
     )
 
     store = relationship("AllStores", back_populates="ledgers")
@@ -39,10 +40,11 @@ class Ledger(Base):
 class LedgerMaintenance(Base):
     __tablename__ = "ledger_maintenance"
 
-    idx: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    idx: Mapped[int] = mapped_column(Integer, primary_key=True,
+                                     autoincrement=True)
     # Foreign key — links to parent Ledger
-    ledger_code: Mapped[str] = mapped_column(
-        String(50), ForeignKey("ledger.Ledger_code"), nullable=False
+    ledger_code: Mapped[int] = mapped_column(
+        Integer, ForeignKey("ledger.Ledger_code"), nullable=False
     )
     ledger_page: Mapped[str] = mapped_column(String(20), nullable=False)
     ohs_number: Mapped[str] = mapped_column(String(50))
