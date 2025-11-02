@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, Enum, ForeignKey
+from sqlalchemy import Column, Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from .base import Base
+
 
 # 1️⃣ AllStores table
 class AllStores(Base):
@@ -12,20 +14,24 @@ class AllStores(Base):
     # One store has many ledgers
     ledgers = relationship("Ledger", back_populates="store", cascade="all, delete")
 
+
 class Ledger(Base):
     __tablename__ = "ledger"
 
     store_id = Column(Integer, ForeignKey("all_stores.store_id"), nullable=False)
-    Ledger_name = Column(Integer, nullable=False)
-    Ledger_code = Column(String(50), primary_key=True, nullable=False)
+    Ledger_code = Column(Integer, primary_key=True, nullable=False)
+    Ledger_name = Column(String(50), primary_key=True, nullable=False)
 
     store = relationship("AllStores", back_populates="ledgers")
-    maintenance_records = relationship("LedgerMaintenance", back_populates="ledger", cascade="all, delete")
+    maintenance_records = relationship(
+        "LedgerMaintenance", back_populates="ledger", cascade="all, delete"
+    )
+
 
 class LedgerMaintenance(Base):
     __tablename__ = "ledger_maintenance"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    idx = Column(Integer, primary_key=True, autoincrement=True)
 
     # Foreign key — links to parent Ledger
     ledger_code = Column(String(50), ForeignKey("ledger.Ledger_code"), nullable=False)
@@ -52,9 +58,16 @@ class LedgerMaintenance(Base):
     cds_unsv_stock = Column(Integer, default=0)
     cds_rep_stock = Column(Integer, default=0)
     cds_serv_stock = Column(Integer, default=0)
-    cds_serv_stock = Column(Integer, default=0)
-    cds_serv_stock = Column(Integer, default=0)
     lpp = Column(String(50))
+    cos_sec: Column(String(50))
+    cab_no: Column(String(50))
+    old_pg_ref: Column(Float)
+    Assy_Comp: Column(String(50))
+    Re_ord_lvl: Column(Integer)
+    safety_stk: Column(Integer)
+    lpp_dt: Column(String(50))
+    rate: Column(Float)
+    Rmks: Column(String(50))
 
     # Relationship back to Ledger
     ledger = relationship("Ledger", back_populates="maintenance_records")
