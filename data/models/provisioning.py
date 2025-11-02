@@ -31,7 +31,7 @@ class AP_Demand(BaseModel):
     partial_recieved: int
     outstanding: int
     percentage_recieved: int
-    select: Optional[bool] = None
+    select: bool
 
     @field_validator("equipment", "equipment_code", mode="before")
     def strip_strings(cls, value):
