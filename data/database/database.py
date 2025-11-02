@@ -1,12 +1,15 @@
 from typing import Annotated
+from logging import getLogger
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-DATABASE_URL = "postgresql+psycopg://admin:pass@localhost:5432/ims"
+DATABASE_URL = "postgresql+psycopg://admin:pass@localhost/ims"
+loggers = getLogger(__name__)
 
 # Create async engine
-# NOTE: Set this as the total pgadmin max_connections : (num of gunicorn workers) * (pool_size + max_overflow)
+# NOTE: Set this as the total pgadmin
+# max_connections : (num of gunicorn workers) * (pool_size + max_overflow)
 # For this cause, max_connections: (num of gunicorn workers (most prob between 2-4) * 10)
 engine = create_async_engine(
     DATABASE_URL,
@@ -30,6 +33,19 @@ AsyncSessionLocal = async_sessionmaker(
 async def get_db():
     async with AsyncSessionLocal() as session:
         yield session
+
+
+async def init_db():
+    loggers.info("Starting db session")
+    async with engine.begin() as conn:
+        from data.models.base import Base
+
+        await conn.run_sync(Base.metadata.create_all)
+
+
+async def close_db():
+    loggers.info("Ending db session")
+    await engine.dispose()
 
 
 DBSession: Annotated[AsyncSession, Depends(get_db)]

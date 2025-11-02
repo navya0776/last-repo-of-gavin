@@ -7,7 +7,7 @@ from fastapi import FastAPI
 
 from backend.routers.admin import admin_router
 from backend.routers.authentication import auth_router
-from data.database import init_mongo, init_redis
+from data.database import init_db, init_redis, close_db, close_redis
 
 load_dotenv()
 
@@ -18,11 +18,11 @@ DEBUG = True
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    redis, client = await asyncio.gather(init_redis(), init_mongo())
+    await asyncio.gather(init_redis(), init_db())
 
     yield
 
-    await asyncio.gather(redis.close(), client.close())
+    await asyncio.gather(close_db(), close_redis())
 
 
 app = FastAPI(lifespan=lifespan)
