@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, ConfigDict
 
 
 # ======= Store =========
@@ -140,5 +140,4 @@ class LedgerMaintenanceResponse(LedgerMaintenanceBase):
     rmks: str
     lpp_dt: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
