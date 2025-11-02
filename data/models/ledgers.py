@@ -58,32 +58,32 @@ class LedgerMaintenance(Base):
     unsv_stock: Mapped[int] = mapped_column(Integer, default=0)
     rep_stock: Mapped[int] = mapped_column(Integer, default=0)
     serv_stock: Mapped[int] = mapped_column(Integer, default=0)
-    msc: Mapped[Enum] = mapped_column(
-        Enum("M", "S", "C", name="msc_enum"), nullable=False
+    msc: Mapped[Enum | None] = mapped_column(
+        Enum("M", "S", "C", name="msc_enum")
     )
-    ved: Mapped[Enum] = mapped_column(
-        Enum("V", "E", "D", name="ved_enum"), nullable=False
+    ved: Mapped[Enum | None] = mapped_column(
+        Enum("V", "E", "D", name="ved_enum")
     )
-    in_house: Mapped[Enum] = mapped_column(
-        Enum("in_house", "ORD", name="in_house_enum"), nullable=False
+    in_house: Mapped[Enum | None] = mapped_column(
+        Enum("in_house", "ORD", name="in_house_enum")
     )
-    dues_in: Mapped[int] = mapped_column(Integer)
-    consumption: Mapped[int] = mapped_column(Integer)
-    bin_number: Mapped[str] = mapped_column(String(50))
-    group: Mapped[str] = mapped_column(String(50))
+    dues_in: Mapped[int | None] = mapped_column(Integer)
+    consumption: Mapped[int | None] = mapped_column(Integer)
+    bin_number: Mapped[str | None] = mapped_column(String(50))
+    group: Mapped[str | None] = mapped_column(String(50))
     cds_unsv_stock: Mapped[int] = mapped_column(Integer, default=0)
     cds_rep_stock: Mapped[int] = mapped_column(Integer, default=0)
     cds_serv_stock: Mapped[int] = mapped_column(Integer, default=0)
-    lpp: Mapped[str] = mapped_column(String(50))
-    cos_sec: Mapped[str] = mapped_column(String(50))
-    cab_no: Mapped[str] = mapped_column(String(50))
-    old_pg_ref: Mapped[float] = mapped_column(Float)
-    Assy_Comp: Mapped[str] = mapped_column(String(50))
-    Re_ord_lvl: Mapped[int] = mapped_column(Integer)
-    safety_stk: Mapped[int] = mapped_column(Integer)
-    lpp_dt: Mapped[str] = mapped_column(String(50))
-    rate: Mapped[float] = mapped_column(Float)
-    Rmks: Mapped[str] = mapped_column(String(50))
+    lpp: Mapped[str | None] = mapped_column(String(50))
+    cos_sec: Mapped[str | None] = mapped_column(String(50))
+    cab_no: Mapped[str | None] = mapped_column(String(50))
+    old_pg_ref: Mapped[float | None] = mapped_column(Float)
+    Assy_Comp: Mapped[str | None] = mapped_column(String(50))
+    Re_ord_lvl: Mapped[int | None] = mapped_column(Integer)
+    safety_stk: Mapped[int | None] = mapped_column(Integer)
+    lpp_dt: Mapped[str | None] = mapped_column(String(50))
+    rate: Mapped[float | None] = mapped_column(Float)
+    Rmks: Mapped[str | None] = mapped_column(String(50))
 
     # Relationship back to Ledger
     ledger = relationship("Ledger", back_populates="maintenance_records")
