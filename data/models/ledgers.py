@@ -8,14 +8,16 @@ from .base import Base
 class AllStores(Base):
     __tablename__ = "all_stores"
 
-    store_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    store_id: Mapped[int] = mapped_column(Integer, primary_key=True,
+                                          autoincrement=True)
 
     store_name: Mapped[str] = mapped_column(
         String(50), nullable=False, unique=True, default="Store"
     )
 
     # One store has many ledgers
-    ledgers = relationship("Ledger", back_populates="store", cascade="all, delete")
+    ledgers = relationship("Ledger", back_populates="store",
+                           cascade="all, delete")
 
 
 class Ledger(Base):
