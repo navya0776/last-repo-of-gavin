@@ -4,7 +4,7 @@ from pydantic import BaseModel, model_validator
 
 
 class Ledger(BaseModel):
-    Ledger_code: int
+    Ledger_code: str
     Ledger_name: str
 
     class Config:
@@ -23,7 +23,7 @@ class StoreWithLedgers(BaseModel):
 # ======== LedgerMaint ========
 class LedgerMaintenanceBase(BaseModel):
     idx: int
-    ledger_page: str
+    ledger_page: str  # NOTE: This is 00/ledger_code
     ohs_number: str | None = None
     isg_number: str | None = None
     ssg_number: str | None = None
@@ -126,5 +126,4 @@ class LedgerMaintenanceResponse(LedgerMaintenanceBase):
     rmks: str
     lpp_dt: str
 
-    class Config:
-        orm_mode = True
+    model_config = {"from_attributes": True}

@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel, model_validator
 
-from data.models.users import User
+from backend.schemas.users import User
 
 
 class LogFetchRequest(BaseModel):

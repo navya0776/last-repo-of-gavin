@@ -29,4 +29,4 @@ class Permissions(BaseModel):
     local_purchase_ordinance: BasePermissions
     local_purchase_pay: BasePermissions
     local_purchase_query: BasePermissions
-    local_purchase_ammend:BasePermissions
+    local_purchase_ammend: BasePermissions

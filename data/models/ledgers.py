@@ -1,23 +1,41 @@
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String
+from enum import Enum
+
+from sqlalchemy import Enum as ORMEnum
+from sqlalchemy import Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
+
+
+class MSC(Enum, str):
+    M = "Must Change"
+    S = "Should Change"
+    C = "Could Change"
+
+
+class VED(Enum, str):
+    V = "Vital"
+    E = "Essential"
+    D = "Desirable"
+
+
+class InHouse(Enum, str):
+    house = "in_house"
+    ord = "ORD"
 
 
 # 1️⃣ AllStores table
 class AllStores(Base):
     __tablename__ = "all_stores"
 
-    store_id: Mapped[int] = mapped_column(Integer, primary_key=True,
-                                          autoincrement=True)
+    store_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
     store_name: Mapped[str] = mapped_column(
         String(50), nullable=False, unique=True, default="Store"
     )
 
     # One store has many ledgers
-    ledgers = relationship("Ledger", back_populates="store",
-                           cascade="all, delete")
+    ledgers = relationship("Ledger", back_populates="store", cascade="all, delete")
 
 
 class Ledger(Base):
@@ -26,7 +44,9 @@ class Ledger(Base):
     store_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("all_stores.store_id"), nullable=False
     )
-    Ledger_code: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    Ledger_code: Mapped[str] = mapped_column(
+        String(4), primary_key=True, nullable=False
+    )
     Ledger_name: Mapped[str] = mapped_column(String(50), nullable=False)
 
     store = relationship("AllStores", back_populates="ledgers")
@@ -41,8 +61,8 @@ class LedgerMaintenance(Base):
 
     idx: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     # Foreign key — links to parent Ledger
-    ledger_code: Mapped[int] = mapped_column(
-        Integer, ForeignKey("ledger.Ledger_code"), nullable=False
+    ledger_code: Mapped[str] = mapped_column(
+        String(4), ForeignKey("ledger.Ledger_code"), nullable=False
     )
     ledger_page: Mapped[str] = mapped_column(String(20), nullable=False)
     ohs_number: Mapped[str] = mapped_column(String(50))
@@ -56,14 +76,10 @@ class LedgerMaintenance(Base):
     unsv_stock: Mapped[int] = mapped_column(Integer, default=0)
     rep_stock: Mapped[int] = mapped_column(Integer, default=0)
     serv_stock: Mapped[int] = mapped_column(Integer, default=0)
-    msc: Mapped[Enum | None] = mapped_column(
-        Enum("M", "S", "C", name="msc_enum")
-    )
-    ved: Mapped[Enum | None] = mapped_column(
-        Enum("V", "E", "D", name="ved_enum")
-    )
-    in_house: Mapped[Enum | None] = mapped_column(
-        Enum("in_house", "ORD", name="in_house_enum")
+    msc: Mapped[MSC | None] = mapped_column(ORMEnum(MSC, name="msc_enum"))
+    ved: Mapped[VED | None] = mapped_column(ORMEnum(VED, name="ved_enum"))
+    in_house: Mapped[InHouse | None] = mapped_column(
+        ORMEnum(InHouse, name="in_house_enum")
     )
     dues_in: Mapped[int | None] = mapped_column(Integer)
     consumption: Mapped[int | None] = mapped_column(Integer)
