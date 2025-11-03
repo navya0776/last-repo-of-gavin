@@ -9,7 +9,7 @@ from backend.routers.authentication.routes import app as auth_router
 from backend.repositories import get_users_collection
 
 from data.models.users import Permissions, User
-from data.models.permissions import (
+from schemas.authentication.permissions import (
     LocalPurchaseQuotation,
     Ledger,
     LocalPurchaseOrdinance,
