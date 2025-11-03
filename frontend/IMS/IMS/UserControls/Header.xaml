@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="IMS.UserControls.Header"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IMS.UserControls"
+             mc:Ignorable="d" Width="Auto" Height="70">
+    <Grid Height="70">
+        <Grid.Background>
+            <SolidColorBrush Color="#D9D9d9"/>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="../Assets/logo.png" Height="50" Width="50" VerticalAlignment="Center" Margin="10,0,0,0"/>
+        <TextBlock Grid.Column="1" Text="Gavin-Spark" VerticalAlignment="Center" Margin="10,0,10,0" FontSize="28" Foreground="#931010" FontWeight="Bold" Grid.ColumnSpan="3" HorizontalAlignment="Center"/>
+    </Grid>
+</UserControl>
