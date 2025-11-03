@@ -11,7 +11,7 @@ from backend.schemas.ledger import (
 )
 from backend.schemas.ledger.stk_analysis import StockCategoryBreakdown
 from data.database import DBSession
-from data.models.ledgers import MSC, VED, AllStores, Ledger, LedgerMaintenance
+from data.models.ledgers import AllStores, Ledger, LedgerMaintenance
 
 logger = getLogger(__name__)
 
@@ -224,7 +224,7 @@ async def get_must_change_analysis(ledger_code: str, session=DBSession):
         )
         .group_by(LedgerMaintenance.msc)
         .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.msc == MSC.M)
+        .where(LedgerMaintenance.msc == "M")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -273,7 +273,7 @@ async def get_shoud_change_analysis(ledger_code: str, session=DBSession):
         )
         .group_by(LedgerMaintenance.msc)
         .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.msc == MSC.S)
+        .where(LedgerMaintenance.msc == "S")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -322,7 +322,7 @@ async def get_could_change_analysis(ledger_code: str, session=DBSession):
         )
         .group_by(LedgerMaintenance.msc)
         .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.msc == MSC.C)
+        .where(LedgerMaintenance.msc == "C")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -371,7 +371,7 @@ async def get_vital_analysis(ledger_code: str, session=DBSession):
         )
         .group_by(LedgerMaintenance.ved)
         .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.ved == VED.V)
+        .where(LedgerMaintenance.ved == "V")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -420,7 +420,7 @@ async def get_essential_analysis(ledger_code: str, session=DBSession):
         )
         .group_by(LedgerMaintenance.ved)
         .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.ved == VED.E)
+        .where(LedgerMaintenance.ved == "E")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -469,7 +469,7 @@ async def get_desirable_analysis(ledger_code: str, session=DBSession):
         )
         .group_by(LedgerMaintenance.ved)
         .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.ved == VED.D)
+        .where(LedgerMaintenance.ved == "D")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
