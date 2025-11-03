@@ -1,0 +1,125 @@
+﻿<Page x:Class="IMS.Views.JobMaster"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d"
+      d:DesignHeight="900" d:DesignWidth="1600"
+      Title="JobMaster">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- TOP FILTER PANEL -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Background="#F6F8FA" Margin="0,2,0,6">
+            <StackPanel Orientation="Horizontal" Margin="20,0" VerticalAlignment="Center">
+                <RadioButton Content="All" GroupName="Status" IsChecked="True" Margin="6,0" />
+                <RadioButton Content="Completed" GroupName="Status" Margin="6,0" />
+                <RadioButton Content="Progress" GroupName="Status" Margin="6,0" />
+                <RadioButton Content="Outs >1 Yrs" GroupName="Status" Margin="6,0" />
+                <RadioButton Content="Deposit Repair" GroupName="Status" Margin="6,0" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- MAIN CONTENT SPLIT (Left Equipment + Right DataGrid) -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ✅ LEFT ACTIVE EQUIPMENT PANEL -->
+            <Border Grid.Column="0" Background="#2E66FF" Padding="4">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="ActiveEquipmentList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"
+                                           Foreground="White"
+                                           FontWeight="SemiBold"
+                                           Margin="4,2"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
+            <!-- ✅ RIGHT DATAGRID -->
+            <Border Grid.Column="1" BorderBrush="#BBBBBB" BorderThickness="1" Margin="6,0,6,6">
+                <DataGrid x:Name="InventoryDataGrid"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          HeadersVisibility="Column"
+                          HorizontalScrollBarVisibility="Visible"
+                          RowHeight="24"
+                          AlternatingRowBackground="#ECFCEE"
+                          Background="#FDEEEE"
+                          FrozenColumnCount="2">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Job No" Binding="{Binding JobNo}" Width="70"/>
+                        <DataGridTextColumn Header="Job Date" Binding="{Binding JobDate}" Width="90"/>
+                        <DataGridTextColumn Header="No" Binding="{Binding No}" Width="40"/>
+                        <DataGridTextColumn Header="Date Comp" Binding="{Binding DateComp}" Width="80"/>
+
+                        <DataGridTemplateColumn Header="Placed Full" Width="70">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding PlacedFull}" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="Bal" Binding="{Binding Bal}" Width="50"/>
+                        <DataGridTextColumn Header="Cancel/Prog" Binding="{Binding CancelProg}" Width="80"/>
+
+                        <DataGridTextColumn Header="ENGR_LP" Binding="{Binding EngrLp}" Width="70"/>
+                        <DataGridTextColumn Header="TOTAL_LP" Binding="{Binding TotalLp}" Width="70"/>
+
+                        <DataGridTextColumn Header="Commit Type" Binding="{Binding CommitType}" Width="120"/>
+
+                        <DataGridTextColumn Header="VIR1" Binding="{Binding VIR1}" Width="50"/>
+                        <DataGridTextColumn Header="VIR2" Binding="{Binding VIR2}" Width="50"/>
+                        <DataGridTextColumn Header="VIR3" Binding="{Binding VIR3}" Width="50"/>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            </Border>
+        </Grid>
+
+        <!-- BOTTOM CONTROL PANEL -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="6">
+            <TextBlock VerticalAlignment="Center" Text="Pg" Margin="6,0" />
+            <ComboBox Width="50">
+                <ComboBoxItem Content="1"/>
+                <ComboBoxItem Content="3"/>
+                <ComboBoxItem Content="10"/>
+            </ComboBox>
+
+            <Button Content="Prev" Margin="6,0"/>
+            <Button Content="Next" Margin="6,0"/>
+            <Button Content="DOS" Margin="6,0" />
+            <Button Content="Windows" Margin="6,0"/>
+            <Button Content="Export_Excel" Margin="16,0"/>
+            <Button Content="Tgt" />
+            <Button Content="O/P" />
+
+            <StackPanel Orientation="Horizontal" Margin="20,0">
+                <TextBlock VerticalAlignment="Center" Text="BAVEM No" Margin="6,0" />
+                <TextBox Width="120"/>
+            </StackPanel>
+
+            <TextBlock VerticalAlignment="Center" Text="Date" Margin="12,0" />
+            <DatePicker Width="130" />
+            <TextBlock Text="to" VerticalAlignment="Center" Margin="6,0"/>
+            <DatePicker Width="130"/>
+
+            <Button Content="Close" Margin="16,0"/>
+        </StackPanel>
+
+    </Grid>
+</Page>

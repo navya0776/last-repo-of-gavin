@@ -1,0 +1,15 @@
+﻿<Window x:Class="IMS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Views="clr-namespace:IMS.Views"
+        xmlns:uc="clr-namespace:IMS.UserControls"
+        Title="GAVIN-SPARK" Height="600" Width="900" Background="#F5F7FA">
+
+    <Grid>
+        <DockPanel>
+            <uc:Header DockPanel.Dock="Top" Loaded="Header_Loaded" />
+            <uc:SideDashboard DockPanel.Dock="Left" />
+            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
+        </DockPanel>
+    </Grid>
+</Window>

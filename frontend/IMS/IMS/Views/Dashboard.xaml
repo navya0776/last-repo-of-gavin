@@ -1,0 +1,107 @@
+﻿<Page x:Class="IMS.Views.Dashboard"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:IMS.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Dashboard" Background="#F5F6FA">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ============= LEFT ICON SIDEBAR ============= -->
+        <StackPanel Grid.Column="0"
+                    Background="#1F1F1F"
+                    VerticalAlignment="Stretch"
+                    
+                    >
+
+            <Image Source="/Assets/logo.png"
+                   Width="50" Height="50"
+                   Margin="0,10"/>
+            <Button Style="{StaticResource SideIconButton}" Content="🏠 Store" HorizontalAlignment="Left" Margin="30,30,0,10"/>
+            <Button Style="{StaticResource SideIconButton}" Content="⚙ CDS" HorizontalAlignment="Left" Margin="30,0,0,10"/>
+            <Button Style="{StaticResource SideIconButton}" Content="📦 Alerts" HorizontalAlignment="Left" Margin="30,0,0,10"/>
+            <Button Style="{StaticResource SideIconButton}" Content="💰 Admin" HorizontalAlignment="Left" Margin="30,0,0,10"/>
+            <Button Style="{StaticResource SideIconButton}" Content="📄 Reports" HorizontalAlignment="Left" Margin="30,0,0,10"/>
+
+        </StackPanel>
+
+        <!-- ============= SECOND WHITE COLUMN ============= -->
+
+
+        <!-- ============= MAIN CONTENT ============= -->
+        <ScrollViewer Grid.Column="1">
+
+            <StackPanel Margin="40,0,0,0" Width="450" VerticalAlignment="Center">
+
+                <!-- Card -->
+                <Border CornerRadius="18"
+                        Background="#E6F1FF"
+                        Padding="18"
+                        Cursor="Hand"
+                        Width="400">
+
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Store"
+                                       FontSize="24"
+                                       FontWeight="SemiBold"
+                                       Foreground="#095ED8"/>
+                        </StackPanel>
+
+                        <!-- 1ST DROPDOWN -->
+                        <Expander Header="Ledger AND OS"
+                                  FontWeight="Medium"
+                                  Margin="0,10,0,0">
+                            <StackPanel>
+                                <Button Style="{StaticResource SubButton}"
+                                        Content="Ledger Maintenance"/>
+                                <Button Style="{StaticResource SubButton}"
+                                        Content="Overhaul Scale"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- 2ND DROPDOWN -->
+
+
+                        <!-- 3RD DROPDOWN -->
+                        <Expander Header="Receipt"
+                                  FontWeight="Medium">
+                            <StackPanel>
+                                <Button Style="{StaticResource SubButton}" Content="From Vendor"/>
+                                <Button Style="{StaticResource SubButton}" Content="From Unit"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- 4TH DROPDOWN -->
+                        <Expander Header="Issue"
+                                  FontWeight="Medium">
+                            <StackPanel>
+                                <Button Style="{StaticResource SubButton}" Content="Internal"/>
+                                <Button Style="{StaticResource SubButton}" Content="External"/>
+                            </StackPanel>
+                        </Expander>
+
+                        <!-- 5TH DROPDOWN -->
+                        <Expander Header="Alert"
+                                  FontWeight="Medium">
+                            <StackPanel>
+                                <Button Style="{StaticResource SubButton}" Content="Expiry"/>
+                                <Button Style="{StaticResource SubButton}" Content="Damage"/>
+                            </StackPanel>
+                        </Expander>
+
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
