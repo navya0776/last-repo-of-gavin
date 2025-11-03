@@ -68,6 +68,8 @@ instance/
 # Scrapy stuff:
 .scrapy
 
+alembic/versions/*.py
+
 # Sphinx documentation
 docs/_build/
 
@@ -179,6 +181,9 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file. However, if you prefer,
 #  you could uncomment the following to ignore the enitre vscode folder
 .vscode/
+.vs
+
+
 
 # Ruff stuff:
 .ruff_cache/
@@ -192,3 +197,16 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+bin/
+obj/
+*.user
+*.suo
+*.nupkg
+packages/
+.vscode/
+*.log
+
+versions
+
+

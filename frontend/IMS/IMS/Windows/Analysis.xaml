@@ -1,0 +1,53 @@
+﻿<Window x:Class="IMS.Windows.Analysis"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IMS.Windows"
+        mc:Ignorable="d"
+        Title="Analysis" Height="450" Width="800">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            
+            <DataGrid ItemsSource="{Binding Rows}"
+                      IsReadOnly="True"
+                      AutoGenerateColumns="False"
+                      HeadersVisibility="Column"
+                      AlternatingRowBackground="LightGray"
+                      AlternationCount="2"
+                      GridLinesVisibility="All">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="80"/>
+                    <DataGridTextColumn Header="Unsv Stk" Binding="{Binding UnsvStk}" Width="80"/>
+                    <DataGridTextColumn Header="Rep Stk" Binding="{Binding RepStk}" Width="80"/>
+                    <DataGridTextColumn Header="Ser Stk" Binding="{Binding SerStk}" Width="80"/>
+                    <DataGridTextColumn Header="% Stk" Binding="{Binding PercentStk}" Width="80"/>
+                    <DataGridTextColumn Header="D_In" Binding="{Binding D_In}" Width="80"/>
+                    <DataGridTextColumn Header="Tot Stk" Binding="{Binding TotStk}" Width="80"/>
+                    <DataGridTextColumn Header="% TStk" Binding="{Binding PercentTotStk}" Width="80"/>
+                    <DataGridTextColumn Header="Re-ord Level" Binding="{Binding ReOrdLevel}" Width="90"/>
+                    <DataGridTextColumn Header="Safety Stock" Binding="{Binding SafetyStock}" Width="90"/>
+                    <DataGridTextColumn Header="Zero Stk" Binding="{Binding ZeroStock}" Width="90"/>
+                    <DataGridTextColumn Header="Stk LT2 Eoq" Binding="{Binding StockLT2}" Width="90"/>
+                    <DataGridTextColumn Header="Stk LT5 Eoq" Binding="{Binding StockLT5}" Width="90"/>
+                    <DataGridTextColumn Header="Stk LT10 Eoq" Binding="{Binding StockLT10}" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Print Summary" Width="110" Click="PrintSummary_Click"/>
+            <Button Content="Close" Width="70" Click="Close_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
+
+
