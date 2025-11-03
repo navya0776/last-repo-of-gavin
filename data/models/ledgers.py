@@ -8,16 +8,14 @@ from .base import Base
 class AllStores(Base):
     __tablename__ = "all_stores"
 
-    store_id: Mapped[int] = mapped_column(Integer, primary_key=True,
-                                          autoincrement=True)
+    store_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
     store_name: Mapped[str] = mapped_column(
         String(50), nullable=False, unique=True, default="Store"
     )
 
     # One store has many ledgers
-    ledgers = relationship("Ledger", back_populates="store",
-                           cascade="all, delete")
+    ledgers = relationship("Ledger", back_populates="store", cascade="all, delete")
 
 
 class Ledger(Base):
@@ -26,11 +24,10 @@ class Ledger(Base):
     store_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("all_stores.store_id"), nullable=False
     )
-    Ledger_code: Mapped[int] = mapped_column(Integer, primary_key=True,
-                                             nullable=False)
-    Ledger_name: Mapped[str] = mapped_column(
-        String(50), nullable=False
+    Ledger_code: Mapped[str] = mapped_column(
+        String, primary_key=True, nullable=False, index=True
     )
+    Ledger_name: Mapped[str] = mapped_column(String(50), nullable=False)
 
     store = relationship("AllStores", back_populates="ledgers")
 
@@ -42,11 +39,10 @@ class Ledger(Base):
 class LedgerMaintenance(Base):
     __tablename__ = "ledger_maintenance"
 
-    idx: Mapped[int] = mapped_column(Integer, primary_key=True,
-                                     autoincrement=True)
+    idx: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     # Foreign key — links to parent Ledger
-    ledger_code: Mapped[int] = mapped_column(
-        Integer, ForeignKey("ledger.Ledger_code"), nullable=False
+    ledger_code: Mapped[str] = mapped_column(
+        String(4), ForeignKey("ledger.Ledger_code"), nullable=False, index=True
     )
     ledger_page: Mapped[str] = mapped_column(String(20), nullable=False)
     ohs_number: Mapped[str] = mapped_column(String(50))
@@ -60,12 +56,8 @@ class LedgerMaintenance(Base):
     unsv_stock: Mapped[int] = mapped_column(Integer, default=0)
     rep_stock: Mapped[int] = mapped_column(Integer, default=0)
     serv_stock: Mapped[int] = mapped_column(Integer, default=0)
-    msc: Mapped[Enum | None] = mapped_column(
-        Enum("M", "S", "C", name="msc_enum")
-    )
-    ved: Mapped[Enum | None] = mapped_column(
-        Enum("V", "E", "D", name="ved_enum")
-    )
+    msc: Mapped[Enum | None] = mapped_column(Enum("M", "S", "C", name="msc_enum"))
+    ved: Mapped[Enum | None] = mapped_column(Enum("V", "E", "D", name="ved_enum"))
     in_house: Mapped[Enum | None] = mapped_column(
         Enum("in_house", "ORD", name="in_house_enum")
     )

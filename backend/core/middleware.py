@@ -2,9 +2,10 @@ from logging import getLogger
 from typing import Any
 
 from fastapi import Cookie, Depends, HTTPException, status
+from sqlalchemy import select
+from backend.schemas.users import User as UserModel
 
-from backend.repositories import UserCollection
-from data.database.redis import get_redis
+from data.database import get_redis, DBSession
 from data.models.users import User
 
 logger = getLogger(__name__)
@@ -67,7 +68,7 @@ async def get_current_user(session_id: str = Cookie(...)) -> dict[str, str]:
 
 
 async def get_admin_user(
-    users: UserCollection, user: dict[str, str] = Depends(get_current_user)
+    session=DBSession, user: dict[str, str] = Depends(get_current_user)
 ) -> dict[str, str | bool]:
     """
     FastAPI dependency that validates and enriches user authentication data with admin status.
@@ -110,7 +111,7 @@ async def get_admin_user(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
         )
 
-    curr_user = await users.find_one({"username": user_id})
+    curr_user = await session.execute(select(User).where(User.username == user_id))
 
     if curr_user is None:
         logger.critical(
@@ -120,7 +121,7 @@ async def get_admin_user(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found!"
         )
 
-    user_model = User(**curr_user)
+    user_model = UserModel.model_validate(curr_user)
 
     return {
         "user_id": user_model.username,

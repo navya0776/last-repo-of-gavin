@@ -1,8 +1,9 @@
-from typing import Annotated
 from logging import getLogger
+from typing import Annotated
 
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import (AsyncSession, async_sessionmaker,
+                                    create_async_engine)
 
 DATABASE_URL = "postgresql+psycopg://admin:pass@localhost/ims"
 loggers = getLogger(__name__)
