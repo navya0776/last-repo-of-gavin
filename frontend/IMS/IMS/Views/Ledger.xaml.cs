@@ -234,18 +234,17 @@ namespace IMS.Views
                 return;
             }
 
-            // Build LedgerItem from form fields
             LedgerItem payload;
             if (_editing == null)
             {
                 payload = new LedgerItem();
+                payload.LedgerPage = Guid.NewGuid().ToString();   // ✅ generate GUID
             }
             else
             {
                 payload = _editing;
             }
 
-            payload.LedgerPage = LedgerPage.Text;
             payload.OHSNo = OHSNo.Text;
             payload.ISGNo = ISGNo.Text;
             payload.SSGNo = SSGNo.Text;
@@ -267,19 +266,15 @@ namespace IMS.Views
             {
                 if (_editing == null)
                 {
-                    // create on server
                     var created = await ApiService.CreateLedgerAsync(payload);
-                    // add to UI list
                     _activeLedgerItems.Add(created);
                 }
                 else
                 {
-                    // update on server
-                    if (Guid.TryParse(payload.LedgerPage, out Guid ledgerPageGuid))
+                    if (Guid.TryParse(payload.LedgerPage, out Guid ledgerGuid))
                     {
-                        var updated = await ApiService.UpdateLedgerAsync(ledgerPageGuid, payload);
-                        // update already reflected in _editing object, but if server returns modified object, sync it:
-                        // find index in collection and replace
+                        // no TryParse, no Guid variable needed
+                        var updated = await ApiService.UpdateLedgerAsync(payload.LedgerPage, payload);
                         var idx = _activeLedgerItems.IndexOf(_editing);
                         if (idx >= 0)
                         {
@@ -302,7 +297,7 @@ namespace IMS.Views
                 MessageBox.Show($"Save failed: {ex.Message}");
             }
         }
-        #endregion
+# endregion
 
         #region Search (client-side)
         private void Search_Click(object sender, RoutedEventArgs e) => ApplyFilter();

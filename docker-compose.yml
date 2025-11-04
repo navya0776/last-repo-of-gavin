@@ -8,22 +8,22 @@ services:
       - db
       - redis
     environment:
-      POSTGRES_URI: postgresql+psycopg2://admin:pass@localhost:5432/ims
+      POSTGRES_URI: postgresql+psycopg://admin:pass@localhost:5432/ims
       REDIS_URL: redis://redis:6379/0
       ENV: production
     restart: always
 
   db:
-      image: postgres:15
-      container_name: postgres
-      environment:
-        POSTGRES_USER: admin
-        POSTGRES_PASSWORD: pass
-        POSTGRES_DB: ims
-      ports:
-        - "5432:5432"
-      volumes:
-        - postgresdata:/var/lib/postgresql/data
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: ims
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
 
   redis:
     image: redis:alpine

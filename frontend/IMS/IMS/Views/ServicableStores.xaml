@@ -20,7 +20,7 @@
         <Border Grid.Column="0" BorderThickness="1" BorderBrush="Gray" CornerRadius="5" Padding="10" Margin="5">
             <DockPanel>
                 <TextBlock Text="Equipments" FontSize="28" FontWeight="Bold" Margin="0,0,0,10" DockPanel.Dock="Top"/>
-                <ListBox x:Name="EquipmentsList" SelectionChanged="EqupimpentsList_SelectionChanged" />
+                <ListBox x:Name="EquipmentsList" />
             </DockPanel>
         </Border>
         <DataGrid Grid.Column="1"
@@ -37,8 +37,8 @@
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-            <Button Content="Print Report" Width="100" Margin="0,0,10,0" Click="PrintReport_Click"/>
-            <Button Content="Close" Width="70" Click="Close_Click"/>
+            <Button Content="Print Report" Width="100" Margin="0,0,10,0" />
+            <Button Content="Close" Width="70" />
         </StackPanel>
     </Grid>
 </Page>

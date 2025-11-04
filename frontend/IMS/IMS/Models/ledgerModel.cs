@@ -6,6 +6,8 @@ namespace IMS.Models
     public class LedgerItem
     {
         public string LedgerPage { get; set; }
+        public string LedgerPageGUID { get; set; }
+
         public string OHSNo { get; set; }
         public string ISGNo { get; set; }
         public string SSGNo { get; set; }

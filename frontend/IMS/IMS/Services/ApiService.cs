@@ -81,42 +81,45 @@ namespace IMS.Services
         }
 
         // ------------------------------
-        // LEDGER GET
-        public static async Task<List<LedgerItem>> GetLedgerAsync(string store, string substore)
+        // LEDGER GET (equipment pages)
+        // ------------------------------
+        public static async Task<List<LedgerItem>> GetLedgerAsync(string store, string equipment)
         {
-            var url = $"/ledger?store={WebUtility.UrlEncode(store)}&substore={WebUtility.UrlEncode(substore)}";
-            var resp = await _client.GetAsync(url);
-
+            var resp = await _client.GetAsync($"/ledger/{equipment}");
             resp.EnsureSuccessStatusCode();
 
-            var json = await resp.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<List<LedgerItem>>(json) ?? new();
+            return await resp.Content.ReadFromJsonAsync<List<LedgerItem>>() ?? new();
         }
 
         // ------------------------------
         // LEDGER CREATE
+        // ------------------------------
         public static async Task<LedgerItem?> CreateLedgerAsync(LedgerItem item)
         {
-            var resp = await _client.PostAsJsonAsync("/ledger", item);
+            var resp = await _client.PostAsJsonAsync("/ledger/create", item);
             resp.EnsureSuccessStatusCode();
             return await resp.Content.ReadFromJsonAsync<LedgerItem>();
         }
 
         // ------------------------------
         // LEDGER UPDATE
-        public static async Task<LedgerItem?> UpdateLedgerAsync(Guid id, LedgerItem item)
+        // ------------------------------
+        public static async Task<LedgerItem?> UpdateLedgerAsync(string pageName, LedgerItem item)
         {
-            var resp = await _client.PutAsJsonAsync($"/ledger/{id}", item);
+            var resp = await _client.PutAsJsonAsync($"/ledger/update/{pageName}", item);
             resp.EnsureSuccessStatusCode();
             return await resp.Content.ReadFromJsonAsync<LedgerItem>();
         }
 
         // ------------------------------
-        // LEDGER DELETE
-        public static async Task DeleteLedgerAsync(Guid id)
+        // ADD PAGE TO EQUIPMENT
+        // ------------------------------
+        public static async Task<bool> AddPageAsync(string equipment, LedgerItem page)
         {
-            var resp = await _client.DeleteAsync($"/ledger/{id}");
+            var resp = await _client.PostAsJsonAsync($"/ledger/{equipment}/add-page", page);
             resp.EnsureSuccessStatusCode();
+            return true;
         }
+
     }
 }

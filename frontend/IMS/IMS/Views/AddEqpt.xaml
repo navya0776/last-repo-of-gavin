@@ -14,7 +14,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" >
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Background="DeepSkyBlue" >
             <TextBlock Text="Equipment Name" VerticalAlignment="Center" Margin="10,0,10,0" />
             <TextBox x:Name="EquipmentNameTextBox" Width="250" Height="30"/>
             <TextBlock Text="Database" VerticalAlignment="Center" Margin="10,0,10,0" />
@@ -26,8 +26,8 @@
         <StackPanel Orientation="Horizontal" Grid.Row="2" >
             <TextBlock Text="Ledger" VerticalAlignment="Center" Margin="10,0,10,0" />
             <TextBox x:Name="LedgerTextBox" Width="100" Height="30"/>
-            <Button x:Name="save" Content="Save" Width="75" Margin="10"/>
-            <Button x:Name="cancel" Content="Cancel" Width="75" Margin="10" />
+            <Button x:Name="save" Content="Save" Width="75" Margin="10" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button x:Name="cancel" Content="Cancel" Width="75" Margin="10" Style="{DynamicResource LedgerButtonStyle}" />
         </StackPanel>
     </Grid>
 </Page>

@@ -33,7 +33,7 @@
                 <RadioButton x:Name="Alive" Content="Alive"/>
                 <RadioButton x:Name="Completed" Content="Completed " />
             </StackPanel>
-            <Button Content="OK" Width="70" Margin="10,0" Click="OK_Click"/>
+            <Button Content="OK" Width="70" Margin="10,0" />
         </StackPanel>
     </Grid>
 </Page>
