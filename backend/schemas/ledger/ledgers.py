@@ -9,10 +9,6 @@ class StoreBase(BaseModel):
     store_id: int
 
 
-class StoreResponse(StoreBase):
-    pass
-
-
 # ======== Ledger ========
 class LedgerBase(BaseModel):
     Ledger_name: str
@@ -30,8 +26,11 @@ class LedgerCreate(LedgerBase):
 class LedgerResponse(LedgerBase):
     pass
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
+
+
+class StoreResponse(StoreBase):
+    ledgers: list[LedgerResponse]
 
 
 # ======== LedgerMaint ========
