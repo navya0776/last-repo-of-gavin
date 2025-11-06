@@ -3,9 +3,10 @@ from typing import Any
 
 from fastapi import Cookie, Depends, HTTPException, status
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from backend.schemas.users import User as UserModel
 
-from data.database import get_redis, DBSession
+from data.database import get_redis, get_db
 from data.models.users import User
 
 logger = getLogger(__name__)
@@ -68,7 +69,8 @@ async def get_current_user(session_id: str = Cookie(...)) -> dict[str, str]:
 
 
 async def get_admin_user(
-    session=DBSession, user: dict[str, str] = Depends(get_current_user)
+    session: AsyncSession = Depends(get_db),
+    user: dict[str, str] = Depends(get_current_user),
 ) -> dict[str, str | bool]:
     """
     FastAPI dependency that validates and enriches user authentication data with admin status.
