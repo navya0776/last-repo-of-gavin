@@ -26,7 +26,7 @@ namespace IMS.Views
         private LedgerItem _editing = null;
 
         // Set your API base here
-        private const string ApiBaseUrl = "https://api.example.com"; // <<-- change this
+        private const string ApiBaseUrl = "http://localhost:8000";
 
         // Mock store → sub-store data
 
@@ -388,6 +388,25 @@ namespace IMS.Views
             var combo = sender as ComboBox;
             var selected = combo?.SelectedItem;
         }
+
+        private void Reports_Click(object sender, RoutedEventArgs e)
+        {
+            var reportsWindow = new ReportsPageLedger
+            {
+                Owner = Window.GetWindow(this)  // makes it modal to parent
+            };
+
+            bool? result = reportsWindow.ShowDialog();
+
+            if (result == true)
+            {
+                string selectedReport = reportsWindow.SelectedReport;
+                MessageBox.Show($"You selected: {selectedReport}", "Report Selected");
+
+                // TODO: Call backend analysis API or export logic here
+            }
+        }
+
     }
 }
 

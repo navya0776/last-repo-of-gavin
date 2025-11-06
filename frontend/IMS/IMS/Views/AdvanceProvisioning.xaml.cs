@@ -106,6 +106,10 @@ namespace IMS.Views
             mainWindow.MainFrame.Navigate(new Views.AnalysisAP());
         }
 
+        private void Report_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
     public class APEntry

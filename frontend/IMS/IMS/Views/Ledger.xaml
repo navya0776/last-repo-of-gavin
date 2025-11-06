@@ -140,6 +140,7 @@
                 <Button x:Name="Add"  Content="Add Page" Width="80" Margin="5" Style="{DynamicResource LedgerButtonStyle}" Click="Add_Click"/>
                 <Button Content="Export To Excel" Width="100" Margin="5" Style="{DynamicResource LedgerButtonStyle}" Click="ExportToXlsx_Click"/>
                 <Button Content="Current Stock" Width="100" Margin="5" Style="{DynamicResource LedgerButtonStyle}" />
+                <Button x:Name="Reports" Content="Reports" Width="80" Margin="5" Style="{DynamicResource LedgerButtonStyle}" Click="Reports_Click"/> 
             </StackPanel>
 
             <!-- ALERT BUTTON (RIGHT SIDE) -->

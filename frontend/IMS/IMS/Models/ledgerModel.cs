@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.Command;
+using System;
 
 namespace IMS.Models
 {
@@ -7,6 +8,9 @@ namespace IMS.Models
     {
         public string LedgerPage { get; set; }
         public string LedgerPageGUID { get; set; }
+        
+        public string ledger_name { get; set; }
+        public string Ledger_code { get; set; }
 
         public string OHSNo { get; set; }
         public string ISGNo { get; set; }

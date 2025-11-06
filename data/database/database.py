@@ -49,4 +49,4 @@ async def close_db():
     await engine.dispose()
 
 
-DBSession: Annotated[AsyncSession, Depends(get_db)]
+DBSession= Annotated[AsyncSession, Depends(get_db)]
