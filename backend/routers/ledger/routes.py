@@ -1,21 +1,30 @@
 import asyncio
 
 from fastapi import APIRouter, HTTPException, Query, status
-from schemas.ledger import (LedgerMaintanenceCreate, LedgerMaintanenceUpdate,
-                            LedgerMaintenanceResponse)
+from schemas.ledger import (
+    LedgerMaintanenceCreate,
+    LedgerMaintanenceUpdate,
+    LedgerMaintenanceResponse,
+)
 from schemas.ledger.stk_analysis import StockAnalysisResult
 
-from backend.services.ledger import (add_page, get_all_ledgers,
-                                     get_could_change_analysis,
-                                     get_desirable_analysis,
-                                     get_essential_analysis, get_item_analysis,
-                                     get_ledger_pages, get_msc_analysis,
-                                     get_must_change_analysis,
-                                     get_non_scaled_item_analysis,
-                                     get_scaled_item_analysis,
-                                     get_shoud_change_analysis,
-                                     get_ved_analysis, get_vital_analysis,
-                                     update_page)
+from backend.services.ledger import (
+    add_page,
+    get_all_ledgers,
+    get_could_change_analysis,
+    get_desirable_analysis,
+    get_essential_analysis,
+    get_item_analysis,
+    get_ledger_pages,
+    get_msc_analysis,
+    get_must_change_analysis,
+    get_non_scaled_item_analysis,
+    get_scaled_item_analysis,
+    get_shoud_change_analysis,
+    get_ved_analysis,
+    get_vital_analysis,
+    update_page,
+)
 from backend.utils.users import UserPermissions
 
 router = APIRouter()

@@ -36,7 +36,7 @@ class LogResponse(BaseModel):
 
 
 class CreateUserRequest(User):
-    new_user = True
+    new_user: bool = True
 
     @model_validator(mode="after")
     def assert_role_is_not_admin(self):
