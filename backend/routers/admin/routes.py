@@ -9,8 +9,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.core.middleware import get_admin_user
 from backend.schemas.users.permissions import Permissions
-from data.database import DBSession
-from data.database.redis import get_redis
+from backend.schemas.users import User as UserModel
+
+from data.database import get_db, get_redis
 from data.models.users import User
 # from data.models.logs import Log  # Assuming you have a Log model now
 from schemas.admin import CreateUserRequest, LogFetchRequest, LogResponse
@@ -47,10 +48,10 @@ audit_logger = getLogger("audit_logs")
 # -----------------------------------------------------------------------------
 # Endpoint: Fetch User Details
 # -----------------------------------------------------------------------------
-@router.get("/users/{username}", response_model=list[User])
+@router.get("/users/{username}", response_model=list[UserModel])
 async def return_user_detail(
     username: str | None,
-    session = DBSession
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Retrieve details for a specific user or all users if username is None.
@@ -75,7 +76,7 @@ async def return_user_detail(
 @router.post("/user")
 async def create_user(
     user_creation_request: CreateUserRequest,
-    session = DBSession
+    session: AsyncSession = Depends(get_db)
 ):
     """
     Create a new user in the PostgreSQL database.
@@ -125,7 +126,7 @@ async def create_user(
 @router.delete("/user/{username}")
 async def delete_user(
     username: str,
-    session = DBSession
+    session : AsyncSession = Depends(get_db)
 ):
     """
     Delete a user from PostgreSQL by username.

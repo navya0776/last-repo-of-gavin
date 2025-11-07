@@ -10,7 +10,7 @@ class StoreBase(BaseModel):
 
 
 class StoreResponse(StoreBase):
-    pass
+    ledgers: list[LedgerResponse]
 
 
 # ======== Ledger ========
@@ -30,8 +30,7 @@ class LedgerCreate(LedgerBase):
 class LedgerResponse(LedgerBase):
     pass
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ======== LedgerMaint ========

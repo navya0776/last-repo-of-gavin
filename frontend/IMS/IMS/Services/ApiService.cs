@@ -69,10 +69,18 @@ namespace IMS.Services
             var result = new List<(string store, List<string> subs)>();
             foreach (var r in raw)
             {
-                string store = r.store ?? r.name ?? "";
+                // Match backend keys
+                string store = r.store_name ?? "";
                 List<string> subs = new();
 
-                try { foreach (var s in r.substores) subs.Add((string)s); } catch { }
+                try
+                {
+                    foreach (var s in r.ledgers)
+                    {
+                        subs.Add((string)s.Ledger_name); // from your backend response
+                    }
+                }
+                catch { }
 
                 result.Add((store, subs));
             }
@@ -80,12 +88,13 @@ namespace IMS.Services
             return result;
         }
 
+
         // ------------------------------
         // LEDGER GET (equipment pages)
         // ------------------------------
-        public static async Task<List<LedgerItem>> GetLedgerAsync(string store, string ledger_code)
+        public static async Task<List<LedgerItem>> GetLedgerAsync(string ledger_name, string currentSubStore)
         {
-            var resp = await _client.GetAsync($"/ledger/?ledger_name={store}&ledger_code={ledger_code}");
+            var resp = await _client.GetAsync($"/ledger/?ledger_name={ledger_name}");
             resp.EnsureSuccessStatusCode();
 
             return await resp.Content.ReadFromJsonAsync<List<LedgerItem>>() ?? new();
@@ -96,7 +105,7 @@ namespace IMS.Services
         // ------------------------------
         public static async Task<LedgerItem?> CreateLedgerAsync(LedgerItem item)
         {
-            var resp = await _client.PostAsJsonAsync("/ledger/", item);
+            var resp = await _client.PostAsJsonAsync($"/ledger/?ledger_code={item.Ledger_code}", item);
             resp.EnsureSuccessStatusCode();
             return await resp.Content.ReadFromJsonAsync<LedgerItem>();
         }
@@ -106,20 +115,20 @@ namespace IMS.Services
         // ------------------------------
         public static async Task<LedgerItem?> UpdateLedgerAsync(string pageName, LedgerItem item)
         {
-            var resp = await _client.PutAsJsonAsync($"/", item);
+            var resp = await _client.PutAsJsonAsync($"/ledger/?ledger_code={item.Ledger_code}", item);
             resp.EnsureSuccessStatusCode();
             return await resp.Content.ReadFromJsonAsync<LedgerItem>();
         }
 
-        // ------------------------------
-        // ADD PAGE TO EQUIPMENT
-        // ------------------------------
-        public static async Task<bool> AddPageAsync(string equipment, LedgerItem page)
-        {
-            var resp = await _client.PostAsJsonAsync($"/", page);
-            resp.EnsureSuccessStatusCode();
-            return true;
-        }
+        //// ------------------------------
+        //// ADD PAGE TO EQUIPMENT
+        //// ------------------------------
+        //public static async Task<bool> AddPageAsync(string equipment, LedgerItem page)
+        //{
+        //    var resp = await _client.PostAsJsonAsync($"/", page);
+        //    resp.EnsureSuccessStatusCode();
+        //    return true;
+        //}
 
     }
 }

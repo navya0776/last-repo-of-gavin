@@ -51,48 +51,20 @@ namespace IMS.Views
             Equipments.ItemsSource = EquipmentList;
         }
 
-        private bool CombinedFilter(object entry)
-        {
-            var row = entry as APEntry;
-            if (row == null) return false;
-            // Filter by Equipment
-            if (!string.IsNullOrEmpty(_selectedEquipment) && row.EquipmentName != _selectedEquipment)
-                return false;
-            // Filter by Demand Type
-            string selected = (FilterCombo.SelectedItem as ComboBoxItem).Content.ToString();
-            if (selected != "All" && row.DemandType != selected)
-                return false;
-            return true;
-        }
-
-        private void ApplyFilter()
-        {
-            if (_ledgerView == null) return;
-
-            string selected = (FilterCombo.SelectedItem as ComboBoxItem).Content.ToString();
-
-            _ledgerView.Filter = entry =>
-            {
-                var row = entry as APEntry;
-                if (row == null) return false;
-
-                if (selected == "All")
-                    return true;
-
-                return row.DemandType == selected;
-            };
-
-            _ledgerView.Refresh();
-        }
-
-        private void FilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ApplyFilter();
-        }
+ 
 
         private void Generate_Click(object sender, RoutedEventArgs e)
         {
-            FormOverlay.Visibility = Visibility.Visible;
+            var popup = new Windows.GenerateNewAP();
+            popup.Owner = Application.Current.MainWindow;
+            popup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            bool? result = popup.ShowDialog();
+            if (result == true)
+            {
+                // Refresh data after successful generation
+                LoadData();
+                _ledgerView.Refresh();
+            }
         }
 
         private void Equipments_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -107,6 +79,21 @@ namespace IMS.Views
         }
 
         private void Report_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void APDemand_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SelectAllRadio_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SupplyDemand_Checked(object sender, RoutedEventArgs e)
         {
 
         }

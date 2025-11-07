@@ -6,7 +6,8 @@ from schemas.ledger import (
     LedgerMaintanenceUpdate,
     LedgerMaintenanceResponse,
 )
-from schemas.ledger.stk_analysis import StockAnalysisResult
+from backend.schemas.ledger.stk_analysis import StockAnalysisResult
+from backend.schemas.ledger.ledgers import StoreResponse
 
 from backend.services.ledger import (
     add_page,
@@ -30,8 +31,31 @@ from backend.utils.users import UserPermissions
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("/", response_model=list[StoreResponse])
 async def get_all_ledger(permissions: UserPermissions):
+    """
+    Will return this format
+
+        [
+    {
+        "store_id": 1,
+        "store_name": "Central Store",
+        "ledgers": [
+        {
+            "Ledger_code": "L001",
+            "Ledger_name": "Cash Ledger",
+            "store_id": 1
+        },
+        {
+            "Ledger_code": "L002",
+            "Ledger_name": "Sales Ledger",
+            "store_id": 1
+        }
+        ]
+    }
+    ]
+
+    """
     if permissions.ledger.read:
         return await get_all_ledgers()
 
@@ -43,9 +67,15 @@ async def get_all_ledger(permissions: UserPermissions):
 @router.get("/", response_model=list[LedgerMaintenanceResponse])
 async def get_ledger_page(
     permissions: UserPermissions,
-    ledger_name: str = Query(...),
-    ledger_code: str = Query(...),
+    ledger_name: str | None = Query(...),
+    ledger_code: str | None = Query(...),
 ):
+    if ledger_name is None and ledger_code is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Provide either ledger_name or ledger_code",
+        )
+    
     if permissions.ledger.read:
         return await get_ledger_pages(ledger_name, ledger_code)
 
