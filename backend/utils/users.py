@@ -14,7 +14,7 @@ from data.database import get_db
 async def get_permissions(
     user=Depends(get_current_user), session: AsyncSession = Depends(get_db)
 ) -> Permissions:
-    stml = select(User.permissions).where(User.username == user["username"])
+    stml = select(User.permissions).where(User.username == user["user_id"])
 
     result = await session.scalar(stml)
     assert result is not None, "User not found but passed authentication!"

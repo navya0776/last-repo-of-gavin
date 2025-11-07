@@ -1,12 +1,15 @@
 import asyncio
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from schemas.ledger import (
     LedgerMaintanenceCreate,
     LedgerMaintanenceUpdate,
     LedgerMaintenanceResponse,
 )
-from schemas.ledger.stk_analysis import StockAnalysisResult
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.schemas.ledger.stk_analysis import StockAnalysisResult
+from backend.schemas.ledger.ledgers import StoreResponse
 
 from backend.services.ledger import (
     add_page,
@@ -26,28 +29,37 @@ from backend.services.ledger import (
     update_page,
 )
 from backend.utils.users import UserPermissions
+from data.database import get_db
 
 router = APIRouter()
 
 
-@router.get("/")
-async def get_all_ledger(permissions: UserPermissions):
+@router.get("/", response_model=list[StoreResponse])
+async def get_all_ledger(
+    permissions: UserPermissions, session: AsyncSession = Depends(get_db)
+):
     if permissions.ledger.read:
-        return await get_all_ledgers()
+        return await get_all_ledgers(session)
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="Read permissions not found!"
     )
 
 
-@router.get("/", response_model=list[LedgerMaintenanceResponse])
+@router.get("/{ledger_code}", response_model=list[LedgerMaintenanceResponse])
 async def get_ledger_page(
     permissions: UserPermissions,
-    ledger_name: str = Query(...),
-    ledger_code: str = Query(...),
+    ledger_code: str,
+    session: AsyncSession = Depends(get_db),
 ):
+    if not ledger_code:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Provide either ledger_name or ledger_code!",
+        )
+
     if permissions.ledger.read:
-        return await get_ledger_pages(ledger_name, ledger_code)
+        return await get_ledger_pages(ledger_code, session)
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="Read permissions not found!"
@@ -59,6 +71,7 @@ async def add_ledger_page(
     permissions: UserPermissions,
     ledger_page: LedgerMaintanenceCreate,
     ledger_code: str = Query(...),
+    session: AsyncSession = Depends(get_db),
 ):
     if not permissions.ledger.read:
         raise HTTPException(
@@ -66,7 +79,7 @@ async def add_ledger_page(
             detail="Read permissions not found!",
         )
     if permissions.ledger.write:
-        return await add_page(ledger_code, ledger_page)
+        return await add_page(ledger_code, ledger_page, session)
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -79,6 +92,7 @@ async def update_ledger_page(
     permissions: UserPermissions,
     ledger_page: LedgerMaintanenceUpdate,
     ledger_code: str = Query(...),
+    session: AsyncSession = Depends(get_db),
 ):
     if not permissions.ledger.read:
         raise HTTPException(
@@ -87,7 +101,7 @@ async def update_ledger_page(
         )
 
     if permissions.ledger.write:
-        return await update_page(ledger_code, ledger_page)
+        return await update_page(ledger_code, ledger_page, session)
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -96,7 +110,11 @@ async def update_ledger_page(
 
 
 @router.post("/analysis", response_model=StockAnalysisResult)
-async def ledger_analysis(permissions: UserPermissions, ledger_code: str = Query(...)):
+async def ledger_analysis(
+    permissions: UserPermissions,
+    ledger_code: str = Query(...),
+    session: AsyncSession = Depends(get_db),
+):
     if not permissions.ledger.read:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="No read permissions"
@@ -114,17 +132,17 @@ async def ledger_analysis(permissions: UserPermissions, ledger_code: str = Query
         essential,
         desirable,
     ) = await asyncio.gather(
-        get_item_analysis(ledger_code),
-        get_scaled_item_analysis(ledger_code),
-        get_non_scaled_item_analysis(ledger_code),
-        get_msc_analysis(ledger_code),
-        get_must_change_analysis(ledger_code),
-        get_shoud_change_analysis(ledger_code),
-        get_could_change_analysis(ledger_code),
-        get_ved_analysis(ledger_code),
-        get_vital_analysis(ledger_code),
-        get_essential_analysis(ledger_code),
-        get_desirable_analysis(ledger_code),
+        get_item_analysis(ledger_code, session),
+        get_scaled_item_analysis(ledger_code, session),
+        get_non_scaled_item_analysis(ledger_code, session),
+        get_msc_analysis(ledger_code, session),
+        get_must_change_analysis(ledger_code, session),
+        get_shoud_change_analysis(ledger_code, session),
+        get_could_change_analysis(ledger_code, session),
+        get_ved_analysis(ledger_code, session),
+        get_vital_analysis(ledger_code, session),
+        get_essential_analysis(ledger_code, session),
+        get_desirable_analysis(ledger_code, session),
     )
 
     return StockAnalysisResult(

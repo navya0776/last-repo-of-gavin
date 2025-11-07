@@ -18,7 +18,7 @@ engine = create_async_engine(
 
 # Create async session factory
 AsyncSessionLocal = async_sessionmaker(
-    engine=engine,
+    engine,
     class_=AsyncSession,
     expire_on_commit=False,
     autoflush=False,

@@ -16,7 +16,7 @@ config = context.config
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 
-database_url = "postgresql+psycopg2://admin:pass@localhost:5432/ims"
+database_url = "postgresql+psycopg://admin:pass@localhost:5432/ims"
 if database_url:
     config.set_main_option("sqlalchemy.url", database_url)
 

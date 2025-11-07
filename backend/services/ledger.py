@@ -1,6 +1,6 @@
 from logging import getLogger
 
-from fastapi import HTTPException, status, Depends
+from fastapi import HTTPException, status
 from sqlalchemy import func, select, insert
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
@@ -13,12 +13,11 @@ from backend.schemas.ledger import (
 )
 from backend.schemas.ledger.stk_analysis import StockCategoryBreakdown
 from data.models.ledgers import AllStores, Ledger, LedgerMaintenance
-from data.database import get_db
 
 logger = getLogger(__name__)
 
 
-async def get_all_ledgers(session: AsyncSession = Depends(get_db)):
+async def get_all_ledgers(session: AsyncSession):
     result = await session.execute(
         select(AllStores).options(selectinload(AllStores.ledgers))
     )
@@ -27,23 +26,11 @@ async def get_all_ledgers(session: AsyncSession = Depends(get_db)):
 
 
 async def get_ledger_pages(
-    ledger_name: str | None = None,
-    ledger_code: str | None = None,
-    session: AsyncSession = Depends(get_db),
+    ledger_code: str,
+    session: AsyncSession,
 ) -> list[LedgerMaintenanceResponse]:
-    # Find the ledger code if only name is given
-    if not ledger_code:
-        result = await session.execute(
-            select(Ledger.Ledger_code).where(Ledger.Ledger_name == ledger_name)
-        )
-        ledger_code = result.scalar_one_or_none()
-        if not ledger_code:
-            raise HTTPException(status_code=404, detail="Ledger not found")
-
-    # Now query maintenance records directly (lazy, efficient)
     stmt = select(LedgerMaintenance).where(LedgerMaintenance.ledger_code == ledger_code)
     result = await session.stream_scalars(stmt)
-    # stream_scalars → yields results as they come, not all in memory
 
     pages = []
     async for record in result:
@@ -57,7 +44,7 @@ async def get_ledger_pages(
 async def add_page(
     ledger_code: str,
     ledger_page: LedgerMaintanenceCreate,
-    session: AsyncSession = Depends(get_db),
+    session: AsyncSession,
 ):
     try:
         async with session.begin():
@@ -98,7 +85,7 @@ async def add_page(
 async def update_page(
     ledger_code: str,
     ledger_page: LedgerMaintanenceUpdate,
-    session: AsyncSession = Depends(get_db),
+    session: AsyncSession,
 ):
     async with session.begin():
         try:
@@ -127,7 +114,7 @@ async def update_page(
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
-async def get_msc_analysis(ledger_code: str, session: AsyncSession = Depends(get_db)):
+async def get_msc_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -175,7 +162,7 @@ async def get_msc_analysis(ledger_code: str, session: AsyncSession = Depends(get
     )
 
 
-async def get_ved_analysis(ledger_code: str, session: AsyncSession = Depends(get_db)):
+async def get_ved_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -223,9 +210,7 @@ async def get_ved_analysis(ledger_code: str, session: AsyncSession = Depends(get
     )
 
 
-async def get_must_change_analysis(
-    ledger_code: str, session: AsyncSession = Depends(get_db)
-):
+async def get_must_change_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -274,9 +259,7 @@ async def get_must_change_analysis(
     )
 
 
-async def get_shoud_change_analysis(
-    ledger_code: str, session: AsyncSession = Depends(get_db)
-):
+async def get_shoud_change_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -325,9 +308,7 @@ async def get_shoud_change_analysis(
     )
 
 
-async def get_could_change_analysis(
-    ledger_code: str, session: AsyncSession = Depends(get_db)
-):
+async def get_could_change_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -376,7 +357,7 @@ async def get_could_change_analysis(
     )
 
 
-async def get_vital_analysis(ledger_code: str, session: AsyncSession = Depends(get_db)):
+async def get_vital_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -425,9 +406,7 @@ async def get_vital_analysis(ledger_code: str, session: AsyncSession = Depends(g
     )
 
 
-async def get_essential_analysis(
-    ledger_code: str, session: AsyncSession = Depends(get_db)
-):
+async def get_essential_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -476,9 +455,7 @@ async def get_essential_analysis(
     )
 
 
-async def get_desirable_analysis(
-    ledger_code: str, session: AsyncSession = Depends(get_db)
-):
+async def get_desirable_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -527,7 +504,7 @@ async def get_desirable_analysis(
     )
 
 
-async def get_item_analysis(ledger_code: str, session: AsyncSession = Depends(get_db)):
+async def get_item_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = select(
@@ -571,9 +548,7 @@ async def get_item_analysis(ledger_code: str, session: AsyncSession = Depends(ge
     )
 
 
-async def get_scaled_item_analysis(
-    ledger_code: str, session: AsyncSession = Depends(get_db)
-):
+async def get_scaled_item_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
@@ -622,9 +597,7 @@ async def get_scaled_item_analysis(
     )
 
 
-async def get_non_scaled_item_analysis(
-    ledger_code: str, session: AsyncSession = Depends(get_db)
-):
+async def get_non_scaled_item_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = (
