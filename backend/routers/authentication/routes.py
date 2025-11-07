@@ -1,136 +1,130 @@
 import asyncio
-from logging import getLogger
 from hashlib import sha256
+from logging import getLogger
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from sqlalchemy.future import select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.middleware import get_admin_user
-from backend.schemas.users.permissions import Permissions
+from backend.schemas.authentication import ForgetPasswordRequest, LoginRequest
+from backend.core.middleware import get_current_user
 from backend.schemas.users import User as UserModel
 
-from data.database import get_db, get_redis
+from data.database import get_redis, get_db
 from data.models.users import User
-from schemas.admin import CreateUserRequest, LogFetchRequest, LogResponse
 
-router = APIRouter(dependencies=[Depends(get_admin_user)])
-logger = getLogger(__name__)
+app = APIRouter()
 audit_logger = getLogger("audit_logs")
+logger = getLogger(__name__)
 
 
-# -----------------------------------------------------------------------------
-# Endpoint: Fetch Logs
-# -----------------------------------------------------------------------------
-# @router.post("/logs/", response_model=list[LogResponse])
-# async def return_logs(
-#     logs: LogFetchRequest,
-#     session = DBSession
-# ):
-#     """
-#     Fetch logs with optional username filtering and pagination.
-#     """
-#     query = select(Log).order_by(Log.created_at.desc())
-
-#     if logs.username:
-#         query = query.where(Log.username == logs.username)
-
-#     query = query.offset(logs.start).limit(logs.end - logs.start)
-
-#     result = await session.execute(query)
-#     logs_list = result.scalars().all()
-
-#     return [LogResponse.from_orm(log) for log in logs_list]
-
-
-# -----------------------------------------------------------------------------
-# Endpoint: Fetch User Details
-# -----------------------------------------------------------------------------
-@router.get("/users/{username}", response_model=list[UserModel])
-async def return_user_detail(
-    username: str | None, session: AsyncSession = Depends(get_db)
-):
+@app.post("/login")
+async def login(credentials: LoginRequest, session: AsyncSession = Depends(get_db)):
     """
-    Retrieve details for a specific user or all users if username is None.
+    Login route:
+        1. Verify username and password.
+        2. Create session in Redis.
+        3. Set cookie with session_id.
     """
-    if username:
-        result = await session.execute(select(User).where(User.username == username))
-        user = result.scalar()
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="User not found!"
-            )
-        return [user]
-    else:
-        result = await session.execute(select(User))
-        users = result.scalars().all()
-        return users
+    username = credentials.username
+    password = credentials.password
 
+    # Find user by username
+    user, redis = await asyncio.gather(
+        session.scalar(select(User).where(User.username == username)), get_redis()
+    )
 
-# -----------------------------------------------------------------------------
-# Endpoint: Create New User
-# -----------------------------------------------------------------------------
-@router.post("/user")
-async def create_user(
-    user_creation_request: CreateUserRequest, session: AsyncSession = Depends(get_db)
-):
-    """
-    Create a new user in the PostgreSQL database.
-    """
-    username = user_creation_request.username
-    permissions = user_creation_request.permissions
-
-    try:
-        async with session.begin():
-            new_user = User(
-                username=username,
-                password=sha256(user_creation_request.password.encode()).hexdigest(),
-                role=user_creation_request.role,
-                new_user=True,
-                permissions=permissions.model_dump(),
-            )
-            session.add(new_user)
-
-        await session.refresh(new_user)  # ensure ID and defaults are populated
-        return new_user
-
-    except Exception as e:
-        logger.error(f"Failed to create user '{username}'", exc_info=True)
+    if user is None:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to create user due to server error.",
-        ) from e
-
-
-# -----------------------------------------------------------------------------
-# Endpoint: Delete User
-# -----------------------------------------------------------------------------
-@router.delete("/user/{username}")
-async def delete_user(username: str, session: AsyncSession = Depends(get_db)):
-    """
-    Delete a user from PostgreSQL by username.
-    """
-    result = await session.execute(select(User).where(User.username == username))
-    user = result.scalars().first()
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User '{username}' not found!",
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found!"
         )
 
-    async with session.begin():
-        try:
-            await session.delete(user)
-        except:
-            await session.rollback()
-            logger.error(f"Failed to delete user '{username}'", exc_info=True)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to delete user '{username}' due to server error.",
-            )
+    # Gets user password, and matches it with SHA256 hex digest representation
+    if user.password != sha256(password.encode()).hexdigest():
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password!"
+        )
 
-    audit_logger.warning(f"Admin deleted user '{username}'")
+    session_id = str(uuid4())
 
-    return {"message": f"User '{username}' deleted successfully."}
+    # Set session data
+    session_data = {"user_id": username}
+
+    await redis.hset(f"session:{session_id}", mapping=session_data)  # pyright: ignore[reportGeneralTypeIssues]
+
+    response = JSONResponse(
+        {
+            "message": "Login successful",
+            "is_admin": user.role == "admin",
+            "is_new_user": user.new_user,
+        }
+    )
+
+    response.set_cookie(key="session_id", value=session_id, httponly=True, max_age=None)
+
+    return response
+
+
+@app.post("/logout")
+async def logout(user: dict[str, str] = Depends(get_current_user)):
+    """Logout route:
+    1. Delete session from Redis.
+    2. Remove session cookie from client.
+    """
+    redis = await get_redis()
+    await redis.delete(f"session:{user['session_id']}")
+
+    response = JSONResponse({"message": "Logged out successfully"})
+    response.delete_cookie("session_id")
+
+    return response
+
+
+@app.post("/forget-password")
+async def forget_password(
+    new_user: ForgetPasswordRequest, session: AsyncSession = Depends(get_db)
+):
+    """
+    Reset a user's password if they are marked as a new user.
+
+    This endpoint allows a new user to set their password for the first time.
+    It validates the user's existence in the database, updates their password,
+    and marks the `new_user` field as `False` after a successful reset.
+
+    Steps:
+        1. Check if the username exists in the users collection.
+        2. If the user is not found, log a critical error and raise HTTP 500.
+        3. If found, update the password and set `new_user` to False.
+        4. Return HTTP 200 OK on success.
+
+    Args:
+        new_user (ForgetPasswordRequest): Pydantic model containing the username and new password details.
+        users (UserCollection): MongoDB collection handler for user records.
+
+    Returns:
+        int: HTTP 200 OK on successful password reset.
+
+    Raises:
+        HTTPException:
+            - 500 if the user record does not exist.
+    """
+    exists = await session.scalar(
+        select(User).where(User.username == new_user.username)
+    )
+
+    if exists is None:
+        logger.critical(
+            "New user forget password conditions matched but user does not exist in database"
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error!",
+        )
+
+    exists.new_user = False
+    exists.password = sha256(new_user.new_password.encode()).hexdigest()
+    await session.commit()
+
+    return status.HTTP_200_OK

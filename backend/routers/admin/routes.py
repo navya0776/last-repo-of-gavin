@@ -75,8 +75,7 @@ async def return_user_detail(
 # -----------------------------------------------------------------------------
 @router.post("/user")
 async def create_user(
-    user_creation_request: CreateUserRequest,
-    session: AsyncSession = Depends(get_db)
+    user_creation_request: CreateUserRequest, session: AsyncSession = Depends(get_db)
 ):
     """
     Create a new user in the PostgreSQL database.
@@ -101,7 +100,7 @@ async def create_user(
                 password=sha256(user_creation_request.password.encode()).hexdigest(),
                 role=user_creation_request.role,
                 new_user=True,
-                permissions=permissions.model_dump()
+                permissions=permissions.model_dump(),
             )
 
             session.add(new_user)
@@ -124,10 +123,7 @@ async def create_user(
 # Endpoint: Delete User
 # -----------------------------------------------------------------------------
 @router.delete("/user/{username}")
-async def delete_user(
-    username: str,
-    session : AsyncSession = Depends(get_db)
-):
+async def delete_user(username: str, session: AsyncSession = Depends(get_db)):
     """
     Delete a user from PostgreSQL by username.
     """

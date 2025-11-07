@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 
 from backend.routers.admin import admin_router
-from backend.routers.authentication.routes import router as auth_router
+from backend.routers.authentication.routes import app as auth_router
+from backend.routers.ledger.routes import router as ledger_router
 from data.database import init_db, init_redis, close_db, close_redis
 
 load_dotenv()
@@ -26,8 +27,10 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
 app.include_router(auth_router, prefix="/auth")
 app.include_router(admin_router, prefix="/admin")
+app.include_router(ledger_router, prefix="/ledger")
 
 if __name__ == "__main__":
     import uvicorn

@@ -14,7 +14,11 @@ services:
     restart: always
 
   db:
+<<<<<<< HEAD
     image: postgres:15
+=======
+    image: postgres:18
+>>>>>>> b76be9586e6f8524df22e83853fe08b120d4011e
     container_name: postgres
     environment:
       POSTGRES_USER: admin
@@ -23,7 +27,11 @@ services:
     ports:
       - "5432:5432"
     volumes:
+<<<<<<< HEAD
       - postgresdata:/var/lib/postgresql/data
+=======
+      - postgresdata:/var/lib/postgresql
+>>>>>>> b76be9586e6f8524df22e83853fe08b120d4011e
 
   redis:
     image: redis:alpine

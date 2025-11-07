@@ -9,10 +9,6 @@ class StoreBase(BaseModel):
     store_id: int
 
 
-class StoreResponse(StoreBase):
-    ledgers: list[LedgerResponse]
-
-
 # ======== Ledger ========
 class LedgerBase(BaseModel):
     Ledger_name: str
@@ -31,6 +27,10 @@ class LedgerResponse(LedgerBase):
     pass
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class StoreResponse(StoreBase):
+    ledgers: list[LedgerResponse]
 
 
 # ======== LedgerMaint ========
