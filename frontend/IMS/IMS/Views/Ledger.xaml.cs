@@ -234,15 +234,18 @@ namespace IMS.Views
                 return;
             }
 
-            LedgerItem payload;
-            if (_editing == null)
+            // Initialize payload to fix CS0165
+            LedgerItem payload = new LedgerItem();
+
+            if (_editing != null)
             {
-                payload = new LedgerItem();
-                payload.LedgerPage = Guid.NewGuid().ToString();   // ✅ generate GUID
+                // If editing, copy the LedgerPage from the selected item
+                payload.LedgerPage = _editing.LedgerPage;
             }
             else
             {
-                payload = _editing;
+                // If adding, generate a new LedgerPage GUID
+                payload.LedgerPage = Guid.NewGuid().ToString();
             }
 
             payload.OHSNo = OHSNo.Text;
@@ -273,7 +276,6 @@ namespace IMS.Views
                 {
                     if (Guid.TryParse(payload.LedgerPage, out Guid ledgerGuid))
                     {
-                        // no TryParse, no Guid variable needed
                         var updated = await ApiService.UpdateLedgerAsync(payload.LedgerPage, payload);
                         var idx = _activeLedgerItems.IndexOf(_editing);
                         if (idx >= 0)

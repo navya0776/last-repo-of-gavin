@@ -4,7 +4,6 @@ using System.Configuration;
 
 namespace IMS.Models
 {
-    // Ledger model containing all requested fields (C: keep all and add missing ones)
     public class LedgerItem
     {
         public string LedgerPage { get; set; }
@@ -29,11 +28,11 @@ namespace IMS.Models
         public string ServStock { get; set; }
         public string MSC { get; set; }
         public string Group { get; set; }
-        public string CDS { get; set; }
-        public string LPP { get; set; }
         public string Remarks { get; set; }
+
+        public string LPP { get; set; }
+        public string CDS { get; set; }
         public string Store { get; set; }
         public string SubStore { get; set; }
     }
-
 }

@@ -73,59 +73,61 @@
 
 
         <!-- DATA GRID (AUTO WIDTH COLUMNS) -->
-        <DataGrid Grid.Row="1" Grid.Column="1"
+        <ScrollViewer  Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto" >
+            <DataGrid Grid.Row="1" Grid.Column="1"
           Name="LedgerDataGrid"
           AutoGenerateColumns="False"
           HeadersVisibility="Column"
           ColumnWidth="*">
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="#FFD477"/>
-                    <Setter Property="Foreground" Value="black"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="BorderThickness" Value="0.5"/>
-                    <Setter Property="FontSize" Value="20"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="DataGridColumnHeader">
-                                <Border Background="{TemplateBinding Background}"
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#FFD477"/>
+                        <Setter Property="Foreground" Value="black"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="0.5"/>
+                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridColumnHeader">
+                                    <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Padding="6">
-                                    <TextBlock Text="{TemplateBinding Content}"
+                                        <TextBlock Text="{TemplateBinding Content}"
                                        TextWrapping="Wrap"
                                        TextAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
 
 
-            <DataGrid.Columns >
-                <DataGridTextColumn Header="Ledger Page" Binding="{Binding LedgerPage}" Width="*" />
-                <DataGridTextColumn Header="OHS No" Binding="{Binding OHSNo}" Width="*" />
-                <DataGridTextColumn Header="ISG No" Binding="{Binding ISGNo}" Width="*" />
-                <DataGridTextColumn Header="SSG No" Binding="{Binding SSGNo}" Width="*" />
-                <DataGridTextColumn Header="Part No" Binding="{Binding PartNo}" Width="*" />
-                <DataGridTextColumn Header="Nomen" Binding="{Binding Nomen}" Width="2*" />
-                <DataGridTextColumn Header="A_U" Binding="{Binding AU}" Width="*" />
-                <DataGridTextColumn Header="No Off" Binding="{Binding NoOff}" Width="*" />
-                <DataGridTextColumn Header="Scl Auth" Binding="{Binding SclAuth}" Width="*" />
-                <DataGridTextColumn Header="Unsv Stock" Binding="{Binding UnsvStock}" Width="*" />
-                <DataGridTextColumn Header="Rep Stock" Binding="{Binding RepStock}" Width="*" />
-                <DataGridTextColumn Header="Serv Stock" Binding="{Binding ServStock}" Width="*" />
-                <DataGridTextColumn Header="MSC" Binding="{Binding MSC}" Width="*" />
-                <DataGridTextColumn Header="Group" Binding="{Binding Group}" Width="*" />
-                <DataGridTextColumn Header="CDC" Binding="{Binding CDC}" Width="*" />
-    
-            </DataGrid.Columns>
+                <DataGrid.Columns >
+                    <DataGridTextColumn Header="Ledger Page" Binding="{Binding LedgerPage}" Width="*" />
+                    <DataGridTextColumn Header="OHS No" Binding="{Binding OHSNo}" Width="*" />
+                    <DataGridTextColumn Header="ISG No" Binding="{Binding ISGNo}" Width="*" />
+                    <DataGridTextColumn Header="SSG No" Binding="{Binding SSGNo}" Width="*" />
+                    <DataGridTextColumn Header="Part No" Binding="{Binding PartNo}" Width="*" />
+                    <DataGridTextColumn Header="Nomen" Binding="{Binding Nomen}" Width="2*" />
+                    <DataGridTextColumn Header="A_U" Binding="{Binding AU}" Width="*" />
+                    <DataGridTextColumn Header="No Off" Binding="{Binding NoOff}" Width="*" />
+                    <DataGridTextColumn Header="Scl Auth" Binding="{Binding SclAuth}" Width="*" />
+                    <DataGridTextColumn Header="Unsv Stock" Binding="{Binding UnsvStock}" Width="*" />
+                    <DataGridTextColumn Header="Rep Stock" Binding="{Binding RepStock}" Width="*" />
+                    <DataGridTextColumn Header="Serv Stock" Binding="{Binding ServStock}" Width="*" />
+                    <DataGridTextColumn Header="MSC" Binding="{Binding MSC}" Width="*" />
+                    <DataGridTextColumn Header="Group" Binding="{Binding Group}" Width="*" />
+                    <DataGridTextColumn Header="CDC" Binding="{Binding CDC}" Width="*" />
 
-        </DataGrid>
+                </DataGrid.Columns>
 
+            </DataGrid>
+
+        </ScrollViewer>
         <!-- FOOTER BUTTONS -->
         <Grid Grid.Row="2" Background="#F5F5F5" Grid.ColumnSpan="99">
 
