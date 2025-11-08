@@ -1,14 +1,13 @@
 from typing import Literal
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class Ledger(BaseModel):
     Ledger_code: str
     Ledger_name: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class StoreWithLedgers(BaseModel):
@@ -16,8 +15,7 @@ class StoreWithLedgers(BaseModel):
     store_name: str
     ledgers: list[Ledger]
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ======== LedgerMaint ========

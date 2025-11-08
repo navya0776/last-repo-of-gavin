@@ -7,7 +7,7 @@ _redis: AsyncRedis | None = None
 async def init_redis() -> AsyncRedis:
     global _redis
     if _redis is None:
-        url: str = getenv("REDIS_URI", "redis://localhost:6379/0")
+        url: str = getenv("REDIS_URI", "redis://redis:6379/0")
         _redis = AsyncRedis.from_url(url, decode_responses=True)
     return _redis
 
