@@ -113,7 +113,8 @@ async def get_admin_user(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
         )
 
-    curr_user = await session.execute(select(User).where(User.username == user_id))
+    result = await session.execute(select(User).where(User.username == user_id))
+    curr_user = result.scalar()
 
     if curr_user is None:
         logger.critical(
@@ -123,7 +124,7 @@ async def get_admin_user(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found!"
         )
 
-    user_model = UserModel.model_validate(curr_user)
+    user_model = UserModel.model_validate(curr_user, from_attributes=True)
 
     return {
         "user_id": user_model.username,
