@@ -96,16 +96,19 @@ namespace IMS.Windows
             if (data.is_admin)
             {
                 main.MainFrame.Navigate(new AdminDashboatd());
+                main.Show();
             }
             else
             {
                 if (data.is_new_user)
                 {
+                    main.Show();
                     var popup = new ChangePasswordWindow();
                     popup.ShowDialog();
+
                 }
 
-                main.MainFrame.Navigate(new Dashboard());
+                //main.MainFrame.Navigate(new Dashboard());
             }
 
 

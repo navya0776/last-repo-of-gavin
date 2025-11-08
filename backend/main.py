@@ -20,6 +20,9 @@ DEBUG = True
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await asyncio.gather(init_redis(), init_db())
+    
+    print("✅ Redis initialized successfully!") #Delete
+
 
     yield
 

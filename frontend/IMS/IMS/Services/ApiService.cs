@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -16,17 +17,19 @@ namespace IMS.Services
     {
         private static readonly CookieContainer _cookies = new CookieContainer();
         private static readonly HttpClient _client;
+        private static HttpClientHandler _handler;  
+
 
         static ApiService()
         {
-            var handler = new HttpClientHandler()
+            _handler = new HttpClientHandler()
             {
                 UseCookies = true,
                 CookieContainer = _cookies,
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
             };
 
-            _client = new HttpClient(handler)
+            _client = new HttpClient(_handler)
             {
                 BaseAddress = new Uri("http://localhost:8000/")
             };
@@ -35,19 +38,41 @@ namespace IMS.Services
             _client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
+        public static void PrintCookies()
+        {
+            var cookies = _handler.CookieContainer.GetCookies(new Uri("http://localhost:8000/"));
+            foreach (Cookie cookie in cookies)
+            {
+                Console.WriteLine($"🍪 {cookie.Name} = {cookie.Value}");
+            }
+        }
 
         // ------------------------------
         // LOGIN
-        public static async Task<LoginResponse?> LoginAsync(string username, string password)
+        public static async Task<bool> LoginAsync(string username, string password)
         {
             var payload = new { username, password };
-            var resp = await _client.PostAsJsonAsync("/auth/login/", payload);
+            var response = await _client.PostAsJsonAsync("login", payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("❌ Login failed");
+                return false;
+            }
 
-            if (!resp.IsSuccessStatusCode)
-                return null;
+            PrintCookies();
 
-            return await resp.Content.ReadFromJsonAsync<LoginResponse>();
+            Debug.WriteLine("✅ Login succeeded");
+            var cookies = ((HttpClientHandler)_handler).CookieContainer
+    .GetCookies(new Uri("http://localhost:8000/"));
+
+            foreach (Cookie cookie in cookies)
+                Console.WriteLine($"🍪 Cookie stored: {cookie.Name} = {cookie.Value}");
+
+
+            // HttpClientHandler is already storing cookies automatically
+            return true;
         }
+
 
         // ------------------------------
         // COOKIE SET
@@ -92,9 +117,9 @@ namespace IMS.Services
         // ------------------------------
         // LEDGER GET (equipment pages)
         // ------------------------------
-        public static async Task<List<LedgerItem>> GetLedgerAsync(string ledger_name, string currentSubStore)
+        public static async Task<List<LedgerItem>> GetLedgerAsync(string ledger_code)
         {
-            var resp = await _client.GetAsync($"/ledger/?ledger_name={ledger_name}");
+            var resp = await _client.GetAsync($"/ledger/?ledger_code={ledger_code}");
             resp.EnsureSuccessStatusCode();
 
             return await resp.Content.ReadFromJsonAsync<List<LedgerItem>>() ?? new();

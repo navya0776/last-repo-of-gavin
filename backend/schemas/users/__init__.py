@@ -1,4 +1,4 @@
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, ConfigDict
 
 from .permissions import Permissions
 
@@ -14,6 +14,9 @@ class User(BaseModel):
     new_user: bool
     role: str
     permissions: Permissions
+    #test
+    model_config = ConfigDict(from_attributes=True)  # ✅ tells Pydantic it's an ORM
+    #test
 
     @model_validator(mode="after")
     def validate_fields(self):

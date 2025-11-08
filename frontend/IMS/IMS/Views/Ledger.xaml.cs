@@ -142,7 +142,7 @@ namespace IMS.Views
 
             try
             {
-                var items = await ApiService.GetLedgerAsync(_currentStore, _currentSubStore);
+                var items = await ApiService.GetLedgerAsync(_currentStore);
                 _activeLedgerItems = new ObservableCollection<LedgerItem>(items);
                 LedgerDataGrid.ItemsSource = _activeLedgerItems;
             }

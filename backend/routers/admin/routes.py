@@ -17,6 +17,7 @@ from data.models.users import User
 from schemas.admin import CreateUserRequest, LogFetchRequest, LogResponse
 
 router = APIRouter(dependencies=[Depends(get_admin_user)])
+# router = APIRouter()
 logger = getLogger(__name__)
 audit_logger = getLogger("audit_logs")
 
@@ -50,7 +51,7 @@ audit_logger = getLogger("audit_logs")
 # -----------------------------------------------------------------------------
 @router.get("/users/{username}", response_model=list[UserModel])
 async def return_user_detail(
-    username: str | None,
+    username: str | None = None,
     session: AsyncSession = Depends(get_db)
 ):
     """
@@ -63,11 +64,11 @@ async def return_user_detail(
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found!"
             )
-        return [user]
+        return [UserModel.model_validate(user, from_attributes=True).model_dump()]
     else:
         result = await session.execute(select(User))
         users = result.scalars().all()
-        return users
+        return [UserModel.model_validate(u).model_dump() for u in users]
 
 
 # -----------------------------------------------------------------------------
@@ -81,7 +82,7 @@ async def create_user(
     Create a new user in the PostgreSQL database.
     """
     username = user_creation_request.username
-    permissions = Permissions(**user_creation_request.permissions)
+    permissions = Permissions.model_validate(user_creation_request.permissions, from_attributes=True)
 
     # Check if username already exists
     result = await session.execute(select(User).where(User.username == username))
@@ -93,24 +94,25 @@ async def create_user(
             detail="Username already exists!",
         )
 
-    async with session.begin():
-        try:
-            new_user = User(
-                username=username,
-                password=sha256(user_creation_request.password.encode()).hexdigest(),
-                role=user_creation_request.role,
-                new_user=True,
-                permissions=permissions.model_dump(),
-            )
+    try:
+        new_user = User(
+            username=username,
+            password=sha256(user_creation_request.password.encode()).hexdigest(),
+            role=user_creation_request.role,
+            new_user=True,
+            permissions=permissions.model_dump(),
+            # permissions=user_creation_request.permissions.model_dump()
+        )
 
-            session.add(new_user)
-        except:
-            await session.rollback()
-            logger.error(f"Failed to create user '{username}'", exc_info=True)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to create user due to server error.",
-            )
+        session.add(new_user)
+        
+    except:
+        await session.rollback()
+        logger.error(f"Failed to create user '{username}'", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create user due to server error.",
+        )
 
     audit_logger.info(f"Admin created new user '{username}'")
     return JSONResponse(

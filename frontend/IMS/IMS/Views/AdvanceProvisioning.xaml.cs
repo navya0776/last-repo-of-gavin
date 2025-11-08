@@ -34,7 +34,6 @@ namespace IMS.Views
             LoadData();
             _ledgerView = CollectionViewSource.GetDefaultView(APItems);
             LedgerDataGrid.ItemsSource = _ledgerView;
-            _ledgerView.Filter = CombinedFilter;
         }
 
         private void LoadData()

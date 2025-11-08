@@ -29,5 +29,35 @@ namespace IMS.Views
         {
 
         }
+
+        private void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void RemoveLinkButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void IndexModeButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OSRadio_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ISGRadio_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SSGRadio_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

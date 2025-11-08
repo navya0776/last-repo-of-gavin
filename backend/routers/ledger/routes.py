@@ -6,7 +6,8 @@ from schemas.ledger import (
     LedgerMaintanenceUpdate,
     LedgerMaintenanceResponse,
 )
-from schemas.ledger.stk_analysis import StockAnalysisResult
+from backend.schemas.ledger.stk_analysis import StockAnalysisResult
+from backend.schemas.ledger.ledgers import StoreResponse
 
 from backend.services.ledger import (
     add_page,
@@ -26,6 +27,7 @@ from backend.services.ledger import (
     update_page,
 )
 from backend.utils.users import UserPermissions
+from sqlalchemy.ext.asyncio import AsyncSession
 from data.database import get_db
 
 router = APIRouter()
@@ -46,8 +48,7 @@ async def get_all_ledger(
 @router.get("/{ledger_code}", response_model=list[LedgerMaintenanceResponse])
 async def get_ledger_page(
     permissions: UserPermissions,
-    ledger_name: str = Query(...),
-    ledger_code: str = Query(...),
+    ledger_code: str,
 ):
     if permissions.ledger.read:
         return await get_ledger_pages(ledger_code, session)

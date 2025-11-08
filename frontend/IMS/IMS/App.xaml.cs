@@ -15,21 +15,21 @@ namespace IMS
         {
             base.OnStartup(e);
 
-            //Windows.LoginWindow login = new Windows.LoginWindow();
-            //bool? result = login.ShowDialog();
+            Windows.LoginWindow login = new Windows.LoginWindow();
+            bool? result = login.ShowDialog();
 
-            //if (result == true)
-            //{
-            //    MainWindow main = new MainWindow();
-            //    main.Show();
-            //}
-            //else
-            //{
-            //     // exit app if login fails
-            //}
+            if (result == true)
+            {
+                MainWindow main = new MainWindow();
+                main.Show();
+            }
+            else
+            {
+                // exit app if login fails
+            }
 
-            MainWindow main = new MainWindow();
-            main.Show();
+            //MainWindow main = new MainWindow();
+            //main.Show();
         }
 
         public class StringNullOrEmptyToVisibilityConverter : IValueConverter
