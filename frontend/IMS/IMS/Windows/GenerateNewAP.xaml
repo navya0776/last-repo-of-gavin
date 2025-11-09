@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMS.Windows"
         mc:Ignorable="d"
-        Title="GenerateNewAP" Height="602" Width="1374">
+        Title="GenerateNewAP" Height="636" Width="1357">
 
     <Window.Resources>
         <!-- light frame around the whole form -->
@@ -123,7 +123,7 @@
 
                 <TextBlock Grid.Column="2" Style="{StaticResource Lbl}" Text="AHQ Srl" Height="16" Margin="126,0,4,0"/>
                 <TextBox x:Name="txtAhq" Grid.Row="0" Grid.Column="3"
-                         Style="{StaticResource PinkBox}" Text="E204" Margin="1,0,109,5"/>
+                         Style="{StaticResource PinkBox}"  Margin="1,0,109,5"/>
 
                 <TextBlock Grid.Column="4" Style="{StaticResource Lbl}" Text="Fin Year" Height="16" Margin="110,0,6,0"/>
                 <ComboBox x:Name="cmbFinYear" Grid.Row="0" Grid.Column="5" Margin="10,1,175,38" Grid.RowSpan="2"
@@ -136,13 +136,13 @@
                 <!-- Row 1 -->
                 <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Lbl}" Text="Store Code" Height="16" Margin="0,0,6,0"/>
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                    <TextBox x:Name="txtStore" Width="44" Style="{StaticResource PinkBox}" Text="05"/>
+                    <TextBox x:Name="txtStore" Width="44" />
                     <TextBlock Text="  Eqpt Code" VerticalAlignment="Center" Margin="6,0,6,0"/>
-                    <TextBox x:Name="txtEqptCode" Width="60" Style="{StaticResource PinkBox}" Text="76"/>
+                    <TextBox x:Name="txtEqptCode" Width="60"/>
                 </StackPanel>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Lbl}" Text="Eqpt" Height="16" Margin="147,0,5,0"/>
-                <TextBox x:Name="txtEqpt" Grid.Row="1" Grid.Column="3" Text="130MM GUN"/>
+                <TextBox x:Name="txtEqpt" Grid.Row="1" Grid.Column="3" />
 
                 <TextBlock Grid.Row="1" Grid.Column="4" Style="{StaticResource Lbl}" Text="Section" Height="16" Margin="0,0,6,0"/>
                 <TextBox Grid.Row="1" Grid.Column="5"/>
@@ -155,16 +155,16 @@
 
                 <TextBlock Grid.Row="2" Grid.Column="4" Style="{StaticResource Lbl}" Text="Ledger Code" Height="16" Margin="0,0,6,0"/>
                 <StackPanel Grid.Row="2" Grid.Column="5" Orientation="Horizontal">
-                    <TextBox x:Name="txtLedgerCode" Width="50" Text="74"/>
+                    <TextBox x:Name="txtLedgerCode" Width="50"/>
                     <TextBlock Text="  Ledger Name" VerticalAlignment="Center" Margin="6,0,6,0"/>
-                    <TextBox x:Name="txtLedgerName" Width="130" Text="INDG"/>
+                    <TextBox x:Name="txtLedgerName" Width="130" />
                     <Button Style="{StaticResource EllipsisBtn}" Click="LedgerPicker_Click"/>
                 </StackPanel>
 
                 <!-- Row 3 -->
                 <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource Lbl}" Text="Scale/SSG ref" Height="16" Margin="0,0,6,0"/>
                 <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
-                         Text="EM/J85 OS NO 1 ISSUE 1 JAN 2020"/>
+                         />
                 <TextBlock Grid.Row="3" Grid.Column="4" Style="{StaticResource Lbl}" Text="Scale Issue No" Height="16" Margin="0,0,6,0"/>
                 <StackPanel Grid.Row="3" Grid.Column="5" Orientation="Horizontal">
                     <TextBox x:Name="txtScaleIssueNo" Width="80"/>
@@ -178,8 +178,8 @@
 
                 <!-- Row 4 -->
                 <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource Lbl}" Text="DemandAuth" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource PinkBox}"
-                         Text="ESD.KANKINARA"/>
+                <TextBox Grid.Row="4" Grid.Column="1" 
+                         />
 
 
 
@@ -226,7 +226,7 @@
                 </StackPanel>
 
                 <TextBlock Grid.Row="7" Grid.Column="2" Style="{StaticResource Lbl}" Text="No of eqpt for spares demand" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="7" Grid.Column="3" Style="{StaticResource NumBox}" Text="3" Margin="73,0,73,0"/>
+                <TextBox Grid.Row="7" Grid.Column="3" Style="{StaticResource NumBox}"  Margin="73,0,73,0"/>
 
                 <TextBlock Grid.Row="7" Grid.Column="4" Style="{StaticResource Lbl}" Text="No of eqpt outs for repair" Height="16" Margin="0,0,6,0"/>
                 <ComboBox Grid.Row="7" Grid.Column="5" Margin="10,0,147,0">

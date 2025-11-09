@@ -1,5 +1,7 @@
-﻿using System;
+﻿using IMS.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace IMS.Views
 {
     /// <summary>
@@ -23,6 +26,8 @@ namespace IMS.Views
         public CentralDemandNavigationPage()
         {
             InitializeComponent();
+            ObservableCollection<IMS.Models.CDS> _activeCDS = new();
+
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -24,29 +24,6 @@ namespace IMS.UserControls
             InitializeComponent();
         }
 
-        private void ToggleSidebarButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (isCollapsed)
-            {
-                // Expand sidebar
-                SidebarColumn.Width = new GridLength(150);
-                MenuButtons.Visibility = Visibility.Visible;
-                ToggleSidebarButton.Content = "X";
-                ToggleSidebarButton.HorizontalAlignment = HorizontalAlignment.Right;
-            }
-            else
-            {
-                // Collapse sidebar to top button only
-                SidebarColumn.Width = new GridLength(30);
-                MenuButtons.Visibility = Visibility.Collapsed;
-                ToggleSidebarButton.Content = "☰";
-                ToggleSidebarButton.HorizontalAlignment = HorizontalAlignment.Center;
-                ToggleSidebarButton.Margin = new Thickness(0);
-            }
-
-            isCollapsed = !isCollapsed;
-        }
-
         private void ledger_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Application.Current.MainWindow as MainWindow;

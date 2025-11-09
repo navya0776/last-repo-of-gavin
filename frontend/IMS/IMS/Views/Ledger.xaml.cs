@@ -34,10 +34,9 @@ namespace IMS.Views
         public Ledger()
         {
             InitializeComponent();
-
-
+            _ = TestBackendConnectionAsync();
             // If you already have a cookie from login flow, set it:
-            // _api.SetAuthCookie("session", "<cookie-value>", "api.example.com");
+            //_api.SetAuthCookie("session", "<cookie-value>", "api.example.com");
 
             ColumnSelector.ItemsSource = typeof(LedgerItem).GetProperties().Select(p => p.Name).ToList();
             ColumnSelector.SelectedIndex = 0;
@@ -46,6 +45,40 @@ namespace IMS.Views
             _ = LoadStoresAndInitialDataAsync();
         }
 
+        private async Task TestBackendConnectionAsync()
+        {
+            try
+            {
+                // Step 1: Try login
+                bool success = await ApiService.LoginAsync("navya", "123456");
+                if (!success)
+                {
+                    MessageBox.Show("❌ Login failed — check backend logs!");
+                    return;
+                }
+
+                // Step 2: Print cookies to console
+                ApiService.PrintCookies();
+
+                // Step 3: Try fetching stores
+                var stores = await ApiService.GetStoresAsync();
+
+                if (stores == null || stores.Count == 0)
+                {
+                    MessageBox.Show("⚠️ No stores found — maybe backend has no data yet?");
+                }
+                else
+                {
+                    var msg = $"✅ Got {stores.Count} stores:\n" +
+                              string.Join("\n", stores.Select(s => $"• {s.store} ({s.substores.Count} substores)"));
+                    MessageBox.Show(msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"🔥 Exception: {ex.Message}");
+            }
+        }
 
 
         private async Task LoadStoresAndInitialDataAsync()
@@ -53,7 +86,9 @@ namespace IMS.Views
             try
             {
                 // 1) load stores from backend
-                var stores = await ApiService.GetStoresAsync(); // returns list of (store, substores)
+                var stores = await ApiService.GetStoresAsync();
+                //MessageBox.Show($"Fetched {stores.Count} stores");  // 💖 Add this line
+                                                                      // returns list of (store, substores)
                 _storesMeta.Clear();
                 foreach (var (store, subs) in stores)
                 {
@@ -91,6 +126,8 @@ namespace IMS.Views
                     storeItem.Items.Add(subItem);
                 }
                 StoresTree.Items.Add(storeItem);
+                //MessageBox.Show($"Store: {kv.Key} → {kv.Value.Count} substores");
+
             }
         }
 
@@ -154,152 +191,47 @@ namespace IMS.Views
         #endregion
 
         #region Add / Update via overlay
-        private void Add_Click(object sender, RoutedEventArgs e)
+        private async void Add_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(_currentSubStore))
-            {
-                MessageBox.Show("Please select an equipment (sub-store) before adding.");
-                return;
-            }
+            var addWindow = new IMS.Windows.AddLedgerWindow();
+            addWindow.Owner = Window.GetWindow(this);
 
-            _editing = null;
-            ClearFormFields();
-            FormOverlay.Visibility = Visibility.Visible;
+            if (addWindow.ShowDialog() == true)
+            {
+                var newLedger = addWindow.CreatedLedger;
+                if (newLedger != null)
+                {
+                    _activeLedgerItems.Add(newLedger);
+                    LedgerDataGrid.ItemsSource = null;
+                    LedgerDataGrid.ItemsSource = _activeLedgerItems;
+                }
+            }
         }
+
 
         private void Update_Click(object sender, RoutedEventArgs e)
         {
-            if (LedgerDataGrid.SelectedItem is LedgerItem sel)
+            if (LedgerDataGrid.SelectedItem is LedgerItem selected)
             {
-                _editing = sel;
-                PopulateFormFields(sel);
-                FormOverlay.Visibility = Visibility.Visible;
+                var win = new IMS.Windows.UpdateLedgerWindow(selected)
+                {
+                    Owner = Window.GetWindow(this)
+                };
+
+                if (win.ShowDialog() == true)
+                {
+                    _ = LoadLedgerForCurrentSelectionAsync();
+                }
             }
             else
             {
-                MessageBox.Show("Please select a row to update.");
+                MessageBox.Show("Please select a ledger page to update.");
             }
         }
 
-        private void CancelForm_Click(object sender, RoutedEventArgs e)
-        {
-            FormOverlay.Visibility = Visibility.Collapsed;
-            _editing = null;
-        }
 
-        private void PopulateFormFields(LedgerItem it)
-        {
-            // map fields from existing LedgerItem to form textboxes (names f_*)
-            LedgerPage.Text = it.LedgerPage;
-            OHSNo.Text = it.OHSNo;
-            ISGNo.Text = it.ISGNo;
-            SSGNo.Text = it.SSGNo;
-            PartNo.Text = it.PartNo;
-            Nomen.Text = it.Nomen;
-            AU.Text = it.AU;
-            NoOff.Text = it.NoOff;
-            SclAuth.Text = it.SclAuth;
-            UnsvStock.Text = it.UnsvStock;
-            RepStock.Text = it.RepStock;
-            ServStock.Text = it.ServStock;
-            MSC.Text = it.MSC;
-            Group.Text = it.Group;
-            Remarks.Text = it.Remarks;
-        }
-
-        private void ClearFormFields()
-        {
-            LedgerPage.Text = "";
-            OHSNo.Text = "";
-            ISGNo.Text = "";
-            SSGNo.Text = "";
-            PartNo.Text = "";
-            Nomen.Text = "";
-            AU.Text = "";
-            NoOff.Text = "";
-            SclAuth.Text = "";
-            UnsvStock.Text = "";
-            RepStock.Text = "";
-            ServStock.Text = "";
-            MSC.Text = "";
-            Group.Text = "";
-            Remarks.Text = "";
-        }
-
-        private async void OK_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(_currentStore) || string.IsNullOrEmpty(_currentSubStore))
-            {
-                MessageBox.Show("No store/sub-store selected.");
-                return;
-            }
-
-            // Initialize payload to fix CS0165
-            LedgerItem payload = new LedgerItem();
-
-            if (_editing != null)
-            {
-                // If editing, copy the LedgerPage from the selected item
-                payload.LedgerPage = _editing.LedgerPage;
-            }
-            else
-            {
-                // If adding, generate a new LedgerPage GUID
-                payload.LedgerPage = Guid.NewGuid().ToString();
-            }
-
-            payload.OHSNo = OHSNo.Text;
-            payload.ISGNo = ISGNo.Text;
-            payload.SSGNo = SSGNo.Text;
-            payload.PartNo = PartNo.Text;
-            payload.Nomen = Nomen.Text;
-            payload.AU = AU.Text;
-            payload.NoOff = NoOff.Text;
-            payload.SclAuth = SclAuth.Text;
-            payload.UnsvStock = UnsvStock.Text;
-            payload.RepStock = RepStock.Text;
-            payload.ServStock = ServStock.Text;
-            payload.MSC = MSC.Text;
-            payload.Group = Group.Text;
-            payload.Remarks = Remarks.Text;
-            payload.Store = _currentStore;
-            payload.SubStore = _currentSubStore;
-
-            try
-            {
-                if (_editing == null)
-                {
-                    var created = await ApiService.CreateLedgerAsync(payload);
-                    _activeLedgerItems.Add(created);
-                }
-                else
-                {
-                    if (Guid.TryParse(payload.LedgerPage, out Guid ledgerGuid))
-                    {
-                        var updated = await ApiService.UpdateLedgerAsync(payload.LedgerPage, payload);
-                        var idx = _activeLedgerItems.IndexOf(_editing);
-                        if (idx >= 0)
-                        {
-                            _activeLedgerItems[idx] = updated;
-                            LedgerDataGrid.ItemsSource = null;
-                            LedgerDataGrid.ItemsSource = _activeLedgerItems;
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid LedgerPage GUID for update.");
-                    }
-                }
-
-                FormOverlay.Visibility = Visibility.Collapsed;
-                _editing = null;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Save failed: {ex.Message}");
-            }
-        }
-# endregion
+   
+        #endregion
 
         #region Search (client-side)
         private void Search_Click(object sender, RoutedEventArgs e) => ApplyFilter();
@@ -310,7 +242,7 @@ namespace IMS.Views
 
         private void ApplyFilter()
         {
-            var term = (SearchBox.Text ?? "").Trim();
+            var term = (SearchTextBox.Text ?? "").Trim();
             var col = ColumnSelector.SelectedItem as string;
             if (string.IsNullOrWhiteSpace(col) || string.IsNullOrWhiteSpace(term) || _activeLedgerItems == null) return;
 
@@ -327,7 +259,7 @@ namespace IMS.Views
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            SearchBox.Text = "";
+            SearchTextBox.Text = "";
             if (_activeLedgerItems != null) LedgerDataGrid.ItemsSource = _activeLedgerItems;
         }
         #endregion
@@ -409,7 +341,46 @@ namespace IMS.Views
             }
         }
 
+        private void LedgerDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            FilterPopup.IsOpen = !FilterPopup.IsOpen;
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var term = (SearchTextBox.Text ?? "").Trim();
+
+            // if nothing typed, show all ledgers again
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                LedgerDataGrid.ItemsSource = _activeLedgerItems;
+                return;
+            }
+
+            var col = ColumnSelector.SelectedItem as string;
+            if (string.IsNullOrWhiteSpace(col))
+                return;
+
+            // filter dynamically based on the selected column
+            var filtered = _activeLedgerItems.Where(x =>
+            {
+                var p = typeof(LedgerItem).GetProperty(col);
+                if (p == null) return false;
+                var val = p.GetValue(x)?.ToString() ?? "";
+                return val.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0;
+            }).ToList();
+
+            LedgerDataGrid.ItemsSource = filtered;
+        }
+
     }
+
+
 }
 
 

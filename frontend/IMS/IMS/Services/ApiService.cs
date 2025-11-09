@@ -52,7 +52,7 @@ namespace IMS.Services
         public static async Task<bool> LoginAsync(string username, string password)
         {
             var payload = new { username, password };
-            var response = await _client.PostAsJsonAsync("login", payload);
+            var response = await _client.PostAsJsonAsync("auth/login", payload);
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine("❌ Login failed");
@@ -62,11 +62,11 @@ namespace IMS.Services
             PrintCookies();
 
             Debug.WriteLine("✅ Login succeeded");
-            var cookies = ((HttpClientHandler)_handler).CookieContainer
-    .GetCookies(new Uri("http://localhost:8000/"));
+    //        var cookies = ((HttpClientHandler)_handler).CookieContainer
+    //.GetCookies(new Uri("http://localhost:8000/"));
 
-            foreach (Cookie cookie in cookies)
-                Console.WriteLine($"🍪 Cookie stored: {cookie.Name} = {cookie.Value}");
+    //        foreach (Cookie cookie in cookies)
+    //            Console.WriteLine($"🍪 Cookie stored: {cookie.Name} = {cookie.Value}");
 
 
             // HttpClientHandler is already storing cookies automatically
@@ -76,16 +76,16 @@ namespace IMS.Services
 
         // ------------------------------
         // COOKIE SET
-        public static void SetAuthCookie(string name, string value, string domain)
-        {
-            _cookies.Add(new Cookie(name, value) { Domain = domain });
-        }
+        //public static void SetAuthCookie(string name, string value, string domain)
+        //{
+        //    _cookies.Add(new Cookie(name, value) { Domain = domain });
+        //}
 
         // ------------------------------
         // STORES
         public static async Task<List<(string store, List<string> substores)>> GetStoresAsync()
         {
-            var resp = await _client.GetAsync("/ledger/");
+            var resp = await _client.GetAsync("ledger/");
             resp.EnsureSuccessStatusCode();
 
             var json = await resp.Content.ReadAsStringAsync();

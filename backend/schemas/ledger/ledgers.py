@@ -12,7 +12,7 @@ class StoreBase(BaseModel):
 # ======== Ledger ========
 class LedgerBase(BaseModel):
     Ledger_name: str
-    Ledger_code: int
+    Ledger_code: str
 
 
 class LedgerCreate(LedgerBase):

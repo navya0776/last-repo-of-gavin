@@ -1,7 +1,7 @@
 from logging import getLogger
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-DATABASE_URL = "postgresql+psycopg://admin:pass@db:5432/ims"
+DATABASE_URL = "postgresql+psycopg://admin:pass@postgres/ims"
 loggers = getLogger(__name__)
 
 # Create async engine
@@ -42,9 +42,10 @@ async def get_db():
 async def init_db():
     loggers.info("Starting db session")
     async with engine.connect() as conn:
-        from data.models.base import Base
+        async with engine.connect() as conn:
+            from data.models.base import Base
 
-        await conn.run_sync(Base.metadata.create_all)
+            await conn.run_sync(Base.metadata.create_all)
 
 
 async def close_db():

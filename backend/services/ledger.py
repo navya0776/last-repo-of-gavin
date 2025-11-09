@@ -47,24 +47,23 @@ async def add_page(
     session: AsyncSession,
 ):
     try:
-        async with session.begin():
-            ledger = await session.get(Ledger, ledger_code)
+        ledger = await session.get(Ledger, ledger_code)
 
-            if not ledger:
-                logger.critical(
-                    "Ledger not found but ledger page creation request was valid"
-                )
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Internal server error",
-                )
-
-            stmt = (
-                insert(LedgerMaintenance)
-                .values(**ledger_page.model_dump(), ledger_code=ledger_code)
-                .returning(LedgerMaintenance)
+        if not ledger:
+            logger.critical(
+                "Ledger not found but ledger page creation request was valid"
             )
-            result = await session.execute(stmt)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Internal server error",
+            )
+
+        stmt = (
+            insert(LedgerMaintenance)
+            .values(**ledger_page.model_dump(), ledger_code=ledger_code)
+            .returning(LedgerMaintenance)
+        )
+        result = await session.execute(stmt)
         return result.scalar_one()
 
     except SQLAlchemyError as e:
@@ -87,31 +86,30 @@ async def update_page(
     ledger_page: LedgerMaintanenceUpdate,
     session: AsyncSession,
 ):
-    async with session.begin():
-        try:
-            stmt = (
-                select(LedgerMaintenance)
-                .where(
-                    LedgerMaintenance.ledger_code == ledger_code,
-                    LedgerMaintenance.ledger_page == ledger_page.ledger_page,
-                )
-                .with_for_update()  # optional row lock to prevent concurrent updates
+    try:
+        stmt = (
+            select(LedgerMaintenance)
+            .where(
+                LedgerMaintenance.ledger_code == ledger_code,
+                LedgerMaintenance.ledger_page == ledger_page.ledger_page,
             )
-            result = await session.execute(stmt)
-            record = result.scalar_one_or_none()
+            .with_for_update()  # optional row lock to prevent concurrent updates
+        )
+        result = await session.execute(stmt)
+        record = result.scalar_one_or_none()
 
-            if not record:
-                raise HTTPException(status_code=404, detail="Page not found")
+        if not record:
+            raise HTTPException(status_code=404, detail="Page not found")
 
-            # Apply updates (validated from Pydantic model)
-            for key, value in ledger_page.model_dump(exclude_unset=True).items():
-                setattr(record, key, value)
+        # Apply updates (validated from Pydantic model)
+        for key, value in ledger_page.model_dump(exclude_unset=True).items():
+            setattr(record, key, value)
 
-            # Transaction auto-commits on exit from `session.begin()`
-            await session.flush()
-            return status.HTTP_200_OK
-        except:
-            raise HTTPException(status_code=500, detail="Internal Server Error")
+        # Transaction auto-commits on exit from `session.begin()`
+        await session.flush()
+        return status.HTTP_200_OK
+    except:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 async def get_msc_analysis(ledger_code: str, session: AsyncSession):

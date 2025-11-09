@@ -49,26 +49,19 @@ audit_logger = getLogger("audit_logs")
 # -----------------------------------------------------------------------------
 # Endpoint: Fetch User Details
 # -----------------------------------------------------------------------------
-@router.get("/users/{username}", response_model=list[UserModel])
-async def return_user_detail(
-    username: str | None = None,
-    session: AsyncSession = Depends(get_db)
-):
-    """
-    Retrieve details for a specific user or all users if username is None.
-    """
-    if username:
-        result = await session.execute(select(User).where(User.username == username))
-        user = result.scalar()
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="User not found!"
-            )
-        return [UserModel.model_validate(user, from_attributes=True).model_dump()]
-    else:
-        result = await session.execute(select(User))
-        users = result.scalars().all()
-        return [UserModel.model_validate(u).model_dump() for u in users]
+@router.get("/users", response_model=list[UserModel])
+async def get_all_users(session: AsyncSession = Depends(get_db)):
+    result = await session.execute(select(User))
+    return result.scalars().all()
+
+
+@router.get("/users/{username}", response_model=UserModel)
+async def get_user(username: str, session: AsyncSession = Depends(get_db)):
+    result = await session.execute(select(User).where(User.username == username))
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 # -----------------------------------------------------------------------------
@@ -82,7 +75,9 @@ async def create_user(
     Create a new user in the PostgreSQL database.
     """
     username = user_creation_request.username
-    permissions = Permissions.model_validate(user_creation_request.permissions, from_attributes=True)
+    permissions = Permissions.model_validate(
+        user_creation_request.permissions, from_attributes=True
+    )
 
     # Check if username already exists
     result = await session.execute(select(User).where(User.username == username))
@@ -101,11 +96,9 @@ async def create_user(
             role=user_creation_request.role,
             new_user=True,
             permissions=permissions.model_dump(),
-            # permissions=user_creation_request.permissions.model_dump()
         )
 
         session.add(new_user)
-        
     except:
         await session.rollback()
         logger.error(f"Failed to create user '{username}'", exc_info=True)
@@ -138,16 +131,15 @@ async def delete_user(username: str, session: AsyncSession = Depends(get_db)):
             detail=f"User '{username}' not found!",
         )
 
-    async with session.begin():
-        try:
-            await session.delete(user)
-        except:
-            await session.rollback()
-            logger.error(f"Failed to delete user '{username}'", exc_info=True)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to delete user '{username}' due to server error.",
-            )
+    try:
+        await session.delete(user)
+    except:
+        await session.rollback()
+        logger.error(f"Failed to delete user '{username}'", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete user '{username}' due to server error.",
+        )
 
     audit_logger.warning(f"Admin deleted user '{username}'")
 
