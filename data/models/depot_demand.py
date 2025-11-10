@@ -1,7 +1,6 @@
 from sqlalchemy import Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
-from .ledgers import Ledger
 
 
 class Equipment(Base):
@@ -62,8 +61,12 @@ class Dmd_details(Base):
 
     __tablename__ = "demand_details"
 
-    Page_no: Mapped[str] = mapped_column(String(10), nullable=False,
-                                         unique=True)
+    Page_no: Mapped[str] = mapped_column(
+        String(20),
+        ForeignKey("ledger.ledger_page"),
+        nullable=False,
+        primary_key=True
+    )
     Scale_no: Mapped[str] = mapped_column(String(10), nullable=False)
     Part_no: Mapped[str] = mapped_column(String(10), nullable=False)
     Nomenclature: Mapped[str] = mapped_column(String(10), nullable=False)
@@ -72,8 +75,6 @@ class Dmd_details(Base):
     Curr_stk_bal: Mapped[int] = mapped_column(Integer, nullable=False)
     Dues_in: Mapped[int] = mapped_column(Integer, nullable=False)
     Outs_Reqd: Mapped[int] = mapped_column(Integer, nullable=False)
-    Page_no: Mapped[str] = mapped_column(String(20), nullable=False,
-                                         unique=True)
     stk_N_yr: Mapped[int] = mapped_column(Integer, default=0)
     Reqd_as_OHS: Mapped[int] = mapped_column(Integer, default=0)
     Cons_pattern: Mapped[str] = mapped_column(String(6), default="0/0")

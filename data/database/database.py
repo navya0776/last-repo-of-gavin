@@ -44,7 +44,7 @@ async def init_db():
     async with engine.connect() as conn:
         from data.models.base import Base
 
-            await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(Base.metadata.create_all)
 
 
 async def close_db():
