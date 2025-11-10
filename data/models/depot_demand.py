@@ -61,9 +61,12 @@ class Dmd_details(Base):
 
     __tablename__ = "demand_details"
 
-    Page_no: Mapped[str] = mapped_column(String(20), nullable=False,
-                                         ForeignKey("ledger.ledger_page"),
-                                         primary_key=True)
+    Page_no: Mapped[str] = mapped_column(
+        String(20),
+        ForeignKey("ledger.ledger_page"),
+        nullable=False,
+        primary_key=True
+    )
     Scale_no: Mapped[str] = mapped_column(String(10), nullable=False)
     Part_no: Mapped[str] = mapped_column(String(10), nullable=False)
     Nomenclature: Mapped[str] = mapped_column(String(10), nullable=False)
