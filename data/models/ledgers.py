@@ -1,7 +1,6 @@
 from sqlalchemy import Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
-from .depot_demand import Equipment, Dmd_details
 
 
 # 1️⃣ AllStores table
@@ -67,7 +66,7 @@ class Ledger(Base):
     safety_stk: Mapped[int | None] = mapped_column(Integer)
     lpp_dt: Mapped[str | None] = mapped_column(String(50))
     rate: Mapped[float | None] = mapped_column(Float)
-    Rmks: Mapped[str | None] = mapped_column(String(50))
+    rmks: Mapped[str | None] = mapped_column(String(50))
 
     # Relationship to store
     store: Mapped["Stores"] = relationship("Stores", back_populates="ledgers")

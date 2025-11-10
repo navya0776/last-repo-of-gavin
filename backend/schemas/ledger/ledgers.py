@@ -135,8 +135,8 @@ class LedgerMaintenanceResponse(LedgerMaintenanceBase):
     cds_rep_stock: int
     cds_serv_stock: int
     lpp: str | None = None
-    rate: float
-    rmks: str
-    lpp_dt: str
+    rate: float | None = None
+    rmks: str | None = None
+    lpp_dt: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
