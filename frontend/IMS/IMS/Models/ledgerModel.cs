@@ -1,29 +1,53 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.Command;
+using System;
+using System.Configuration;
 
 namespace IMS.Models
 {
-    // Ledger model containing all requested fields (C: keep all and add missing ones)
     public class LedgerItem
     {
-        public string LedgerPage { get; set; }
-        public string OHSNo { get; set; }
-        public string ISGNo { get; set; }
-        public string SSGNo { get; set; }
-        public string PartNo { get; set; }
-        public string Nomen { get; set; }
-        public string AU { get; set; }
-        public string NoOff { get; set; }
-        public string SclAuth { get; set; }
-        public string UnsvStock { get; set; }
-        public string RepStock { get; set; }
-        public string ServStock { get; set; }
-        public string MSC { get; set; }
-        public string Group { get; set; }
-        public string CDS { get; set; }
-        public string LPP { get; set; }
-        public string Remarks { get; set; }
+        public int idx { get; set; }
+        public string Ledger_code { get; set; }
+        public string ledger_page { get; set; }
+        public string? ohs_number { get; set; }
+        public string? isg_number { get; set; }
+        public string? ssg_number { get; set; }
+        public string part_number { get; set; }
+        public string nomenclature { get; set; }
+        public string a_u { get; set; }
+        public int no_off { get; set; }
+        public int scl_auth { get; set; }
+        public int unsv_stock { get; set; }
+        public int rep_stock { get; set; }
+        public int serv_stock { get; set; }
+        public string msc { get; set; }
+        public string ved { get; set; }
+        public string in_house { get; set; }
+        public int? dues_in { get; set; }
+        public int? consumption { get; set; }
+        public string? bin_number { get; set; }
+        public string? group { get; set; }
+
+        // Extra fields from LedgerMaintanenceCreate
+        public string cos_sec { get; set; }
+        public string cab_no { get; set; }
+        public double old_pg_ref { get; set; }
+        public string Assy_Comp { get; set; }
+        public int Re_ord_lvl { get; set; }
+        public int safety_stk { get; set; }
+
+        // Response-only fields
+        public int cds_unsv_stock { get; set; }
+        public int cds_rep_stock { get; set; }
+        public int cds_serv_stock { get; set; }
+        public string? lpp { get; set; }
+        public double rate { get; set; }
+        public string rmks { get; set; }
+        public string lpp_dt { get; set; }
+
+        // Local WPF-side fields
         public string Store { get; set; }
         public string SubStore { get; set; }
     }
-
 }
+

@@ -52,7 +52,7 @@
             <StackPanel Orientation="Horizontal" Margin="5"  >
                 <TextBlock Text="Go to page" Width="70" VerticalAlignment="Center" />
                 <TextBox Width="100" />
-                <TextBlock Text="Scale" Width="50" VerticalAlignment="Center" />
+                <TextBlock Text="Scale" Width="50" VerticalAlignment="Center" Margin="10,0,0,0" />
                 <TextBox Width="100" />
             </StackPanel>
         </StackPanel>

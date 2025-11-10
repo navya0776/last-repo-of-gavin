@@ -6,7 +6,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              mc:Ignorable="d" d:DesignHeight="450" >
 
-    <Grid>
+    <Grid x:Name="SideBar" Visibility="Collapsed">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="SidebarColumn" Width="200"/>
             <ColumnDefinition Width="*"/>
@@ -14,9 +14,6 @@
 
         <!-- Sidebar -->
         <StackPanel Background="#498CE3" Grid.Column="0" x:Name="SidebarStack" >
-            <!-- Toggle button -->
-            <Button x:Name="ToggleSidebarButton" Content="X" Width="40" Height="40" Margin="110,0,0,0" Click="ToggleSidebarButton_Click" Background="Transparent" BorderBrush="Transparent" Style="{DynamicResource SidebarButtonStyle}" />
-
             <!-- Sidebar Buttons -->
             <StackPanel x:Name="MenuButtons">
                 <Expander Header="STORE"  Margin="5" AutomationProperties.IsColumnHeader="True" FontSize="18" >

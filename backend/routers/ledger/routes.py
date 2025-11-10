@@ -6,8 +6,6 @@ from schemas.ledger import (
     LedgerMaintanenceUpdate,
     LedgerMaintenanceResponse,
 )
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from backend.schemas.ledger.stk_analysis import StockAnalysisResult
 from backend.schemas.ledger.ledgers import StoreResponse
 
@@ -29,6 +27,7 @@ from backend.services.ledger import (
     update_page,
 )
 from backend.utils.users import UserPermissions
+from sqlalchemy.ext.asyncio import AsyncSession
 from data.database import get_db
 
 router = APIRouter()
@@ -50,14 +49,7 @@ async def get_all_ledger(
 async def get_ledger_page(
     permissions: UserPermissions,
     ledger_code: str,
-    session: AsyncSession = Depends(get_db),
 ):
-    if not ledger_code:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Provide either ledger_name or ledger_code!",
-        )
-
     if permissions.ledger.read:
         return await get_ledger_pages(ledger_code, session)
 

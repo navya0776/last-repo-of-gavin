@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -16,17 +17,19 @@ namespace IMS.Services
     {
         private static readonly CookieContainer _cookies = new CookieContainer();
         private static readonly HttpClient _client;
+        private static HttpClientHandler _handler;  
+
 
         static ApiService()
         {
-            var handler = new HttpClientHandler()
+            _handler = new HttpClientHandler()
             {
                 UseCookies = true,
                 CookieContainer = _cookies,
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
             };
 
-            _client = new HttpClient(handler)
+            _client = new HttpClient(_handler)
             {
                 BaseAddress = new Uri("http://localhost:8000/")
             };
@@ -35,32 +38,54 @@ namespace IMS.Services
             _client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
+        public static void PrintCookies()
+        {
+            var cookies = _handler.CookieContainer.GetCookies(new Uri("http://localhost:8000/"));
+            foreach (Cookie cookie in cookies)
+            {
+                Console.WriteLine($"🍪 {cookie.Name} = {cookie.Value}");
+            }
+        }
 
         // ------------------------------
         // LOGIN
-        public static async Task<LoginResponse?> LoginAsync(string username, string password)
+        public static async Task<bool> LoginAsync(string username, string password)
         {
             var payload = new { username, password };
-            var resp = await _client.PostAsJsonAsync("/auth/login/", payload);
+            var response = await _client.PostAsJsonAsync("auth/login", payload);
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("❌ Login failed");
+                return false;
+            }
 
-            if (!resp.IsSuccessStatusCode)
-                return null;
+            PrintCookies();
 
-            return await resp.Content.ReadFromJsonAsync<LoginResponse>();
+            Debug.WriteLine("✅ Login succeeded");
+    //        var cookies = ((HttpClientHandler)_handler).CookieContainer
+    //.GetCookies(new Uri("http://localhost:8000/"));
+
+    //        foreach (Cookie cookie in cookies)
+    //            Console.WriteLine($"🍪 Cookie stored: {cookie.Name} = {cookie.Value}");
+
+
+            // HttpClientHandler is already storing cookies automatically
+            return true;
         }
+
 
         // ------------------------------
         // COOKIE SET
-        public static void SetAuthCookie(string name, string value, string domain)
-        {
-            _cookies.Add(new Cookie(name, value) { Domain = domain });
-        }
+        //public static void SetAuthCookie(string name, string value, string domain)
+        //{
+        //    _cookies.Add(new Cookie(name, value) { Domain = domain });
+        //}
 
         // ------------------------------
         // STORES
         public static async Task<List<(string store, List<string> substores)>> GetStoresAsync()
         {
-            var resp = await _client.GetAsync("/stores");
+            var resp = await _client.GetAsync("ledger/");
             resp.EnsureSuccessStatusCode();
 
             var json = await resp.Content.ReadAsStringAsync();
@@ -69,10 +94,18 @@ namespace IMS.Services
             var result = new List<(string store, List<string> subs)>();
             foreach (var r in raw)
             {
-                string store = r.store ?? r.name ?? "";
+                // Match backend keys
+                string store = r.store_name ?? "";
                 List<string> subs = new();
 
-                try { foreach (var s in r.substores) subs.Add((string)s); } catch { }
+                try
+                {
+                    foreach (var s in r.ledgers)
+                    {
+                        subs.Add((string)s.Ledger_name); // from your backend response
+                    }
+                }
+                catch { }
 
                 result.Add((store, subs));
             }
@@ -80,43 +113,47 @@ namespace IMS.Services
             return result;
         }
 
-        // ------------------------------
-        // LEDGER GET
-        public static async Task<List<LedgerItem>> GetLedgerAsync(string store, string substore)
-        {
-            var url = $"/ledger?store={WebUtility.UrlEncode(store)}&substore={WebUtility.UrlEncode(substore)}";
-            var resp = await _client.GetAsync(url);
 
+        // ------------------------------
+        // LEDGER GET (equipment pages)
+        // ------------------------------
+        public static async Task<List<LedgerItem>> GetLedgerAsync(string ledger_code)
+        {
+            var resp = await _client.GetAsync($"/ledger/?ledger_code={ledger_code}");
             resp.EnsureSuccessStatusCode();
 
-            var json = await resp.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<List<LedgerItem>>(json) ?? new();
+            return await resp.Content.ReadFromJsonAsync<List<LedgerItem>>() ?? new();
         }
 
         // ------------------------------
         // LEDGER CREATE
+        // ------------------------------
         public static async Task<LedgerItem?> CreateLedgerAsync(LedgerItem item)
         {
-            var resp = await _client.PostAsJsonAsync("/ledger", item);
+            var resp = await _client.PostAsJsonAsync($"/ledger/?ledger_code={item.Ledger_code}", item);
             resp.EnsureSuccessStatusCode();
             return await resp.Content.ReadFromJsonAsync<LedgerItem>();
         }
 
         // ------------------------------
         // LEDGER UPDATE
-        public static async Task<LedgerItem?> UpdateLedgerAsync(Guid id, LedgerItem item)
+        // ------------------------------
+        public static async Task<LedgerItem?> UpdateLedgerAsync(string pageName, LedgerItem item)
         {
-            var resp = await _client.PutAsJsonAsync($"/ledger/{id}", item);
+            var resp = await _client.PutAsJsonAsync($"/ledger/?ledger_code={item.Ledger_code}", item);
             resp.EnsureSuccessStatusCode();
             return await resp.Content.ReadFromJsonAsync<LedgerItem>();
         }
 
-        // ------------------------------
-        // LEDGER DELETE
-        public static async Task DeleteLedgerAsync(Guid id)
-        {
-            var resp = await _client.DeleteAsync($"/ledger/{id}");
-            resp.EnsureSuccessStatusCode();
-        }
+        //// ------------------------------
+        //// ADD PAGE TO EQUIPMENT
+        //// ------------------------------
+        //public static async Task<bool> AddPageAsync(string equipment, LedgerItem page)
+        //{
+        //    var resp = await _client.PostAsJsonAsync($"/", page);
+        //    resp.EnsureSuccessStatusCode();
+        //    return true;
+        //}
+
     }
 }

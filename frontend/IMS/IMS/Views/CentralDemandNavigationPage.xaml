@@ -48,7 +48,7 @@
                 FontWeight="Bold" 
                 FontSize="10" Margin="10,5,10,195" Grid.Column="1"/>
             <ListBox Grid.Row="1" ItemsSource="{Binding JobList}"
-                Background="#B2E1FF" Margin="10,20,10,0" Grid.Column="1" />
+                Background="#B2E1FF" Margin="10,20,10,0" Grid.Column="1" d:ItemsSource="{d:SampleData ItemCount=5}" />
             <ListBox x:Name="lprList_Copy" ItemsSource="{Binding LPRList}"
                     Background="#FF99C8" d:ItemsSource="{d:SampleData ItemCount=5}" FontSize="6" Grid.Column="1" Margin="10,24,10,50" Grid.Row="2"/>
             <TextBlock FontWeight="Bold" FontSize="10" Grid.Column="1" Margin="10,11,10,191" Grid.Row="2" Text="Stor IV    CDS IV       CRV"/>
@@ -61,58 +61,58 @@
               AutoGenerateColumns="False"
               AlternatingRowBackground="#E8FEE8"
               IsReadOnly="True"
-              Margin="10,10,0,30" 
+              Margin="10,10,-2340,30" 
                   HorizontalScrollBarVisibility="Visible" SelectionChanged="DataGrid_SelectionChanged">
 
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Header="SEL" Binding="{Binding PageNo}"/>
-                <DataGridTextColumn Header="Ledg pPage" Binding="{Binding PartNo}"/>
-                <DataGridTextColumn Header="OHS No" Binding="{Binding Nomenclature}"/>
-                <DataGridTextColumn Header="Part Number" Binding="{Binding UOM}"/>
-                <DataGridTextColumn Header="Spart_no" Binding="{Binding OH}"/>
-                <DataGridTextColumn Header="Nomenclature" Binding="{Binding IND}"/>
-                <DataGridTextColumn Header="A_U" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="No Off" Binding="{Binding DemandDate}"/>
-                <DataGridTextColumn Header="OHS Auth" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Dem" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Addl Dem" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="OSS Iss" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS Iss" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS Stk" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Job No" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Job Date" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Dem No" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Dem dt" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Addi DNo" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Addi dem dt " Binding="{Binding Demand}"/>
-                <DataGridCheckBoxColumn Header="LPR" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="LPR Qty" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="LPR No" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="LPR dt" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Demand Ctrl No" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Demand Ctrl Date" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Curr Stk" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Now Issue" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Recd Qty" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Date NR" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Qty(1)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="OSS IV(1)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="OSS IV_dt(1)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Qty(2)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="OSS IV(2)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="OSS IV_dt(2)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="Qty(3)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="OSS IV(3)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="OSS IV_dt(3)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS qt1" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS IV(1)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS IV_dt(1)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS qt2" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS IV(2)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS IV_dt(2)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS qt3" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS IV(3)" Binding="{Binding Demand}"/>
-                <DataGridTextColumn Header="CDS IV_dt(3)" Binding="{Binding Demand}"/>
+                <DataGridCheckBoxColumn Header="SEL" Binding="{Binding SEL}"/>
+                <DataGridTextColumn Header="Ledg Page" Binding="{Binding LedgPage}"/>
+                <DataGridTextColumn Header="OHS No" Binding="{Binding OHSNo}"/>
+                <DataGridTextColumn Header="Part Number" Binding="{Binding PartNo}"/>
+                <DataGridTextColumn Header="Spart_no" Binding="{Binding Spart_No}"/>
+                <DataGridTextColumn Header="Nomenclature" Binding="{Binding Nomen}"/>
+                <DataGridTextColumn Header="A_U" Binding="{Binding AU}"/>
+                <DataGridTextColumn Header="No Off" Binding="{Binding NoOff}"/>
+                <DataGridTextColumn Header="OHS Auth" Binding="{Binding OHSAuth}"/>
+                <DataGridTextColumn Header="Dem" Binding="{Binding Dem}"/>
+                <DataGridTextColumn Header="Addl Dem" Binding="{Binding AddlDem}"/>
+                <DataGridTextColumn Header="OSS Iss" Binding="{Binding OSSIss}"/>
+                <DataGridTextColumn Header="CDS Iss" Binding="{Binding CDSIss}"/>
+                <DataGridTextColumn Header="CDS Stk" Binding="{Binding CDSStk}"/>
+                <DataGridTextColumn Header="Job No" Binding="{Binding JobNo}"/>
+                <DataGridTextColumn Header="Job Date" Binding="{Binding JobDate}"/>
+                <DataGridTextColumn Header="Dem No" Binding="{Binding DemNo}"/>
+                <DataGridTextColumn Header="Dem dt" Binding="{Binding DemDt}"/>
+                <DataGridTextColumn Header="Addi DNo" Binding="{Binding AddiDno}"/>
+                <DataGridTextColumn Header="Addi dem dt " Binding="{Binding AddiDemdt}"/>
+                <DataGridCheckBoxColumn Header="LPR" Binding="{Binding LPR}"/>
+                <DataGridTextColumn Header="LPR Qty" Binding="{Binding LPRQty}"/>
+                <DataGridTextColumn Header="LPR No" Binding="{Binding LPRNo}"/>
+                <DataGridTextColumn Header="LPR dt" Binding="{Binding LPRdt}"/>
+                <DataGridTextColumn Header="Demand Ctrl No" Binding="{Binding DemandCtrlNo}"/>
+                <DataGridTextColumn Header="Demand Ctrl Date" Binding="{Binding DemandCtrlDate}"/>
+                <DataGridTextColumn Header="Curr Stk" Binding="{Binding CurrStk}"/>
+                <DataGridTextColumn Header="Now Issue" Binding="{Binding NowIssue}"/>
+                <DataGridTextColumn Header="Recd Qty" Binding="{Binding RecdQty}"/>
+                <DataGridTextColumn Header="Date NR" Binding="{Binding DateNR}"/>
+                <DataGridTextColumn Header="Qty(1)" Binding="{Binding Qty1}"/>
+                <DataGridTextColumn Header="OSS IV(1)" Binding="{Binding OSSIV1}"/>
+                <DataGridTextColumn Header="OSS IV_dt(1)" Binding="{Binding OSSIV_dt1}"/>
+                <DataGridTextColumn Header="Qty(2)" Binding="{Binding Qty2}"/>
+                <DataGridTextColumn Header="OSS IV(2)" Binding="{Binding OSSIV2}"/>
+                <DataGridTextColumn Header="OSS IV_dt(2)" Binding="{Binding OSSIV_dt2}"/>
+                <DataGridTextColumn Header="Qty(3)" Binding="{Binding Qty3}"/>
+                <DataGridTextColumn Header="OSS IV(3)" Binding="{Binding OSSIV3}"/>
+                <DataGridTextColumn Header="OSS IV_dt(3)" Binding="{Binding OSSIV_dt3}"/>
+                <DataGridTextColumn Header="CDS qt1" Binding="{Binding CDSqt1}"/>
+                <DataGridTextColumn Header="CDS IV(1)" Binding="{Binding CDSIV1}"/>
+                <DataGridTextColumn Header="CDS IV_dt(1)" Binding="{Binding CDSIV_dt1}"/>
+                <DataGridTextColumn Header="CDS qt2" Binding="{Binding CDSqt2}"/>
+                <DataGridTextColumn Header="CDS IV(2)" Binding="{Binding CDSIV2}"/>
+                <DataGridTextColumn Header="CDS IV_dt(2)" Binding="{Binding CDSIV_dt2}"/>
+                <DataGridTextColumn Header="CDS qt3" Binding="{Binding CDSqt3}"/>
+                <DataGridTextColumn Header="CDS IV(3)" Binding="{Binding CDSIV3}"/>
+                <DataGridTextColumn Header="CDS IV_dt(3)" Binding="{Binding CDSIV_dt3}"/>
                 <DataGridTextColumn Header="Dem ID" Binding="{Binding DemID}"/>
             </DataGrid.Columns>
 

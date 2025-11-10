@@ -4,9 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:IMS.Views"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="AnalysisAP">
+      mc:Ignorable="d"
+      Title="AnalysisAP" Height="466" Width="1422">
 
     <Grid Background="White">
         <Grid.ColumnDefinitions>
@@ -31,7 +30,7 @@
               VerticalAlignment="Stretch"
               BorderBrush="Gray" BorderThickness="0,0,1,1"
               ColumnHeaderHeight="35"
-              FontSize="12" SelectionChanged="LedgerDataGrid_SelectionChanged" >
+              FontSize="8" SelectionChanged="LedgerDataGrid_SelectionChanged" >
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Background" Value="#81B5F7"/>
@@ -96,17 +95,17 @@
                 <Button Content="Print Demand" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue"/>
             </StackPanel>
             <StackPanel Grid.Row="3">
-            <!-- Demand Analysis -->
-            <Button  Content="Demand Analysis" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+                <!-- Demand Analysis -->
+                <Button  Content="Demand Analysis" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
 
-            <!-- Category (MSC) -->
-            <Button  Content="Category (M S C)" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+                <!-- Category (MSC) -->
+                <Button  Content="Category (M S C)" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
 
-            <!-- Category (VED) -->
-            <Button  Content="Category (V E D)" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+                <!-- Category (VED) -->
+                <Button  Content="Category (V E D)" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
 
-            <!-- Dues In/Out -->
-            <Button Grid.Row="9" Content="Dues In/Out" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+                <!-- Dues In/Out -->
+                <Button Grid.Row="9" Content="Dues In/Out" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
             </StackPanel>
 
             <!-- Bottom Section -->

@@ -11,13 +11,13 @@ from backend.core.middleware import get_admin_user
 from backend.schemas.users.permissions import Permissions
 from backend.schemas.users import User as UserModel
 
-from data.database.database import get_db
-from data.database.redis import get_redis
+from data.database import get_db, get_redis
 from data.models.users import User
-
+# from data.models.logs import Log  # Assuming you have a Log model now
 from schemas.admin import CreateUserRequest, LogFetchRequest, LogResponse
 
 router = APIRouter(dependencies=[Depends(get_admin_user)])
+# router = APIRouter()
 logger = getLogger(__name__)
 audit_logger = getLogger("audit_logs")
 
@@ -27,7 +27,7 @@ audit_logger = getLogger("audit_logs")
 # -----------------------------------------------------------------------------
 # @router.post("/logs/", response_model=list[LogResponse])
 # async def return_logs(
-#     logs: LogFetchRequest,
+#     logs: LogFetchRequest, 
 #     session = DBSession
 # ):
 #     """

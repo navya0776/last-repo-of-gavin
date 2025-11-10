@@ -25,8 +25,11 @@ namespace IMS
             }
             else
             {
-                 // exit app if login fails
+                // exit app if login fails
             }
+
+            //MainWindow main = new MainWindow();
+            //main.Show();
         }
 
         public class StringNullOrEmptyToVisibilityConverter : IValueConverter

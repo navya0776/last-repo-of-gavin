@@ -7,8 +7,8 @@
 
     <Grid>
         <DockPanel>
-            <uc:Header DockPanel.Dock="Top" Loaded="Header_Loaded" />
-            <uc:SideDashboard DockPanel.Dock="Left" />
+            <uc:Header DockPanel.Dock="Top" Loaded="Header_Loaded" x:Name="HeaderControl" />
+            <uc:SideDashboard x:Name="SidebarControl" DockPanel.Dock="Left" />
             <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
         </DockPanel>
     </Grid>

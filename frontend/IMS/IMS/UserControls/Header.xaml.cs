@@ -20,9 +20,17 @@ namespace IMS.UserControls
     /// </summary>
     public partial class Header : UserControl
     {
+        public event EventHandler ToggleSidebarRequested;
+
         public Header()
         {
             InitializeComponent();
+        }
+
+        private void MyButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleSidebarRequested?.Invoke(this, EventArgs.Empty);
+
         }
     }
 }

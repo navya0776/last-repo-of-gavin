@@ -1,0 +1,143 @@
+﻿<Window x:Class="IMS.Windows.UpdateLedgerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Update / Close / Re-open Ledger Page"
+        Height="700" Width="1000"
+        Background="#F4F6FA"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Border BorderBrush="#B0C4DE" BorderThickness="1" CornerRadius="8" Padding="15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock Text="Update / Close / Re-open Ledger Page"
+                       FontSize="22" FontWeight="Bold"
+                       Foreground="#273248"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,10"/>
+
+            <!-- Form Grid -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Row 0 -->
+                <TextBlock Text="Ledg Page" Grid.Row="0" Grid.Column="0"/>
+                <TextBox x:Name="LedgerPage" Grid.Row="0" Grid.Column="0" Margin="80,0,0,5"/>
+
+                <TextBlock Text="OHS No" Grid.Row="0" Grid.Column="1"/>
+                <TextBox x:Name="OHSNo" Grid.Row="0" Grid.Column="1" Margin="60,0,0,5"/>
+
+                <TextBlock Text="ISG No" Grid.Row="0" Grid.Column="2"/>
+                <TextBox x:Name="ISGNo" Grid.Row="0" Grid.Column="2" Margin="60,0,0,5"/>
+
+                <TextBlock Text="SSG No" Grid.Row="0" Grid.Column="3"/>
+                <TextBox x:Name="SSGNo" Grid.Row="0" Grid.Column="3" Margin="60,0,0,5"/>
+
+                <!-- Row 1 -->
+                <TextBlock Text="Part No" Grid.Row="1" Grid.Column="0"/>
+                <TextBox x:Name="PartNo" Grid.Row="1" Grid.Column="0" Margin="80,0,0,5"/>
+
+                <TextBlock Text="A_U" Grid.Row="1" Grid.Column="1"/>
+                <TextBox x:Name="AU" Grid.Row="1" Grid.Column="1" Margin="60,0,0,5"/>
+
+                <!-- Row 2 -->
+                <TextBlock Text="Nomen" Grid.Row="2" Grid.Column="0"/>
+                <TextBox x:Name="Nomen" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                         Margin="80,0,0,5" Width="600"/>
+
+                <!-- Row 3 -->
+                <TextBlock Text="COS Section" Grid.Row="3" Grid.Column="0"/>
+                <TextBox x:Name="COSSec" Grid.Row="3" Grid.Column="0" Margin="80,0,0,5"/>
+
+                <TextBlock Text="Component" Grid.Row="3" Grid.Column="1"/>
+                <ComboBox x:Name="AssyComp" Grid.Row="3" Grid.Column="1" Margin="60,0,0,5">
+                    <ComboBoxItem Content="ASSY"/>
+                    <ComboBoxItem Content="COMP"/>
+                </ComboBox>
+
+                <!-- Row 4 -->
+                <TextBlock Text="In Lieu Part" Grid.Row="4" Grid.Column="0"/>
+                <TextBox x:Name="InLieuPart" Grid.Row="4" Grid.Column="0" Margin="100,0,0,5"/>
+
+                <TextBlock Text="Cabin No" Grid.Row="4" Grid.Column="1"/>
+                <TextBox x:Name="CabNo" Grid.Row="4" Grid.Column="1" Margin="70,0,0,5"/>
+
+                <TextBlock Text="Bin No" Grid.Row="4" Grid.Column="2"/>
+                <TextBox x:Name="BinNo" Grid.Row="4" Grid.Column="2" Margin="70,0,0,5"/>
+
+                <!-- Row 5 -->
+                <TextBlock Text="Old Page Ref" Grid.Row="5" Grid.Column="0"/>
+                <TextBox x:Name="OldPgRef" Grid.Row="5" Grid.Column="0" Margin="100,0,0,5"/>
+
+                <TextBlock Text="Item Group/Sub-Assy" Grid.Row="5" Grid.Column="1"/>
+                <TextBox x:Name="ItemGroup" Grid.Row="5" Grid.Column="1" Margin="120,0,0,5"/>
+
+                <!-- Row 6 -->
+                <TextBlock Text="Re-ord Level" Grid.Row="6" Grid.Column="0"/>
+                <TextBox x:Name="ReOrdLvl" Grid.Row="6" Grid.Column="0" Margin="100,0,0,5"/>
+
+                <TextBlock Text="Safety Stock" Grid.Row="6" Grid.Column="1"/>
+                <TextBox x:Name="SafetyStock" Grid.Row="6" Grid.Column="1" Margin="100,0,0,5"/>
+
+                <TextBlock Text="Auth in Scale" Grid.Row="6" Grid.Column="2"/>
+                <TextBox x:Name="SclAuth" Grid.Row="6" Grid.Column="2" Margin="100,0,0,5"/>
+
+                <!-- Row 7 -->
+                <TextBlock Text="Listed Price" Grid.Row="7" Grid.Column="0"/>
+                <TextBox x:Name="ListedPrice" Grid.Row="7" Grid.Column="0" Margin="100,0,0,5"/>
+
+                <TextBlock Text="Eqpt Code" Grid.Row="7" Grid.Column="1"/>
+                <TextBox x:Name="EqptCode" Grid.Row="7" Grid.Column="1" Margin="100,0,0,5"/>
+
+                <!-- Row 8 -->
+                <TextBlock Text="Stock dt" Grid.Row="8" Grid.Column="0"/>
+                <TextBox x:Name="StockDate" Grid.Row="8" Grid.Column="0" Margin="100,0,0,5"/>
+
+                <TextBlock Text="Rep Stk" Grid.Row="8" Grid.Column="1"/>
+                <TextBox x:Name="RepStock" Grid.Row="8" Grid.Column="1" Margin="100,0,0,5"/>
+
+                <!-- Row 9 -->
+                <TextBlock Text="Remarks" Grid.Row="9" Grid.Column="0"/>
+                <TextBox x:Name="Remarks" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3"
+                         Margin="100,0,0,5" Height="60" TextWrapping="Wrap"/>
+
+                <!-- Status -->
+                <TextBlock Text="Page Closed" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" />
+                <TextBox x:Name="PageStatus" Grid.Row="10" Grid.Column="1" Margin="60,0,0,5"/>
+            </Grid>
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="11" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                <Button Content="Close / Re-open" Width="140" Margin="10" Click="ClosePage_Click"/>
+                <Button Content="Update" Width="120" Margin="10" Click="Update_Click"/>
+                <Button Content="Go To" Width="120" Margin="10"/>
+                <Button Content="Cancel" Width="120" Margin="10" Click="Cancel_Click"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

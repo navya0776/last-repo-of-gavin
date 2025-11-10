@@ -1,225 +1,158 @@
-﻿using IMS.Services;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using IMS.Models;
+using IMS.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace IMS.Views
 {
-    public partial class AdminDashboatd : Page
+    public partial class AdminDashboatd : System.Windows.Controls.Page
     {
-
-        public class PermissionItem
-        {
-            public bool read { get; set; }
-            public bool write { get; set; }
-        }
-
-        public class UserDto
-        {
-            public string username { get; set; }
-            public bool new_user { get; set; }
-            public string role { get; set; }
-            public Dictionary<string, PermissionItem> Permissions { get; set; }
-        }
-
-        public class AuditLogRequest
-        {
-            public string? username { get; set; } // null shows ALL
-            public int start { get; set; }
-            public int end { get; set; }
-        }
-
-
-
-
-        // Mock backend store
-        private List<UserDto> _users = new();
-        private UserDto _selectedUser;
-
-        // Available permissions (system supported)
-        private readonly string[] _allPermissions =
-        {
-            "View Ledger", "Edit Ledger", "Export",
-            "Admin Access", "Manage Users", "View Audit Logs"
-        };
-
         public AdminDashboatd()
         {
             InitializeComponent();
-            PopulateUserList();
-            Loaded += AdminDashboatd_Loaded;
-
+            LoadUsers();
         }
-        private async void AdminDashboatd_Loaded(object sender, RoutedEventArgs e)
+
+        private async void RefreshUsers_Click(object sender, RoutedEventArgs e)
         {
-            await LoadUsersAndLogs();
+            await LoadUsers();
         }
 
-        private async Task LoadUsersAndLogs()
-        {
-            try
-            {
-                _users = await ApiClient.PostAsync<List<UserDto>>("admin/users/", null)
-                         ?? new List<UserDto>();
-
-                UsersList.ItemsSource = _users.Select(u => u.username).ToList();
-
-                // Load all audit logs by default
-                var logs = await GetAuditLogs(null, 0, 50);
-                AuditList.ItemsSource = logs ?? new List<AuditLogRequest>();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"LoadUsersAndLogs failed: {ex.Message}");
-            }
-        }
-
-
-        // Mock data loader
-
-        // Fill left list
-        private async void PopulateUserList()
-        {
-            _users = await ApiClient.PostAsync<List<UserDto>>("admin/users/", null);
-
-            if (_users == null)
-            {
-                MessageBox.Show("Failed to load users!");
-                return;
-            }
-
-            UsersList.ItemsSource = _users.Select(u => u.username);
-        }
-
-        private async Task<List<AuditLogRequest>?> GetAuditLogs(string? username, int start, int end)
+        private async Task LoadUsers()
         {
             try
             {
-                var req = new AuditLogRequest
-                {
-                    username = username,
-                    start = start,
-                    end = end
-                };
+                var users = await ApiClient.GetAsync<List<UserResponse>>("admin/users/");
 
-                // endpoint path — update if different
-                var logs = await ApiClient.PostAsync<List<AuditLogRequest>>("admin/audit_logs/", req);
-
-                if (logs == null)
+                if (users == null || users.Count == 0)
                 {
-                    MessageBox.Show("No audit logs returned (null).");
+                    MessageBox.Show("No users found.");
+                    UsersList.ItemsSource = null;
+                    return;
                 }
 
-                return logs;
+                // Bind usernames to the ListBox
+                UsersList.ItemsSource = users;
+                UsersList.DisplayMemberPath = "username"; // 👈 shows username
+                UsersList.SelectedValuePath = "username"; // 👈 easy to get selection
+
+                MessageBox.Show($"✅ Loaded {users.Count} users successfully!");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"GetAuditLogs failed: {ex.Message}\n{ex.StackTrace}");
-                return null;
+                MessageBox.Show($"❌ Error loading users: {ex.Message}");
             }
         }
 
 
-
-        // When user is clicked
-        private async void UsersList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void UsersList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (UsersList.SelectedItem == null)
+            if (UsersList.SelectedItem is UserResponse selectedUser)
             {
-                var logs = await GetAuditLogs(null, 0, 50);
-                AuditList.ItemsSource = logs;
-                return;
+                SelectedUsername.Text = selectedUser.username;
+                SelectedRole.Text = selectedUser.role;
+
+                PermissionsPanel.Children.Clear();
+                foreach (PropertyInfo prop in typeof(Permissions).GetProperties())
+                {
+                    var perm = (BasePermissions)prop.GetValue(selectedUser.permissions);
+                    var permText = new TextBlock
+                    {
+                        Text = $"{prop.Name}: Read = {perm.read}, Write = {perm.write}",
+                        Margin = new Thickness(2)
+                    };
+                    PermissionsPanel.Children.Add(permText);
+                }
             }
-
-            string username = UsersList.SelectedItem.ToString();
-
-            // Fetch user detail from backend 
-            _selectedUser = await ApiClient.GetAsync<UserDto>($"admin/users/{username}/");
-
-
-
-            if (_selectedUser == null)
-            {
-                MessageBox.Show("User details not found!");
-                return;
-            }
-
-            SelectedUsername.Text = _selectedUser.username;
-            SelectedRole.Text = _selectedUser.role;
-
-            PopulatePermissionCheckboxes();
-            var userLogs = await GetAuditLogs(_selectedUser.username, 0, 50);
-            AuditList.ItemsSource = userLogs;
-
         }
 
 
-
-        // Dynamically generate permission checkboxes
-        private void PopulatePermissionCheckboxes()
+        private Permissions BuildPermissions()
         {
-            PermissionsPanel.Children.Clear();
-
-            if (_selectedUser?.Permissions == null) return;
-
-            foreach (var kv in _selectedUser.Permissions)
+            // Define all required permission keys as per backend
+            string[] keys = new[]
             {
-                var stack = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 4, 0, 4) };
+        "ledger",
+        "apd",
+        "overhaul_scale",
+        "recieve_voucher",
+        "issue_voucher",
+        "local_purchase_indent",
+        "local_purchase_quotation",
+        "local_purchase_recieved",
+        "local_purchase_ordinance",
+        "local_purchase_pay",
+        "local_purchase_query",
+        "local_purchase_ammend"
+    };
 
-                stack.Children.Add(new TextBlock
+            var permissions = new Permissions();
+
+            // Initialize every permission to {read=false, write=false}
+            foreach (var key in keys)
+            {
+                var prop = typeof(Permissions).GetProperty(key);
+                if (prop != null)
                 {
-                    Text = kv.Key,
-                    Width = 160,
-                    VerticalAlignment = VerticalAlignment.Center
-                });
-
-                stack.Children.Add(new CheckBox
-                {
-                    Content = "Read",
-                    IsChecked = kv.Value.read,
-                    IsEnabled = false,
-                    VerticalAlignment = VerticalAlignment.Center
-                });
-
-                stack.Children.Add(new CheckBox
-                {
-                    Content = "Write",
-                    IsChecked = kv.Value.write,
-                    IsEnabled = false,
-                    Margin = new Thickness(8, 0, 0, 0),
-                    VerticalAlignment = VerticalAlignment.Center
-                });
-
-                PermissionsPanel.Children.Add(stack);
+                    prop.SetValue(permissions, new BasePermissions { read = false, write = false });
+                }
             }
+
+            // Update based on actual checkboxes
+            foreach (var key in keys)
+            {
+                // Look for checkboxes named like LedgerRead, LedgerWrite, etc.
+                var readCheckbox = FindName($"{key.First().ToString().ToUpper() + key.Substring(1)}Read") as CheckBox;
+                var writeCheckbox = FindName($"{key.First().ToString().ToUpper() + key.Substring(1)}Write") as CheckBox;
+
+                var prop = typeof(Permissions).GetProperty(key);
+                if (prop != null)
+                {
+                    prop.SetValue(permissions, new BasePermissions
+                    {
+                        read = readCheckbox?.IsChecked == true,
+                        write = writeCheckbox?.IsChecked == true
+                    });
+                }
+            }
+
+            return permissions;
         }
 
 
-        // On checking/unchecking permissions
+        private async void SubmitNewUser_Click(object sender, RoutedEventArgs e)
+        {
+            var newUser = new UserCreateRequest
+            {
+                username = NewUsernameInput.Text.Trim(),
+                password = NewPasswordInput.Password.Trim(),
+                role = (RoleComboBox.SelectedItem as ComboBoxItem)?.Content.ToString(),
+                permissions = BuildPermissions()
+            };
+
+            var result = await ApiClient.PostAsync<object>("admin/user", newUser);
+            MessageBox.Show(result != null ? "✅ User created successfully!" : "❌ Failed to create user.");
+        }
 
 
-        // Save button click
 
 
-        // Audit logs popup mock
+        private async void DeleteUser_Click(object sender, RoutedEventArgs e)
+        {
+            // optional delete implementation
+        }
+
         private void ViewAuditLogs_Click(object sender, RoutedEventArgs e)
         {
-            /*
-             * Send me JSON
-             * {
-             *   username: string | None, string for a specific user, None for all users
-             *   start: int, start from today's number of audit logs - x 
-             *   end: self explanatory
-             *   }
-             */
-            /*
-             * Same as above
-             */
-
-            MessageBox.Show("Audit Logs:\n- Admin modified user permissions\n- StoreA_user exported Ledger");
+            // optional log viewer
         }
-    }
 
+
+    }
 }

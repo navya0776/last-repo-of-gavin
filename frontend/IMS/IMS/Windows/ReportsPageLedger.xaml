@@ -1,0 +1,45 @@
+﻿<Window x:Class="IMS.Windows.ReportsPageLedger"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IMS.Windows"
+        mc:Ignorable="d"
+        Title="ReportsPageLedger" Height="350" Width="400"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterOwner">
+    <Border Margin="15" CornerRadius="8" Background="White" Padding="15" BorderBrush="#D0D0D0" BorderThickness="1">
+        <StackPanel>
+            <TextBlock Text="Select Report" 
+                       FontWeight="Bold" 
+                       FontSize="16"
+                       Foreground="#003366"
+                       Margin="0,0,0,10" 
+                       HorizontalAlignment="Center"/>
+            <ListBox x:Name="ReportsList" 
+                     FontSize="14"
+                     Height="180"
+                     BorderThickness="1"
+                     BorderBrush="#CCCCCC"
+                     Background="#FAFAFA"
+                     SelectionMode="Single">
+                <ListBoxItem Content="Current Stock Report"/>
+                <ListBoxItem Content="MSC Analysis Report"/>
+                <ListBoxItem Content="VED Analysis Report"/>
+                <ListBoxItem Content="Vital"/>
+                <ListBoxItem Content="Desiraable"/>
+                <ListBoxItem Content="Essential"/>
+                <ListBoxItem Content="Scaled items"/>
+                <ListBoxItem Content="Non-Scaled Items"/>
+                <ListBoxItem Content="Must Change"/>
+                <ListBoxItem Content="Should Change"/>
+                <ListBoxItem Content="Could Change"/>
+            </ListBox>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                <Button x:Name="OkButton" Content="Open" Width="80" Height="30" Margin="0,0,10,0" Background="#007ACC" Foreground="White" Click="OkButton_Click"/>
+                <Button x:Name="CancelButton" Content="Cancel" Width="80" Height="30" Background="#E0E0E0" Click="CancelButton_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>
