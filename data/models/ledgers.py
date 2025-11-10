@@ -1,21 +1,23 @@
 from sqlalchemy import Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from .base import Base
+from .depot_demand import Equipment, Dmd_details
 
 
 # 1️⃣ AllStores table
-class AllStores(Base):
-    __tablename__ = "all_stores"
+class Stores(Base):
+    __tablename__ = "stores"
 
-    store_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    store_id: Mapped[int] = mapped_column(Integer, primary_key=True,
+                                          autoincrement=True)
 
     store_name: Mapped[str] = mapped_column(
         String(50), nullable=False, unique=True, default="Store"
     )
 
     # One store has many ledgers
-    ledgers = relationship("Ledger", back_populates="store", cascade="all, delete")
+    ledgers = relationship("Ledger", back_populates="store",
+                           cascade="all, delete")
 
 
 class Ledger(Base):
@@ -24,27 +26,13 @@ class Ledger(Base):
     store_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("all_stores.store_id"), nullable=False
     )
-    Ledger_code: Mapped[str] = mapped_column(
-        String, primary_key=True, nullable=False, index=True
+    Ledger_code: Mapped[str] = mapped_column(String(4), primary_key=True,
+                                             nullable=False)
+    Ledger_name: Mapped[str] = mapped_column(
+        String(50), nullable=False
     )
-    Ledger_name: Mapped[str] = mapped_column(String(50), nullable=False)
-
-    store = relationship("AllStores", back_populates="ledgers")
-
-    maintenance_records = relationship(
-        "LedgerMaintenance", back_populates="ledger", cascade="all, delete"
-    )
-
-
-class LedgerMaintenance(Base):
-    __tablename__ = "ledger_maintenance"
-
-    idx: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    # Foreign key — links to parent Ledger
-    ledger_code: Mapped[str] = mapped_column(
-        String(4), ForeignKey("ledger.Ledger_code"), nullable=False, index=True
-    )
-    ledger_page: Mapped[str] = mapped_column(String(20), nullable=False)
+    ledger_page: Mapped[str] = mapped_column(String(20), nullable=False,
+                                             unique=True)
     ohs_number: Mapped[str] = mapped_column(String(50))
     isg_number: Mapped[str] = mapped_column(String(50))
     ssg_number: Mapped[str] = mapped_column(String(50))
@@ -56,8 +44,10 @@ class LedgerMaintenance(Base):
     unsv_stock: Mapped[int] = mapped_column(Integer, default=0)
     rep_stock: Mapped[int] = mapped_column(Integer, default=0)
     serv_stock: Mapped[int] = mapped_column(Integer, default=0)
-    msc: Mapped[Enum | None] = mapped_column(Enum("M", "S", "C", name="msc_enum"))
-    ved: Mapped[Enum | None] = mapped_column(Enum("V", "E", "D", name="ved_enum"))
+    msc: Mapped[Enum | None] = mapped_column(Enum("M", "S", "C",
+                                                  name="msc_enum"))
+    ved: Mapped[Enum | None] = mapped_column(Enum("V", "E", "D",
+                                                  name="ved_enum"))
     in_house: Mapped[Enum | None] = mapped_column(
         Enum("in_house", "ORD", name="in_house_enum")
     )
@@ -79,5 +69,12 @@ class LedgerMaintenance(Base):
     rate: Mapped[float | None] = mapped_column(Float)
     Rmks: Mapped[str | None] = mapped_column(String(50))
 
-    # Relationship back to Ledger
-    ledger = relationship("Ledger", back_populates="maintenance_records")
+    # Relationship to store
+    store: Mapped["Stores"] = relationship("Stores", back_populates="ledgers")
+    # Relationship to equipment
+    eqpt: Mapped["Equipment"] = relationship("Equipment",
+                                             back_populates="ledger",
+                                             uselist=False)
+    demand_details: Mapped[list["Dmd_details"]] = relationship(
+        "Dmd_details",
+        back_populates="dmd_ledgers")
