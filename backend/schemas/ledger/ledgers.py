@@ -35,7 +35,6 @@ class StoreResponse(StoreBase):
 
 # ======== LedgerMaint ========
 class LedgerMaintenanceBase(BaseModel):
-    idx: int
     ledger_page: str
     ohs_number: str | None = None
     isg_number: str | None = None
@@ -48,9 +47,9 @@ class LedgerMaintenanceBase(BaseModel):
     unsv_stock: int
     rep_stock: int
     serv_stock: int
-    msc: Literal["M", "S", "C"]
-    ved: Literal["V", "E", "D"]
-    in_house: Literal["in_house", "ORD"]
+    msc: Literal["M", "S", "C"] | None = None
+    ved: Literal["V", "E", "D"] | None = None
+    in_house: Literal["in_house", "ORD"] | None = None
     dues_in: int | None = None
     consumption: int | None = None
     bin_number: str | None = None

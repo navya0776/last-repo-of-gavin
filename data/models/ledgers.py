@@ -23,7 +23,7 @@ class Ledger(Base):
     __tablename__ = "ledger"
 
     store_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("all_stores.store_id"), nullable=False
+        Integer, ForeignKey("stores.store_id"), nullable=False
     )
     Ledger_code: Mapped[str] = mapped_column(String(4), primary_key=True,
                                              nullable=False)
@@ -32,9 +32,9 @@ class Ledger(Base):
     )
     ledger_page: Mapped[str] = mapped_column(String(20), nullable=False,
                                              unique=True)
-    ohs_number: Mapped[str] = mapped_column(String(50))
-    isg_number: Mapped[str] = mapped_column(String(50))
-    ssg_number: Mapped[str] = mapped_column(String(50))
+    ohs_number: Mapped[str | None] = mapped_column(String(50))
+    isg_number: Mapped[str | None] = mapped_column(String(50))
+    ssg_number: Mapped[str | None] = mapped_column(String(50))
     part_number: Mapped[str] = mapped_column(String(50), nullable=False)
     nomenclature: Mapped[str] = mapped_column(String(255), nullable=False)
     a_u: Mapped[str] = mapped_column(String(10), nullable=False)
@@ -66,7 +66,7 @@ class Ledger(Base):
     safety_stk: Mapped[int | None] = mapped_column(Integer)
     lpp_dt: Mapped[str | None] = mapped_column(String(50))
     rate: Mapped[float | None] = mapped_column(Float)
-    rmks: Mapped[str | None] = mapped_column(String(50))
+    Rmks: Mapped[str | None] = mapped_column(String(50))
 
     # Relationship to store
     store: Mapped["Stores"] = relationship("Stores", back_populates="ledgers")
