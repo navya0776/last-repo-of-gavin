@@ -1,6 +1,0 @@
-env:
-  Solution_Name: frontend/IMS.sln
-  Test_Project_Path: test/Frontend_test/IMS.test.csproj
-  Wap_Project_Directory: frontend/IMS/IMS.Package
-  Wap_Project_Path: frontend/IMS/IMS.Package/IMS.Package.wapproj
-  Configuration: Release
