@@ -11,15 +11,16 @@ from backend.schemas.ledger import (
     LedgerMaintanenceUpdate,
     LedgerMaintenanceResponse,
 )
+
 from backend.schemas.ledger.stk_analysis import StockCategoryBreakdown
-from data.models.ledgers import AllStores, Ledger, LedgerMaintenance
+from data.models.ledgers import Stores, Ledger
 
 logger = getLogger(__name__)
 
 
 async def get_all_ledgers(session: AsyncSession):
     result = await session.execute(
-        select(AllStores).options(selectinload(AllStores.ledgers))
+        select(Stores).options(selectinload(Stores.ledgers))
     )
 
     return result.scalars().all()
@@ -29,13 +30,14 @@ async def get_ledger_pages(
     ledger_code: str,
     session: AsyncSession,
 ) -> list[LedgerMaintenanceResponse]:
-    stmt = select(LedgerMaintenance).where(LedgerMaintenance.ledger_code == ledger_code)
+    stmt = select(Ledger).where(Ledger.ledger_code == ledger_code)
     result = await session.stream_scalars(stmt)
 
     pages = []
     async for record in result:
         pages.append(
-            LedgerMaintenanceResponse.model_validate(record, from_attributes=True)
+            LedgerMaintenanceResponse.model_validate(
+                record, from_attributes=True)
         )
 
     return pages
@@ -59,9 +61,9 @@ async def add_page(
             )
 
         stmt = (
-            insert(LedgerMaintenance)
+            insert(Ledger)
             .values(**ledger_page.model_dump(), ledger_code=ledger_code)
-            .returning(LedgerMaintenance)
+            .returning(Ledger)
         )
         result = await session.execute(stmt)
         return result.scalar_one()
@@ -88,10 +90,10 @@ async def update_page(
 ):
     try:
         stmt = (
-            select(LedgerMaintenance)
+            select(Ledger)
             .where(
-                LedgerMaintenance.ledger_code == ledger_code,
-                LedgerMaintenance.ledger_page == ledger_page.ledger_page,
+                Ledger.ledger_code == ledger_code,
+                Ledger.ledger_page == ledger_page.ledger_page,
             )
             .with_for_update()  # optional row lock to prevent concurrent updates
         )
@@ -117,21 +119,21 @@ async def get_msc_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.msc,
+            Ledger.msc,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.msc)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
+        .group_by(Ledger.msc)
+        .where(Ledger.ledger_code == ledger_code)
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -165,21 +167,21 @@ async def get_ved_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.ved,
+            Ledger.ved,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.ved)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
+        .group_by(Ledger.ved)
+        .where(Ledger.ledger_code == ledger_code)
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -213,22 +215,22 @@ async def get_must_change_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.msc,
+            Ledger.msc,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.msc)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.msc == "M")
+        .group_by(Ledger.msc)
+        .where(Ledger.ledger_code == ledger_code)
+        .where(Ledger.msc == "M")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -262,22 +264,22 @@ async def get_shoud_change_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.msc,
+            Ledger.msc,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.msc)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.msc == "S")
+        .group_by(Ledger.msc)
+        .where(Ledger.ledger_code == ledger_code)
+        .where(Ledger.msc == "S")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -311,22 +313,22 @@ async def get_could_change_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.msc,
+            Ledger.msc,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.msc)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.msc == "C")
+        .group_by(Ledger.msc)
+        .where(Ledger.ledger_code == ledger_code)
+        .where(Ledger.msc == "C")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -360,22 +362,22 @@ async def get_vital_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.ved,
+            Ledger.ved,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.ved)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.ved == "V")
+        .group_by(Ledger.ved)
+        .where(Ledger.ledger_code == ledger_code)
+        .where(Ledger.ved == "V")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -409,22 +411,22 @@ async def get_essential_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.ved,
+            Ledger.ved,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.ved)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.ved == "E")
+        .group_by(Ledger.ved)
+        .where(Ledger.ledger_code == ledger_code)
+        .where(Ledger.ved == "E")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -458,22 +460,22 @@ async def get_desirable_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.ved,
+            Ledger.ved,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.ved)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.ved == "D")
+        .group_by(Ledger.ved)
+        .where(Ledger.ledger_code == ledger_code)
+        .where(Ledger.ved == "D")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -506,19 +508,19 @@ async def get_item_analysis(ledger_code: str, session: AsyncSession):
     """Compute stock breakdowns asynchronously."""
     # Example: group by M/S/C category
     msc_query = select(
-        LedgerMaintenance,
+        Ledger,
         func.count().label("total_qty"),
-        func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-        func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-        func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-        func.sum(LedgerMaintenance.dues_in).label("D_in"),
-        func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-        func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-        func.count(LedgerMaintenance.serv_stock == 0).fi.label("zero_stk"),
-        func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-        func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-        func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
-    ).where(LedgerMaintenance.ledger_code == ledger_code)
+        func.sum(Ledger.unsv_stock).label("unsv_stk"),
+        func.sum(Ledger.rep_stock).label("rep_stk"),
+        func.sum(Ledger.serv_stock).label("ser_stk"),
+        func.sum(Ledger.dues_in).label("D_in"),
+        func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+        func.sum(Ledger.safety_stk).label("safety_stk"),
+        func.count(Ledger.serv_stock == 0).fi.label("zero_stk"),
+        func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+        func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+        func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
+    ).where(Ledger.ledger_code == ledger_code)
     result = await session.execute(msc_query)
     row = result.mappings().first()
 
@@ -551,22 +553,22 @@ async def get_scaled_item_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.ohs_number,
+            Ledger.ohs_number,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.ohs_number)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.ohs_number != "NS")
+        .group_by(Ledger.ohs_number)
+        .where(Ledger.ledger_code == ledger_code)
+        .where(Ledger.ohs_number != "NS")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()
@@ -600,22 +602,22 @@ async def get_non_scaled_item_analysis(ledger_code: str, session: AsyncSession):
     # Example: group by M/S/C category
     msc_query = (
         select(
-            LedgerMaintenance.ohs_number,
+            Ledger.ohs_number,
             func.count().label("total_qty"),
-            func.sum(LedgerMaintenance.unsv_stock).label("unsv_stk"),
-            func.sum(LedgerMaintenance.rep_stock).label("rep_stk"),
-            func.sum(LedgerMaintenance.serv_stock).label("ser_stk"),
-            func.sum(LedgerMaintenance.dues_in).label("D_in"),
-            func.sum(LedgerMaintenance.Re_ord_lvl).label("re_ord_lvl"),
-            func.sum(LedgerMaintenance.safety_stk).label("safety_stk"),
-            func.count(LedgerMaintenance.serv_stock == 0).label("zero_stk"),
-            func.count(LedgerMaintenance.serv_stock < 2).label("stk_less_than_2"),
-            func.count(LedgerMaintenance.serv_stock < 5).label("stk_less_than_5"),
-            func.count(LedgerMaintenance.serv_stock < 10).label("stk_less_than_10"),
+            func.sum(Ledger.unsv_stock).label("unsv_stk"),
+            func.sum(Ledger.rep_stock).label("rep_stk"),
+            func.sum(Ledger.serv_stock).label("ser_stk"),
+            func.sum(Ledger.dues_in).label("D_in"),
+            func.sum(Ledger.Re_ord_lvl).label("re_ord_lvl"),
+            func.sum(Ledger.safety_stk).label("safety_stk"),
+            func.count(Ledger.serv_stock == 0).label("zero_stk"),
+            func.count(Ledger.serv_stock < 2).label("stk_less_than_2"),
+            func.count(Ledger.serv_stock < 5).label("stk_less_than_5"),
+            func.count(Ledger.serv_stock < 10).label("stk_less_than_10"),
         )
-        .group_by(LedgerMaintenance.ohs_number)
-        .where(LedgerMaintenance.ledger_code == ledger_code)
-        .where(LedgerMaintenance.ohs_number == "NS")
+        .group_by(Ledger.ohs_number)
+        .where(Ledger.ledger_code == ledger_code)
+        .where(Ledger.ohs_number == "NS")
     )
     result = await session.execute(msc_query)
     row = result.mappings().first()

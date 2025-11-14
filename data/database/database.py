@@ -1,9 +1,14 @@
 from logging import getLogger
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+import os
 
-DATABASE_URL = "postgresql+psycopg://admin:pass@postgres/ims"
 loggers = getLogger(__name__)
 
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL not set. Export DATABASE_URL."
+    )
 # Create async engine
 # NOTE: Set this as the total pgadmin
 # max_connections : (num of gunicorn workers) * (pool_size + max_overflow)

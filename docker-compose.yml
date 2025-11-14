@@ -1,5 +1,7 @@
 services:
   backend:
+    env_file:
+      - .env
     build: .
     container_name: backend
     ports:
@@ -7,19 +9,13 @@ services:
     depends_on:
       - db
       - redis
-    environment:
-      POSTGRES_URI: postgresql+psycopg://admin:pass@postgres:5432/ims
-      REDIS_URL: redis://redis:6379/0
-      ENV: production
     restart: always
 
   db:
+    env_file:
+      - .env
     image: postgres:18
     container_name: postgres
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: ims
     ports:
       - "5432:5432"
     volumes:

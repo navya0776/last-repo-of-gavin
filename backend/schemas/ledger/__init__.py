@@ -121,7 +121,7 @@ class LedgerMaintenanceResponse(LedgerMaintenanceBase):
     cds_serv_stock: int
     lpp: str | None = None
     rate: float
-    rmks: str
+    Rmks: str
     lpp_dt: str
 
     model_config = {"from_attributes": True}

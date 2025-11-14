@@ -1,47 +1,26 @@
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String
+from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
-
-
-class Equipment(Base):
-
-    __tablename__ = "eqpt_table"
-
-    eqpt_code: Mapped[str] = mapped_column(String, primary_key=True,
-                                           nullable=False)
-    eqpt_name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-
-    Ledger_code: Mapped[int] = mapped_column(String(4),
-                                             ForeignKey("ledger.Ledger_code"),
-                                             nullable=False,
-                                             unique=True)
-
-    ledger: Mapped[list["Ledger"]] = relationship("Ledger",
-                                                  back_populates="eqpt")
-
-    dmd: Mapped[list["Demand"]] = relationship("Demand",
-                                               back_populates="eqpt",
-                                               cascade="all, delete")
 
 
 class Demand(Base):
     __tablename__ = "Demand_table"
 
     eqpt_code: Mapped[str] = mapped_column(
-        String, ForeignKey("eqpt_table.eqpt_code"), nullable=False
+        String, ForeignKey("eqpt.eqpt_code"), nullable=False
     )
-    demand_no: Mapped[str] = mapped_column(String(10), primary_key=True,
-                                           nullable=False)
+    demand_no: Mapped[int] = mapped_column(Integer, primary_key=True,
+                                           nullable=False, autoincrement=True)
     demand_type: Mapped[Enum] = mapped_column(
         Enum("APD", "SPD", name="dmd_type_enum"), nullable=False
     )
-    equipment_code: Mapped[str] = mapped_column(String(50), nullable=False)
-    equipment_name: Mapped[str] = mapped_column(String(100))
+    eqpt_name: Mapped[str] = mapped_column(
+        String(11), ForeignKey("eqpt.eqpt_name"), nullable=False)
     fin_year: Mapped[str] = mapped_column(
-                    String(9),  # 'YYYY-YYYY' → 9 chars
-                    nullable=False,
-                    index=True,
-                    doc="Financial year in format YYYY-YYYY")
+        String(9),  # 'YYYY-YYYY' → 9 chars
+        nullable=False,
+        index=True,
+        doc="Financial year in format YYYY-YYYY")
 
     demand_auth: Mapped[str | None] = mapped_column(String(100))
     full_received: Mapped[int] = mapped_column(Integer, default=0)
@@ -51,7 +30,9 @@ class Demand(Base):
     remarks: Mapped[str | None] = mapped_column(String(255))
 
     eqpt: Mapped["Equipment"] = relationship("Equipment",
-                                             back_populates="dmd")
+                                             back_populates="dmd",
+                                             uselist=False)
+
     dmd_details: Mapped[list["Dmd_details"]] = relationship(
         "Dmd_details",
         back_populates="demand")
@@ -67,6 +48,14 @@ class Dmd_details(Base):
         nullable=False,
         primary_key=True
     )
+
+    demand_no: Mapped[int] = mapped_column(Integer,
+                                           ForeignKey("Demand_table.demand_no"),
+                                           nullable=False)
+
+    is_locked: Mapped[bool] = mapped_column(Boolean,
+                                            nullable=False)
+
     Scale_no: Mapped[str] = mapped_column(String(10), nullable=False)
     Part_no: Mapped[str] = mapped_column(String(10), nullable=False)
     Nomenclature: Mapped[str] = mapped_column(String(10), nullable=False)
@@ -85,5 +74,6 @@ class Dmd_details(Base):
 
     dmd_ledgers: Mapped["Ledger"] = relationship("Ledger",
                                                  back_populates="demand_details")
+
     demand: Mapped["Demand"] = relationship("Demand",
-                                            back_populates="dmd_details")
+                                            back_populates="dmd_details", foreign_keys=[demand_no])

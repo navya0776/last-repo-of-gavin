@@ -1,5 +1,6 @@
 from sqlalchemy import Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from .base import Base
 
 
@@ -25,13 +26,14 @@ class Ledger(Base):
     store_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("stores.store_id"), nullable=False
     )
-    Ledger_code: Mapped[str] = mapped_column(String(4), primary_key=True,
+    Ledger_code: Mapped[str] = mapped_column(String(4),
+                                             ForeignKey("eqpt.Ledger_code"),
                                              nullable=False)
     Ledger_name: Mapped[str] = mapped_column(
         String(50), nullable=False
     )
     ledger_page: Mapped[str] = mapped_column(String(20), nullable=False,
-                                             unique=True)
+                                             primary_key=True)
     ohs_number: Mapped[str | None] = mapped_column(String(50))
     isg_number: Mapped[str | None] = mapped_column(String(50))
     ssg_number: Mapped[str | None] = mapped_column(String(50))
@@ -70,10 +72,7 @@ class Ledger(Base):
 
     # Relationship to store
     store: Mapped["Stores"] = relationship("Stores", back_populates="ledgers")
-    # Relationship to equipment
-    eqpt: Mapped["Equipment"] = relationship("Equipment",
-                                             back_populates="ledger",
+    Eqpt: Mapped["Equipment"] = relationship("Equipment", back_populates="legder",
                                              uselist=False)
-    demand_details: Mapped[list["Dmd_details"]] = relationship(
-        "Dmd_details",
-        back_populates="dmd_ledgers")
+    cds_ledger: Mapped["CdsJunction"] = relationship(
+        "CdsJunction", back_populates="ledger_cds")
