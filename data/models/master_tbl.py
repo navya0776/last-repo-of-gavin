@@ -21,3 +21,5 @@ class Equipment(Base):
 
     job: Mapped[list["JobMaster"]] = relationship("JobMaster", back_populates="Eqpt", cascade="all, delete")
 
+
+    cds_Eqpt: Mapped["CDS"] = relationship("CDS", back_populates="Eqpt_cds")

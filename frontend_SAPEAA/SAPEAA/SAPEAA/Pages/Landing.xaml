@@ -1,0 +1,252 @@
+﻿<Page x:Class="SAPEAA.Pages.Landing"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SAPEAA.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Landing">
+    <Page.Resources>
+        <!-- Brand palette -->
+        <SolidColorBrush x:Key="TealDark" Color="#1E6B83"/>
+        <SolidColorBrush x:Key="Teal" Color="#05B5A8"/>
+        <SolidColorBrush x:Key="Orange" Color="#E96C5F"/>
+
+        <!-- Card drop shadow -->
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="20" ShadowDepth="4" Opacity="0.35"/>
+
+        <!-- Button style with hover to orange + icon swap -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Height" Value="280"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="#2DB8B3"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#AcademySans"/>
+            <Setter Property="Template">
+
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <!-- soft shadow -->
+                            <Border CornerRadius="10" Background="#00000000">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="15" ShadowDepth="10" Opacity="0.35"/>
+                                </Border.Effect>
+                            </Border>
+
+                            <!-- button body -->
+                            <Border x:Name="Body" CornerRadius="10"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- ICON: two images (black/white), swap on hover -->
+                                    <Grid VerticalAlignment="Center">
+                                        <Image x:Name="IconBlack" Width="84" Height="84" 
+                                           Source="Assets/Cart_Black.png" />
+                                        <Image x:Name="IconWhite" Width="84" Height="84" 
+                                           Source="Assets/Cart_White.png" Opacity="0" />
+                                    </Grid>
+
+                                    <TextBlock Grid.Row="1" Text="{TemplateBinding Content}" 
+                                           Margin="0,14,0,16" FontSize="24"
+                                      
+                                           FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- hover -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Body" Property="Background" Value="{StaticResource Orange}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="IconBlack" Property="Opacity" Value="0"/>
+                                <Setter TargetName="IconWhite" Property="Opacity" Value="1"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource Orange}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Body" Property="Background" Value="#D85F53"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <!-- LAYER 1: gradient background -->
+        <Rectangle Grid.ColumnSpan="2">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#B7E3F7" Offset="0"/>
+                    <GradientStop Color="#7DD5EA" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- LAYER 2: tiled logos evenly spaced, low opacity -->
+        <!-- Put your mono logo PNG at Assets/logo_gear.png -->
+        <Rectangle Opacity="0.10" Grid.ColumnSpan="2">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="/Assets/SAPEAA.png"
+                    TileMode="Tile" Stretch="Uniform"
+                    AlignmentX="Center" AlignmentY="Center"
+                    ViewportUnits="Absolute" Viewport="0,0,180,180"/>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- CENTER CARD with GRADIENT BORDER -->
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="900" Height="600" Grid.Column="1">
+            <!-- gradient stroke -->
+            <Rectangle RadiusX="26" RadiusY="26" StrokeThickness="40" Fill="Transparent">
+                <Rectangle.Stroke>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{Binding Color, Source={StaticResource TealDark}}" Offset="0"/>
+                        <GradientStop Color="{Binding Color, Source={StaticResource Teal}}" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Stroke>
+                <Rectangle.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.25"/>
+                </Rectangle.Effect>
+            </Rectangle>
+
+            <!-- white inner area -->
+            <Border Margin="10" CornerRadius="40" Background="White" />
+
+            <!-- content -->
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- header -->
+                <TextBlock Grid.Row="2" Margin="0,80,0,446" HorizontalAlignment="Center"
+                   FontSize="40" FontWeight="SemiBold">
+            <Run Text="Choose your "  FontFamily="pack://application:,,,/Fonts/#AcademySans"/>
+            <Run Text="Action" Foreground="{StaticResource Orange}" FontFamily="pack://application:,,,/Fonts/#AcademySans" />
+                </TextBlock>
+
+                <!-- divider -->
+                <Rectangle Grid.Row="1" Height="1" Fill="#E2E2E2" Margin="24,0"/>
+
+                <!-- buttons -->
+                <Grid Grid.Row="2" Margin="0,30,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Purchase -->
+                    <Button Grid.Column="0" Style="{StaticResource ActionButton}"
+                    Content="Purchase" Click="Purchase_Click" Margin="100,168,60,101">
+                        <!-- override the default icons for this instance -->
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <Border CornerRadius="10" Background="#00000000">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="15" ShadowDepth="6" Opacity="0.35"/>
+                                        </Border.Effect>
+                                    </Border>
+                                    <Border x:Name="Body" CornerRadius="10"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="#2DB8B3" BorderThickness="6">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid VerticalAlignment="Center">
+                                                <Image x:Name="IconBlack" Width="130" Height="130" Source="/Assets/Cart_Black.png"/>
+                                                <Image x:Name="IconWhite" Width="130" Height="130" Source="/Assets/Cart_White.png" Opacity="0"/>
+                                            </Grid>
+                                            <TextBlock Grid.Row="1" Text="{TemplateBinding Content}" Margin="0,10,0,16"
+                                               FontSize="40" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Body" Property="Background" Value="{StaticResource Orange}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter TargetName="IconBlack" Property="Opacity" Value="0"/>
+                                        <Setter TargetName="IconWhite" Property="Opacity" Value="1"/>
+                                        <Setter TargetName="Body" Property="BorderBrush" Value="Transparent"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="Body" Property="Background" Value="#D85F53"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Analysis -->
+                    <Button Grid.Column="1" Margin="60,168,100,101"
+                    Style="{StaticResource ActionButton}" Content="Analysis"
+                    Click="Analysis_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <Border CornerRadius="10" Background="#00000000">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="15" ShadowDepth="6" Opacity="0.35"/>
+                                        </Border.Effect>
+                                    </Border>
+                                    <Border x:Name="Body" CornerRadius="10"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="#2DB8B3" BorderThickness="6">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid VerticalAlignment="Center">
+                                                <Image x:Name="IconBlack" Width="130" Height="130" Source="/Assets/Analysis_Black.png"/>
+                                                <Image x:Name="IconWhite" Width="130" Height="130" Source="/Assets/Analysis_WHite.png" Opacity="0"/>
+                                            </Grid>
+                                            <TextBlock Grid.Row="1" Text="{TemplateBinding Content}" Margin="0,10,0,16"
+                                               FontSize="40" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Body" Property="Background" Value="{StaticResource Orange}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter TargetName="IconBlack" Property="Opacity" Value="0"/>
+                                        <Setter TargetName="IconWhite" Property="Opacity" Value="1"/>
+                                        <Setter TargetName="Body" Property="BorderBrush" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="4"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="Body" Property="Background" Value="#D85F53"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Page>

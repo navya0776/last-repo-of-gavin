@@ -1,4 +1,4 @@
-﻿namespace Sapeaa_test
+﻿namespace SAPEAA.Tests
 {
     [TestClass]
     public sealed class Test1

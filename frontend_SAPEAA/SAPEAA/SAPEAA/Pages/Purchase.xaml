@@ -1,0 +1,249 @@
+﻿<Page x:Class="SAPEAA.Pages.Purchase"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SAPEAA.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Purchase">
+    
+    
+    <Page.Resources>
+        <!-- Colors -->
+        <SolidColorBrush x:Key="TealDark" Color="#1E6B83"/>
+        <SolidColorBrush x:Key="Teal" Color="#05B5A8"/>
+        <SolidColorBrush x:Key="Orange" Color="#E96C5F"/>
+
+        <!-- Role tile item style -->
+        <Style x:Key="RoleComboBoxItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="Padding" Value="18,18"/>
+            <Setter Property="Margin" Value="8,8,8,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="12"
+                                SnapsToDevicePixels="True"
+                                BorderBrush="#EEE" BorderThickness="1">
+                            <ContentPresenter Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource Orange}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource Orange}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Role ComboBox appearance / popup -->
+        <Style x:Key="RoleComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="MinWidth" Value="160"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <!-- Closed appearance: user icon + text inside a small rounded box -->
+                            <Border x:Name="Box" Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="8" Padding="6" >
+                                <DockPanel>
+                                    <Image Source="/Assets/user.png" Width="18" Height="18" Margin="6,0" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                    <ContentPresenter x:Name="ContentSite"
+                                                      Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                      Margin="6,0,24,0"
+                                                      VerticalAlignment="Center"/>
+                                    <!-- Chevron -->
+                                    <TextBlock Text="▾" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#666" FontSize="12" Margin="0,0,6,0"/>
+                                </DockPanel>
+                            </Border>
+
+                            <Popup x:Name="PART_Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                <Border Background="Transparent" Padding="10">
+                                    <Border Background="#FCFCFC" CornerRadius="12" Padding="8" BorderBrush="#EEE" BorderThickness="1" >
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="380">
+                                            <ItemsPresenter/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Page.Resources>
+
+    <Grid>
+        <!-- Background -->
+        <Rectangle>
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#B7E3F7" Offset="0"/>
+                    <GradientStop Color="#7DD5EA" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Rectangle Opacity="0.12">
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="/Assets/SAPEAA.png" TileMode="Tile" Stretch="Uniform"
+                    Viewport="0,0,90,90" ViewportUnits="Absolute"/>
+            </Rectangle.Fill>
+        </Rectangle>
+
+
+        <!-- Sidebar -->
+        <Border Width="70" Background="White" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="0.818"/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="0.786"/>
+                </TransformGroup>
+            </Border.RenderTransform>
+            <StackPanel Margin="0,25,0,0">
+                <Image Source="/Assets/SAPEAA_logo.png" Width="50"/>
+                <TextBlock Text="SAPEAA" FontWeight="Bold" FontFamily="AcademySans" HorizontalAlignment="Center" Margin="0,8,0,28"/>
+
+                <!--<Button Background="Transparent" BorderThickness="0" Cursor="Hand">
+                    <Image Source="/Assets/Dashboard.png" Width="32"/>
+                </Button>
+                <Button Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="0,25,0,0">
+                    <Image Source="/Assets/help.png" Width="32"/>
+                </Button>
+                <Button Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="0,25,0,0">
+                    <Image Source="/Assets/Noti.png" Width="32"/>
+                </Button>
+                <Button Background="Transparent" BorderThickness="0" Cursor="Hand" Margin="0,25,0,0">
+                    <Image Source="/Assets/Profile.png" Width="32"/>
+                </Button>-->
+
+            </StackPanel>
+        </Border>
+        
+        
+        
+        <!-- Main Content -->
+        <StackPanel Margin="130,30,30,30">
+
+            <!-- Toggle (Purchase / Analysis) -->
+            <Border Background="White" CornerRadius="16" Padding="14" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+
+                    <!-- PURCHASE (active) -->
+                    <Border Background="#E96C5F" Padding="8,4" CornerRadius="10" Margin="0,0,14,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/Cart_White.png" Width="22" Margin="0,0,6,0"/>
+                            <TextBlock Text="Purchase" Foreground="White" FontSize="16"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ANALYSIS BUTTON -->
+                    <Button Content="Analysis"
+                Click="Analysis_Click"
+                FontSize="16"
+                Padding="8,4"
+                Background="White"
+                BorderBrush="#1E6B83"
+                BorderThickness="1"
+                Cursor="Hand"/>
+                </StackPanel>
+            </Border>
+
+
+            <!-- Purchase header -->
+            <Grid Margin="0,30,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Height="80" CornerRadius="14" Background="#05B5A8" Grid.ColumnSpan="2">
+                    <TextBlock Text="Purchase" VerticalAlignment="Center" Margin="24,0"
+                               FontSize="40" FontWeight="SemiBold" Foreground="White"/>
+                </Border>
+
+                <Image Source="/Assets/Cart_White.png" Width="68" VerticalAlignment="Center" Grid.Column="1" Margin="15,0,10,0"/>
+            </Grid>
+
+            <!-- Date + Role Row -->
+            <Grid Margin="0,8,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+
+                <StackPanel Orientation="Horizontal">
+                    <DatePicker x:Name="FromDate" SelectedDate="{Binding FromDate}" Margin="0,0,12,0"/>
+                    <TextBlock Text="To" FontSize="18" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <DatePicker x:Name="ToDate" SelectedDate="{Binding ToDate}"/>
+                </StackPanel>
+
+                <!-- Right: Role dropdown using the styles above -->
+                <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <TextBlock Text=" " Width="6" />
+                    <ComboBox x:Name="RoleBox"
+                              Style="{StaticResource RoleComboBoxStyle}"
+                              ItemContainerStyle="{StaticResource RoleComboBoxItemStyle}"
+                              ItemsSource="{Binding AvailableRoles}"
+                              SelectedItem="{Binding SelectedRole, Mode=TwoWay}"
+                              Width="220"
+                              VerticalAlignment="Center"
+                              IsSynchronizedWithCurrentItem="False"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Tile Buttons -->
+            <UniformGrid Columns="2" Margin="0,20,0,0">
+                <Button Style="{DynamicResource PurchaseButton}" Content="Job/Equipment" Tag="Job" Click="Tile_Click" Margin="0,0,8,8"/>
+                <Button Style="{DynamicResource PurchaseButton}" Content="CRV" Tag="CRV" Click="Tile_Click" Margin="8,0,0,8"/>
+
+                <Button Style="{DynamicResource PurchaseButton}" Content="LPR" Tag="LPR" Click="Tile_Click" Margin="0,0,8,8"/>
+                <Button Style="{DynamicResource PurchaseButton}" Content="Bill" Tag="Bill" Click="Tile_Click" Margin="8,0,0,8"/>
+
+                <Button Style="{DynamicResource PurchaseButton}" Content="Indent" Tag="Indent" Click="Tile_Click" Margin="0,0,8,8"/>
+                <Button Style="{DynamicResource PurchaseButton}" Content="Database" Tag="Database" Click="Tile_Click" Margin="8,0,0,8"/>
+
+                <Button Style="{DynamicResource PurchaseButton}" Content="Order" Tag="Order" Click="Tile_Click" Margin="0,0,8,8"/>
+                <Button Style="{DynamicResource PurchaseButton}" Content="Query" Tag="Query" Click="Tile_Click" Margin="8,0,0,8"/>
+
+                <Button Style="{DynamicResource PurchaseButton}" Content="Inspection Note" Tag="InspNote" Click="Tile_Click" Margin="0,0,8,8"/>
+                <Button Style="{DynamicResource PurchaseButton}" Content="System" Tag="System" Click="Tile_Click" Margin="8,0,0,8"/>
+
+                <Button Style="{DynamicResource PurchaseButton}" Content="Analysis" Tag="AnalysisPurchase" Click="Tile_Click" Margin="0,0,8,0"/>
+            </UniformGrid>
+
+
+        </StackPanel>
+        
+        
+
+
+
+
+
+    </Grid>
+</Page>
