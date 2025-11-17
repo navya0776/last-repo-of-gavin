@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\AcademySans-Bold.ttf" />
+    <None Remove="Assets\AcademySans-BoldItalic.ttf" />
+    <None Remove="Assets\AcademySans-DemiBold.ttf" />
+    <None Remove="Assets\AcademySans-DemiBoldItalic.ttf" />
+    <None Remove="Assets\AcademySans-Heavy.ttf" />
+    <None Remove="Assets\AcademySans-HeavyItalic.ttf" />
+    <None Remove="Assets\AcademySans-Italic.ttf" />
+    <None Remove="Assets\AcademySans-Light.ttf" />
+    <None Remove="Assets\AcademySans-LightItalic.ttf" />
+    <None Remove="Assets\AcademySans.ttf" />
+    <None Remove="Assets\Analysis_Black.png" />
+    <None Remove="Assets\Analysis_WHite.png" />
+    <None Remove="Assets\Cart_Black.png" />
+    <None Remove="Assets\Cart_White.png" />
+    <None Remove="Assets\Dashboard.png" />
+    <None Remove="Assets\help.png" />
+    <None Remove="Assets\Noti.png" />
+    <None Remove="Assets\Profile.png" />
+    <None Remove="Assets\SAPEAA.png" />
+    <None Remove="Assets\SAPEAA_logo.png" />
+    <None Remove="Assets\user.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\AcademySans-Bold.ttf" />
+    <Resource Include="Assets\AcademySans-BoldItalic.ttf" />
+    <Resource Include="Assets\AcademySans-DemiBold.ttf" />
+    <Resource Include="Assets\AcademySans-DemiBoldItalic.ttf" />
+    <Resource Include="Assets\AcademySans-Heavy.ttf" />
+    <Resource Include="Assets\AcademySans-HeavyItalic.ttf" />
+    <Resource Include="Assets\AcademySans-Italic.ttf" />
+    <Resource Include="Assets\AcademySans-Light.ttf" />
+    <Resource Include="Assets\AcademySans-LightItalic.ttf" />
+    <Resource Include="Assets\AcademySans.ttf" />
+    <Resource Include="Assets\Analysis_Black.png" />
+    <Resource Include="Assets\Analysis_WHite.png" />
+    <Resource Include="Assets\Cart_Black.png" />
+    <Resource Include="Assets\Cart_White.png" />
+    <Resource Include="Assets\Dashboard.png" />
+    <Resource Include="Assets\help.png" />
+    <Resource Include="Assets\Noti.png" />
+    <Resource Include="Assets\Profile.png" />
+    <Resource Include="Assets\SAPEAA.png" />
+    <Resource Include="Assets\SAPEAA_logo.png" />
+    <Resource Include="Assets\user.png" />
+  </ItemGroup>
+
+</Project>
