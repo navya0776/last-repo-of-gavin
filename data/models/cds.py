@@ -81,7 +81,7 @@ class CDS(Base):
 
     demands: Mapped["JobMaster"] = relationship("JobMaster",
                                                 back_populates="jobs")
-    Eqpt: Mapped["Equipment"] = relationship("Equipment", back_populates="job")
+    Eqpt_cds: Mapped["Equipment"] = relationship("Equipment", back_populates="cds_Eqpt")
     cds_cdsJunc: Mapped["CdsJunction"] = relationship("CdsJunction",
                                                       back_populates="cdsJunc_cds")
 
