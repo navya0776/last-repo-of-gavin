@@ -16,7 +16,7 @@ from datetime import date
 
 
 # ===========================
-# Task Master
+# Job Master
 # ===========================
 class JobMaster(Base):
     __tablename__ = "job_master"
@@ -62,6 +62,8 @@ class JobMaster(Base):
     Eqpt: Mapped["MasterTable"] = relationship(
         "MasterTable", back_populates="job")
     jobs: Mapped[list["CDS"]] = relationship("CDS", back_populates="demands")
+    job_lpr: Mapped["LPR"] = relationship("LPR", back_populates="lpr_job")
+
 
 # ===========================
 # CDS Table
@@ -130,7 +132,45 @@ class CdsJunction(Base):
     cds_iv2: Mapped[str] = mapped_column(String(20), nullable=True)
     cds_ivdt2: Mapped[date] = mapped_column(Date, nullable=True)
 
-    cdsJunc_cds:  Mapped["CDS"] = relationship("CDS",
-                                               back_populates="cds_cdsJunc")
-    ledger_cds: Mapped["Ledger"] = relationship(
-        "Ledger", back_populates="cds_ledger")
+    cdsJunc_cds:  Mapped["CDS"] = relationship("CDS",back_populates="cds_cdsJunc")
+    ledger_cds: Mapped["Ledger"] = relationship("Ledger", back_populates="cds_ledger")
+
+# ===========================
+#CDS table
+# ===========================
+
+class cds_table(Base):
+    __tablename__ = "cds_table"
+
+    # ---- COMPOSITE PRIMARY KEY ----
+    ledger_code: Mapped[str] = mapped_column(
+        String(4),
+        ForeignKey("master_table.Ledger_code"),
+        primary_key=True
+    )
+
+    eqpt_code: Mapped[str] = mapped_column(
+        String(4),
+        ForeignKey("master_table.eqpt_code"),
+        primary_key=True
+    )
+
+    # ---- OTHER FIELDS ----
+    equipment_name: Mapped[str] = mapped_column(
+        String(50),
+        unique=True,
+        nullable=False
+    )
+
+    grp: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        unique=True
+    )
+    head: Mapped[str] = mapped_column(String(15), nullable=False)
+    db:Mapped[str] = mapped_column(String(20), nullable=False,unique=True)
+    # ---- RELATIONSHIPS ----
+
+    eqpt: Mapped["MasterTable"] = relationship(
+        "MasterTable",
+        back_populates="added_eqpt",foreign_keys=[eqpt_code])

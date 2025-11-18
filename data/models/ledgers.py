@@ -1,6 +1,5 @@
 from sqlalchemy import Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from .base import Base
 
 
@@ -27,11 +26,10 @@ class Ledger(Base):
         Integer, ForeignKey("stores.store_id"), nullable=False
     )
     Ledger_code: Mapped[str] = mapped_column(String(4),
-                                             ForeignKey("master_table.Ledger_code"),
+                                             ForeignKey(
+                                             "master_table.Ledger_code"),
                                              nullable=False)
-    Ledger_name: Mapped[str] = mapped_column(
-        String(50), nullable=False
-    )
+
     ledger_page: Mapped[str] = mapped_column(String(20), nullable=False,
                                              primary_key=True)
     ohs_number: Mapped[str | None] = mapped_column(String(50))
@@ -77,6 +75,9 @@ class Ledger(Base):
     )
 
     Eqpt: Mapped["MasterTable"] = relationship("MasterTable", back_populates="legder",
-                                             uselist=False)
+                                               uselist=False, foreign_keys=[Ledger_code])
     cds_ledger: Mapped["CdsJunction"] = relationship(
         "CdsJunction", back_populates="ledger_cds")
+
+    ledger_lpr_junc: Mapped["LPR_Junction"] = relationship(
+        "LPR_Junction", back_populates="lpr_ledger_junc")
