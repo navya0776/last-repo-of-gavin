@@ -1,11 +1,8 @@
 all:
-	@echo "Starting docker containers"
-	@docker compose up -d
-
-build:
 	@echo "Building docker containers backend"
-	@docker compose up -d --build backend
+	@docker compose up -d --build
 
 clean:
 	@echo "Stopping and removing docker containers"
 	@docker compose down -v
+	@rm -rf data/alembic/versions/*.py

@@ -1,4 +1,4 @@
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Date
+from sqlalchemy import ForeignKey, Integer, String, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 from datetime import date
@@ -23,7 +23,7 @@ class JobMaster(Base):
 
     job_no: Mapped[int] = mapped_column(Integer, primary_key=True)
     eqpt_code: Mapped[str] = mapped_column(
-        String(4), ForeignKey("eqpt.eqpt_code"))
+        String(4), ForeignKey("master_table.eqpt_code"))
     eqpt_name: Mapped[str] = mapped_column(String(50))
     job_date: Mapped[date] = mapped_column(Date)
     no_eqpt: Mapped[int] = mapped_column(Integer)
@@ -59,7 +59,8 @@ class JobMaster(Base):
     VIR_DT3: Mapped[int] = mapped_column(Integer, nullable=True)
     VIR_DEM3: Mapped[int] = mapped_column(Integer, nullable=True)
     VIR_ISS3: Mapped[int] = mapped_column(Integer, nullable=True)
-    Eqpt: Mapped["Equipment"] = relationship("Equipment", back_populates="job")
+    Eqpt: Mapped["MasterTable"] = relationship(
+        "MasterTable", back_populates="job")
     jobs: Mapped[list["CDS"]] = relationship("CDS", back_populates="demands")
 
 # ===========================
@@ -74,14 +75,15 @@ class CDS(Base):
     job_no: Mapped[int] = mapped_column(Integer, ForeignKey("job_master.job_no"
                                                             ))
     eqpt_code: Mapped[str] = mapped_column(String(4),
-                                           ForeignKey("eqpt.eqpt_code"
+                                           ForeignKey("master_table.eqpt_code"
                                                       ))
     job_date: Mapped[date] = mapped_column(Date)
     dem_date: Mapped[date] = mapped_column(Date, nullable=True)
 
     demands: Mapped["JobMaster"] = relationship("JobMaster",
                                                 back_populates="jobs")
-    Eqpt_cds: Mapped["Equipment"] = relationship("Equipment", back_populates="cds_Eqpt")
+    Eqpt_cds: Mapped["MasterTable"] = relationship(
+        "MasterTable", back_populates="cds_Eqpt")
     cds_cdsJunc: Mapped["CdsJunction"] = relationship("CdsJunction",
                                                       back_populates="cdsJunc_cds")
 

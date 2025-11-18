@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.schemas.ledger import (
+from ..schemas import (
     LedgerMaintanenceCreate,
     LedgerMaintanenceUpdate,
     LedgerMaintenanceResponse,

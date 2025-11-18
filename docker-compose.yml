@@ -11,6 +11,7 @@ services:
       - redis
     restart: always
 
+
   db:
     env_file:
       - .env

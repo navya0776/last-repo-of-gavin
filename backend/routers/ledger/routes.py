@@ -1,7 +1,7 @@
 import asyncio
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from schemas.ledger import (
+from backend.schemas import (
     LedgerMaintanenceCreate,
     LedgerMaintanenceUpdate,
     LedgerMaintenanceResponse,
