@@ -166,7 +166,7 @@ class cds_table(Base):
         unique=True
     )
     head: Mapped[str] = mapped_column(String(15), nullable=False)
-    db:Mapped[str] = mapped_column(String(20), nullable=False,unique=True)
+    db:Mapped[str] = mapped_column(String(20), nullable=False)
     # ---- RELATIONSHIPS ----
 
     eqpt: Mapped["MasterTable"] = relationship(

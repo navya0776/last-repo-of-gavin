@@ -6,7 +6,7 @@ from backend.schemas.CDS.cds import AddEquipmentCreate, AddEquipmentView,CDSView
 from backend.utils.users import UserPermissions
 from data.database import get_db
 from data.models.cds import cds_table
-
+from data.models.master_tbl import MasterTable
 router = APIRouter(
     prefix="/cds",
     tags=["CDS Table"]
@@ -52,31 +52,68 @@ async def add_equipment(
     if not perms.ledger.write:
         raise HTTPException(status_code=403, detail="Not allowed to write CDS")
 
-    # Check duplicate entry using composite key
-    existing = await session.scalar(
-        select(cds_table).where(
-            cds_table.eqpt_code == payload.eqpt_code,
-            cds_table.ledger_code == payload.ledger_code
+    # -------------------------------------------------------
+    # VALIDATE THAT eqpt_code + ledger_code EXIST IN MASTER TABLE
+    # -------------------------------------------------------
+    master_exists = await session.scalar(
+        select(MasterTable).where(
+            MasterTable.eqpt_code == payload.eqpt_code,
+            MasterTable.Ledger_code == payload.ledger_code
         )
     )
-    if existing:
-        raise HTTPException(status_code=400, detail="Equipment already exists in CDS table")
+    if not master_exists:
+        raise HTTPException(
+            status_code=400,
+            detail="eqpt_code + ledger_code pair not found in master_table"
+        )
 
-    # Insert new row
+    # -------------------------------------------------------
+    # VALIDATE EQUIPMENT NAME (PRIMARY KEY)
+    # -------------------------------------------------------
+    existing_name = await session.scalar(
+        select(cds_table).where(
+            cds_table.equipment_name == payload.equipment_name
+        )
+    )
+    if existing_name:
+        raise HTTPException(
+            status_code=400,
+            detail="equipment_name already exists in CDS table"
+        )
+
+    # -------------------------------------------------------
+    # VALIDATE GRP (UNIQUE)
+    # -------------------------------------------------------
+    existing_grp = await session.scalar(
+        select(cds_table).where(
+            cds_table.grp == payload.grp
+        )
+    )
+    if existing_grp:
+        raise HTTPException(
+            status_code=400,
+            detail="grp already exists — grp must remain unique"
+        )
+
+    # -------------------------------------------------------
+    # INSERT NEW ROW
+    # -------------------------------------------------------
     new_entry = cds_table(
         ledger_code=payload.ledger_code,
         eqpt_code=payload.eqpt_code,
         equipment_name=payload.equipment_name,
         grp=payload.grp,
         head=payload.head,
-        db=payload.db,
+        db=payload.db,   # db is NOT UNIQUE anymore
     )
 
     session.add(new_entry)
     await session.commit()
     await session.refresh(new_entry)
 
-    # Return CDSView_primary mapping
+    # -------------------------------------------------------
+    # RETURN FORMATTED RESPONSE
+    # -------------------------------------------------------
     return {
         "eqpt_name": new_entry.equipment_name,
         "Database": new_entry.db,
