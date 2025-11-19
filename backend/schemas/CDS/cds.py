@@ -26,6 +26,8 @@ class AddEquipmentCreate(AddEquipmentBase):
 
     equipment_name: str = Field(..., min_length=4)
 
+    db: str = Field(..., min_length=1)
+
     @field_validator("*", mode="before")
     def strip_strings(cls, v):
         if isinstance(v, str):
