@@ -146,19 +146,17 @@ class cds_table(Base):
     ledger_code: Mapped[str] = mapped_column(
         String(4),
         ForeignKey("master_table.Ledger_code"),
-        primary_key=True
     )
 
     eqpt_code: Mapped[str] = mapped_column(
         String(4),
         ForeignKey("master_table.eqpt_code"),
-        primary_key=True
     )
 
     # ---- OTHER FIELDS ----
     equipment_name: Mapped[str] = mapped_column(
         String(50),
-        unique=True,
+        primary_key=True,
         nullable=False
     )
 

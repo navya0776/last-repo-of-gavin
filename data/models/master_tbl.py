@@ -5,6 +5,7 @@ from .depot_demand import Demand
 from .cds import cds_table
 from .ledgers import Ledger
 
+
 class MasterTable(Base):
     __tablename__ = "master_table"
 
@@ -41,6 +42,7 @@ class MasterTable(Base):
         back_populates="Eqpt",
         cascade="all, delete"
     )
-    
+
     added_eqpt: Mapped["cds_table"] = relationship(
-        "cds_table", back_populates="", cascade="all, delete", foreign_keys=[cds_table.eqpt_code])
+        "cds_table", back_populates="", cascade="all, delete",
+        foreign_keys=[cds_table.eqpt_code])
