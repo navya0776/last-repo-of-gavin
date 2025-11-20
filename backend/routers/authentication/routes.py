@@ -1,5 +1,4 @@
 import asyncio
-from datetime import datetime, timedelta
 from hashlib import sha256
 from logging import getLogger
 from uuid import uuid4
@@ -11,7 +10,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.schemas.authentication import ForgetPasswordRequest, LoginRequest
 from backend.core.middleware import get_current_user
-from backend.schemas.users import User as UserModel
 
 from data.database import get_redis, get_db
 from data.models.users import User

@@ -1,41 +1,40 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from backend.schemas.CDS.cds import AddEquipmentCreate, AddEquipmentView,CDSView_primary
+from sqlalchemy import select, insert
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.schemas.CDS.cds import (
+    AddEquipmentCreate,
+    CDSView_primary,
+    JobMasterCreate,
+    JobMasterView,
+)
 from backend.utils.users import UserPermissions
 from data.database import get_db
-from data.models.cds import cds_table
+from data.models.cds import cds_table, JobMaster
 from data.models.master_tbl import MasterTable
-router = APIRouter(
-    prefix="/cds",
-    tags=["CDS Table"]
-)
+
+router = APIRouter()
+
 
 # ============================================================
 #  GET ALL ENTRIES FROM cds_table
 # ============================================================
-@router.get("/list", response_model=list[CDSView_primary])
+@router.get(
+    "/",
+    response_model=list[CDSView_primary],
+    description="List's all the equipments in CDS",
+)
 async def list_all_equipment(
-    perms: UserPermissions,
-    session: AsyncSession = Depends(get_db)
+    perms: UserPermissions, session: AsyncSession = Depends(get_db)
 ):
-    if not perms.ledger.read:
+    if not perms.cds.read:
         raise HTTPException(status_code=403, detail="Not allowed to read CDS")
 
-    stmt = select(
-        cds_table.ledger_code,
-        cds_table.eqpt_code,
-        cds_table.equipment_name.label("eqpt_name"),
-        cds_table.grp,
-        cds_table.head,
-        cds_table.db.label("Database")
-    )
+    result = await session.scalars(select(cds_table))
 
-    result = await session.execute(stmt)
-    rows = result.mappings().all()
-
-    return rows
+    return [CDSView_primary.model_validate(row) for row in result.all()]
 
 
 # ============================================================
@@ -43,82 +42,81 @@ async def list_all_equipment(
 # ============================================================
 
 
-@router.post("/add", response_model=CDSView_primary)
+@router.post("/")
 async def add_equipment(
     payload: AddEquipmentCreate,
     perms: UserPermissions,
-    session: AsyncSession = Depends(get_db)
+    session: AsyncSession = Depends(get_db),
 ):
-    if not perms.ledger.write:
+    if not perms.cds.write:
         raise HTTPException(status_code=403, detail="Not allowed to write CDS")
 
     # -------------------------------------------------------
     # VALIDATE THAT eqpt_code + ledger_code EXIST IN MASTER TABLE
+    # (you MUST keep this because schema doesn't enforce it)
     # -------------------------------------------------------
     master_exists = await session.scalar(
         select(MasterTable).where(
             MasterTable.eqpt_code == payload.eqpt_code,
-            MasterTable.Ledger_code == payload.ledger_code
+            MasterTable.Ledger_code == payload.ledger_code,
         )
     )
     if not master_exists:
         raise HTTPException(
             status_code=400,
-            detail="eqpt_code + ledger_code pair not found in master_table"
+            detail="eqpt_code + ledger_code pair not found in master_table",
         )
 
     # -------------------------------------------------------
-    # VALIDATE EQUIPMENT NAME (PRIMARY KEY)
+    # INSERT WITH DB-LEVEL SAFETY FOR UNIQUE CONSTRAINTS
     # -------------------------------------------------------
-    existing_name = await session.scalar(
-        select(cds_table).where(
-            cds_table.equipment_name == payload.equipment_name
-        )
-    )
-    if existing_name:
+    try:
+        await session.execute(insert(cds_table).values(**payload.model_dump()))
+
+    except IntegrityError as e:
+        await session.rollback()
+        msg = str(e.orig)
+
+        if "equipment_name" in msg:
+            raise HTTPException(400, "equipment_name already exists")
+
+        if "grp" in msg:
+            raise HTTPException(400, "grp must be unique")
+
+        raise HTTPException(500, "Database error")
+
+
+@router.get("/job-master/{equipment_code}", response_model=list[JobMasterView])
+async def get_jobs(
+    equipment_code: str,
+    permissions: UserPermissions,
+    session: AsyncSession = Depends(get_db),
+):
+    if not permissions.cds.read:
         raise HTTPException(
-            status_code=400,
-            detail="equipment_name already exists in CDS table"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Insufficient permissions!"
         )
 
-    # -------------------------------------------------------
-    # VALIDATE GRP (UNIQUE)
-    # -------------------------------------------------------
-    existing_grp = await session.scalar(
-        select(cds_table).where(
-            cds_table.grp == payload.grp
-        )
+    result = await session.scalars(
+        select(JobMaster).where(JobMaster.eqpt_code == equipment_code)
     )
-    if existing_grp:
+
+    return result.all()
+
+
+@router.post("/job-master")
+async def create_job(
+    payload: JobMasterCreate,
+    permissions: UserPermissions,
+    session: AsyncSession = Depends(get_db),
+):
+    if not permissions.cds.write:
         raise HTTPException(
-            status_code=400,
-            detail="grp already exists — grp must remain unique"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Insufficient permissions!"
         )
 
-    # -------------------------------------------------------
-    # INSERT NEW ROW
-    # -------------------------------------------------------
-    new_entry = cds_table(
-        ledger_code=payload.ledger_code,
-        eqpt_code=payload.eqpt_code,
-        equipment_name=payload.equipment_name,
-        grp=payload.grp,
-        head=payload.head,
-        db=payload.db,   # db is NOT UNIQUE anymore
-    )
+    try:
+        await session.execute(insert(JobMaster))
 
-    session.add(new_entry)
-    await session.commit()
-    await session.refresh(new_entry)
-
-    # -------------------------------------------------------
-    # RETURN FORMATTED RESPONSE
-    # -------------------------------------------------------
-    return {
-        "eqpt_name": new_entry.equipment_name,
-        "Database": new_entry.db,
-        "head": new_entry.head,
-        "eqpt_code": new_entry.eqpt_code,
-        "ledger_code": new_entry.ledger_code,
-        "grp": new_entry.grp,
-    }
+    except IntegrityError as e:
+        await session.rollback()

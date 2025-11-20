@@ -7,55 +7,51 @@ class Demand(Base):
     __tablename__ = "Demand_table"
 
     eqpt_code: Mapped[str] = mapped_column(
-        String, ForeignKey("master_table.eqpt_code"), nullable=False
+        String, ForeignKey("master_table.eqpt_code"), nullable=False, index=True
     )
-    demand_no: Mapped[int] = mapped_column(Integer, primary_key=True,
-                                           nullable=False, autoincrement=True)
+    demand_no: Mapped[int] = mapped_column(
+        Integer, primary_key=True, nullable=False, autoincrement=True
+    )
     demand_type: Mapped[Enum] = mapped_column(
         Enum("APD", "SPD", name="dmd_type_enum"), nullable=False
     )
     eqpt_name: Mapped[str] = mapped_column(
-        String(11), ForeignKey("master_table.ledger_name"), nullable=False)
+        String(11), ForeignKey("master_table.ledger_name"), nullable=False
+    )
 
     fin_year: Mapped[str] = mapped_column(
         String(9),  # 'YYYY-YYYY' → 9 chars
         nullable=False,
-        index=True,
-        doc="Financial year in format YYYY-YYYY")
+        doc="Financial year in format YYYY-YYYY",
+    )
 
-    demand_auth: Mapped[str | None] = mapped_column(String(100))
+    demand_auth: Mapped[int] = mapped_column(Integer, default=0)
     full_received: Mapped[int] = mapped_column(Integer, default=0)
     part_received: Mapped[int] = mapped_column(Integer, default=0)
     outstanding: Mapped[int] = mapped_column(Integer, default=0)
     percent_received: Mapped[float] = mapped_column(Float, default=0.0)
-    remarks: Mapped[str | None] = mapped_column(String(255))
 
     eqpt: Mapped["MasterTable"] = relationship(
-        "MasterTable", back_populates="dmd", uselist=False, foreign_keys=[eqpt_code])
+        "MasterTable", back_populates="dmd", uselist=False, foreign_keys=[eqpt_code]
+    )
 
     dmd_details: Mapped[list["Dmd_junction"]] = relationship(
-        "Dmd_junction",
-        back_populates="demand")
+        "Dmd_junction", back_populates="demand"
+    )
 
 
 class Dmd_junction(Base):
-
     __tablename__ = "demand_junc_ledger"
 
     Page_no: Mapped[str] = mapped_column(
-        String(20),
-        ForeignKey("ledger.ledger_page"),
-        nullable=False,
-        primary_key=True
+        String(20), ForeignKey("ledger.ledger_page"), nullable=False, primary_key=True
     )
 
-    demand_no: Mapped[int] = mapped_column(Integer,
-                                           ForeignKey(
-                                               "Demand_table.demand_no"),
-                                           nullable=False)
+    demand_no: Mapped[int] = mapped_column(
+        Integer, ForeignKey("Demand_table.demand_no"), nullable=False
+    )
 
-    is_locked: Mapped[bool] = mapped_column(Boolean,
-                                            nullable=False)
+    is_locked: Mapped[bool] = mapped_column(Boolean, nullable=False)
 
     Scale_no: Mapped[str] = mapped_column(String(10), nullable=False)
     Part_no: Mapped[str] = mapped_column(String(10), nullable=False)
@@ -74,7 +70,9 @@ class Dmd_junction(Base):
     Dept_ctrl_dt: Mapped[str | None] = mapped_column(String(10), nullable=True)
 
     dmd_ledgers: Mapped["Ledger"] = relationship(
-        "Ledger", back_populates="ledger_dmd", foreign_keys=[Page_no])
+        "Ledger", back_populates="ledger_dmd", foreign_keys=[Page_no]
+    )
 
-    demand: Mapped["Demand"] = relationship("Demand",
-                                            back_populates="dmd_details", foreign_keys=[demand_no])
+    demand: Mapped["Demand"] = relationship(
+        "Demand", back_populates="dmd_details", foreign_keys=[demand_no]
+    )

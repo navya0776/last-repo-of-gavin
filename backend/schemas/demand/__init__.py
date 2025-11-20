@@ -1,8 +1,7 @@
 import re
 from pydantic import BaseModel, Field, field_validator, ConfigDict
-from typing import List, Optional
+from typing import Optional
 from enum import Enum
-from datetime import datetime
 
 
 # ENUM
@@ -49,66 +48,31 @@ class DmdJunctionBase(BaseModel):
 
 
 class DmdJunctionCreate(DmdJunctionBase):
-    pass
+    eqpt_code: str
 
 
 class DmdJunctionResponse(DmdJunctionBase):
     model_config = ConfigDict(from_attributes=True)
 
 
-class DemandBase(BaseModel):
-    eqpt_code: str = Field(..., description="Foreign key to master_table.eqpt_code")
-    demand_type: DemandTypeEnum = Field(..., description="APD / SPD")
-    eqpt_name: str = Field(..., max_length=11)
+class DemandResponse(BaseModel):
+    demand_no: int
+    eqpt_code: str
+    equipment: str = Field(..., max_length=11)
+    no_equipment: int
 
-    # Optional because it will auto-generate
-    fin_year: Optional[str] = Field(
-        None,
+    fin_year: str = Field(
+        ...,
         pattern=r"^\d{4}-\d{4}$",
         description="Format YYYY-YYYY (Auto-generated for April cycle)",
     )
 
-    demand_auth: Optional[str] = Field(None, max_length=100)
+    demand_type: DemandTypeEnum
+    demand_auth: int
     full_received: int = Field(0, ge=0)
     part_received: int = Field(0, ge=0)
     outstanding: int = Field(0, ge=0)
     percent_received: float = Field(0.0, ge=0, le=100)
-    remarks: Optional[str] = Field(None, max_length=255)
-
-    # ➕ NEW FIELD: DEPOT
-    depot: Optional[str] = Field(
-        None, max_length=100, description="Depot responsible for demand processing"
-    )
-
-    dmd_details: Optional[List["DmdJunctionCreate"]] = Field(
-        None, description="List of ledger junction rows"
-    )
-
-    # ---------------- VALIDATORS ----------------
-
-    @field_validator("depot")
-    def validate_depot(cls, v):
-        if v is not None and len(v.strip()) == 0:
-            raise ValueError("Depot cannot be empty or whitespace.")
-        return v
-
-    @field_validator("fin_year", mode="before")
-    def auto_generate_fin_year(cls, v):
-        if v is not None:
-            return v
-
-        today = datetime.now()
-        year = today.year
-        month = today.month
-
-        if month < 4:
-            start_year = year - 1
-            end_year = year
-        else:
-            start_year = year
-            end_year = year + 1
-
-        return f"{start_year}-{end_year}"
 
     @field_validator("fin_year")
     def ensure_fin_year_span_is_1(cls, v):
@@ -117,20 +81,4 @@ class DemandBase(BaseModel):
             raise ValueError("fin_year must be a 1-year span (e.g., 2024-2025)")
         return v
 
-    @field_validator("percent_received")
-    def percent_must_match_values(cls, v, values):
-        full = values.get("full_received", 0)
-        part = values.get("part_received", 0)
-        total = full + part
-        if total > 0 and v == 0:
-            raise ValueError("percent_received must reflect full+part received values.")
-        return v
-
-
-class DemandCreate(DemandBase):
-    pass
-
-
-class DemandResponse(DemandBase):
-    demand_no: int = Field(..., description="Auto-increment primary key")
     model_config = ConfigDict(from_attributes=True)
