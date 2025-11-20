@@ -68,8 +68,6 @@ async def login(credentials: LoginRequest, session: AsyncSession = Depends(get_d
     return response
 
 
-
-
 @app.post("/logout")
 async def logout(user: dict[str, str] = Depends(get_current_user)):
     """Logout route:
@@ -128,6 +126,5 @@ async def forget_password(
 
     exists.new_user = False
     exists.password = sha256(new_user.new_password.encode()).hexdigest()
-    await session.commit()
 
     return status.HTTP_200_OK
