@@ -1,0 +1,190 @@
+﻿<Page x:Class="IMS.Views.GenerateCRV"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:IMS.Views"
+      mc:Ignorable="d"
+      Title="GenerateCRV" Height="926" Width="1281" Background="White">
+
+    <Grid Margin="6" ShowGridLines="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- header -->
+            <RowDefinition Height="*"/>
+            <!-- PO area -->
+            <RowDefinition Height="Auto"/>
+            <!-- chal1 small box -->
+            <RowDefinition Height="2*"/>
+            <!-- bottom items grid -->
+            <RowDefinition Height="Auto"/>
+            <!-- footer -->
+        </Grid.RowDefinitions>
+
+        <!-- header bar -->
+        <Border Grid.Row="0" BorderBrush="#B7B7B7" BorderThickness="1" Padding="6" Background="#EDEDED">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="CRV  Head:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox Width="80"/>
+                <TextBlock Text="ORD:" VerticalAlignment="Center" Margin="10,0,6,0"/>
+                <TextBox Width="80"/>
+                <TextBlock Text="Date range:" VerticalAlignment="Center" Margin="10,0,6,0"/>
+                <DatePicker Width="110"/>
+            </StackPanel>
+        </Border>
+
+        <!-- main split -->
+        <Grid Grid.Row="1" Margin="0,6,0,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="420"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- left PO list -->
+            <Border BorderBrush="#B7B7B7" BorderThickness="1">
+                <DataGrid x:Name="PoListGrid"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          RowHeight="24"
+                          AlternatingRowBackground="#F6FAFF">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#81B5F7"/>
+                            <Setter Property="Foreground" Value="black"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="0.5"/>
+                            <Setter Property="FontSize" Value="20"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="Height" Value="60"/>
+                            <Setter Property="FontFamily" Value="CorpSansRd" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridColumnHeader">
+                                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="6" Height="30">
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center" Height="30"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="P.O No." Width="1*"/>
+                        <DataGridTextColumn Header="date" Width="1*"/>
+                        <DataGridTextColumn Header="Indt. No" Width="1*"/>
+                        <DataGridTextColumn Header="date" Width="1*"/>
+                        <DataGridTextColumn Header="Vend" Width="1*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <!-- right cyan work area -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,6">
+                    <TextBlock Text="Ledg" VerticalAlignment="Center"/>
+                    <ComboBox Width="100" Margin="5,0"/>
+                    <TextBlock Text="Eqpt" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                    <ComboBox Width="100"/>
+                    <Button Content="Print" Width="80" Margin="15,0,0,0" Style="{DynamicResource LedgerButtonStyle}" Click="PrintCRV_click"/>
+                    <Button Content="Search" Width="80" Margin="5,0,0,0" Style="{DynamicResource LedgerButtonStyle}"/>
+                    <CheckBox Content="Only receipt" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Background="#CFF5F0" BorderBrush="#B7B7B7" BorderThickness="1"/>
+            </Grid>
+        </Grid>
+
+        <!-- chal1 mini section -->
+        <Border Grid.Row="2" BorderBrush="#B7B7B7" BorderThickness="1" Padding="4" Background="#F9F9F9" Margin="0,0,0,6">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Chal1" Margin="6,0"/>
+                <TextBox Width="40" Margin="4,0"/>
+                <TextBlock Text="OS" Margin="10,0"/>
+                <TextBox Width="40" Margin="4,0"/>
+                <TextBlock Text="CRV1" Margin="10,0"/>
+                <TextBox Width="40" Margin="4,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- bottom item grid -->
+        <Border Grid.Row="3" BorderBrush="#B7B7B7" BorderThickness="1" Background="White">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <DataGrid x:Name="ItemsGrid"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          RowHeight="24"
+                          FontSize="12"
+                          GridLinesVisibility="All"
+                          AlternatingRowBackground="#F5F5F5">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#81B5F7"/>
+                            <Setter Property="Foreground" Value="black"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="0.5"/>
+                            <Setter Property="FontSize" Value="20"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="Height" Value="60"/>
+                            <Setter Property="FontFamily" Value="CorpSansRd" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridColumnHeader">
+                                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="6">
+                                            <TextBlock Text="{TemplateBinding Content}"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Ledg Page" Width="1.1*"/>
+                        <DataGridTextColumn Header="OS No" Width="0.8*"/>
+                        <DataGridTextColumn Header="Part No" Width="1.0*"/>
+                        <DataGridTextColumn Header="Nomen" Width="2.8*"/>
+                        <DataGridTextColumn Header="A_U" Width="0.7*"/>
+                        <DataGridTextColumn Header="Qty Order" Width="1.0*"/>
+                        <DataGridTextColumn Header="Sup1" Width="0.7*"/>
+                        <DataGridTextColumn Header="Sup2" Width="0.7*"/>
+                        <DataGridTextColumn Header="Sup3" Width="0.7*"/>
+                        <DataGridTextColumn Header="Sup4" Width="0.7*"/>
+                        <DataGridTextColumn Header="Stock" Width="0.8*"/>
+                        <DataGridTextColumn Header="Rect" Width="0.8*"/>
+                        <DataGridTextColumn Header="Job No" Width="0.9*"/>
+                        <DataGridTextColumn Header="Job date" Width="1.1*"/>
+                        <DataGridTextColumn Header="LPR No" Width="0.9*"/>
+                        <DataGridTextColumn Header="LPR date" Width="1.1*"/>
+                        <DataGridTextColumn Header="SO" Width="0.7*"/>
+                        <DataGridTextColumn Header="SO date" Width="1.1*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </ScrollViewer>
+        </Border>
+
+        <!-- footer buttons -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,6,0,0">
+            <Button Content="Auto Link" Width="100" Margin="4,0" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button Content="View Ledger" Width="110" Margin="4,0" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button Content="Close" Width="90" Margin="4,0" Style="{DynamicResource LedgerButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+
+</Page>

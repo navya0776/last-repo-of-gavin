@@ -1,0 +1,87 @@
+﻿<Page x:Class="IMS.Views.RepairableStores"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:IMS.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="RepairableStores">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/> 
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" >
+            <TextBlock Text="Recieved From" VerticalAlignment="Center" Margin="10,0,10,0" />
+            <ComboBox Width="180" Height="30">
+                <ComboBoxItem />
+            </ComboBox>
+        </StackPanel>
+        <Border Grid.Row="1" BorderThickness="1" BorderBrush="Gray" CornerRadius="5" Padding="10" Margin="5">
+            <TextBlock Text="Ledger" FontSize="18" FontWeight="Bold" VerticalAlignment="Top"/>
+        </Border>
+        <DataGrid Grid.Row="1" Grid.Column="1"
+                  x:Name="StoresDataGrid"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Margin="5">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#81B5F7"/>
+                    <Setter Property="Foreground" Value="black"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="0.5"/>
+                    <Setter Property="FontSize" Value="20"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Height" Value="60"/>
+                    <Setter Property="FontFamily" Value="CorpSansRd" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="6">
+                                    <TextBlock Text="{TemplateBinding Content}"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Ledg Page" Binding="{Binding DemNo}" Width="75"/>
+                <DataGridTextColumn Header="Scale" Binding="{Binding Scale}" Width="55"/>
+                <DataGridTextColumn Header="Part no" Binding="{Binding FinYear}" Width="100"/>
+                <DataGridTextColumn Header="Nomen" Binding="{Binding Nomen}" Width="170"/>
+                <DataGridTextColumn Header="A_U" Binding="{Binding AU}" Width="50"/>
+                <DataGridTextColumn Header="Rep stk" Binding="{Binding RepStk}" Width="50"/>
+                <DataGridTextColumn Header="Ser stk" Binding="{Binding SerStk}" Width="50"/>
+                <DataGridTextColumn Header="Now Recd" Binding="{Binding NowRecd}" Width="80"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
+            <StackPanel Orientation="Horizontal"  Margin="5"  >
+            <Button Content="Save Repairable Receipt" Width="150" Margin="0,0,10,0" Style="{DynamicResource LedgerButtonStyle}" />
+            <Button Content="Search" Width="70" Style="{DynamicResource LedgerButtonStyle}"/>
+        </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5"  >
+                <TextBlock Text="Go to page" Width="70" VerticalAlignment="Center" />
+                <TextBox Width="100" />
+                <TextBlock Text="Scale" Width="50" VerticalAlignment="Center" Margin="10,0,0,0" />
+                <TextBox Width="100" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

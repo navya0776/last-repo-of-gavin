@@ -1,0 +1,121 @@
+﻿<Page x:Class="IMS.Views.AnalysisAP"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:IMS.Views"
+      mc:Ignorable="d"
+      Title="AnalysisAP" Height="466" Width="1422">
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="*" />
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <!--Main Table-->
+        <DataGrid Grid.Column="1" x:Name="LedgerDataGrid"
+              AutoGenerateColumns="False"
+              CanUserAddRows="False"
+              CanUserResizeRows="False"
+              HeadersVisibility="Column"
+              Background="White"
+              BorderBrush="Gray" BorderThickness="0,0,1,1"
+              ColumnHeaderHeight="35"
+              FontSize="8" SelectionChanged="LedgerDataGrid_SelectionChanged" Margin="0,38,1,2" Grid.RowSpan="2" >
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#81B5F7"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontSize" Value="18"/>
+                    <Setter Property="Height" Value="35"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+
+            <DataGrid.Columns >
+                <DataGridTextColumn Header="Page No" Binding="{Binding PageNo}" Width="*" />
+                <DataGridTextColumn Header="Scale No" Binding="{Binding ScaleNo}" Width="*" />
+                <DataGridTextColumn Header="Part No" Binding="{Binding PartNo}" Width="2*" />
+                <DataGridTextColumn Header="Nomenclature" Binding="{Binding Nomen}" Width="2.5*" />
+                <DataGridTextColumn Header="A_U" Binding="{Binding AU}" Width="*" />
+                <DataGridTextColumn Header="Auth" Binding="{Binding Auth}" Width="2*" />
+                <DataGridTextColumn Header="Curr Stock Balance" Binding="{Binding CurrStck}" Width="*" />
+                <DataGridTextColumn Header="DuesIn" Binding="{Binding DuesIn}" Width="*" />
+                <DataGridTextColumn Header="Outs Reqd" Binding="{Binding OutsReqd}" Width="*" />
+                <DataGridTextColumn Header="Stk N_Yr" Binding="{Binding StkN}" Width="*" />
+                <DataGridTextColumn Header="Reqd as OHS" Binding="{Binding ReqdOHS}" Width="*" />
+                <DataGridTextColumn Header="Cons Ptrn Qty/Eq" Binding="{Binding Ptrn}" Width="*" />
+                <DataGridTextColumn Header="Reqd as per Cons" Binding="{Binding ReqdCons}" Width="*" />
+                <DataGridTextColumn Header="Qty Demand" Binding="{Binding QtyDem}" Width="*" />
+                <DataGridTextColumn Header="Received" Binding="{Binding Received}" Width="*" />
+                <DataGridTextColumn Header="Depot Ctrl" Binding="{Binding DepotCtrl}" Width="*" />
+                <DataGridTextColumn Header="Dep Ctrl dt" Binding="{Binding DepCtrlDt}" Width="*" />
+                <DataGridTextColumn Header="D E L " Binding="{Binding Received}" Width="0.5*" />
+                <DataGridTextColumn Header="Sub Dem No" Binding="{Binding Received}" Width="*" />
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <Grid Grid.Row="1" Grid.Column="0" Background="#F4F4F4" Margin="0,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title -->
+            <StackPanel Grid.Row="0" VerticalAlignment="Center" Margin="10,0">
+                <TextBlock Text="Menu" FontWeight="Bold" FontSize="18" Foreground="#6F8600"/>
+            </StackPanel>
+
+            <!-- Working Sheet -->
+            <StackPanel Grid.Row="2" Margin="10,5">
+                <TextBlock Text="Working Sheet" Foreground="Black"/>
+                <StackPanel Orientation="Horizontal" Margin="0,2">
+                    <CheckBox VerticalAlignment="Center"/>
+                    <TextBlock Text="With Consumption" Margin="2,0"/>
+                </StackPanel>
+                <Button Content="Print Demand" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue"/>
+            </StackPanel>
+            <StackPanel Grid.Row="3">
+                <!-- Demand Analysis -->
+                <Button  Content="Demand Analysis" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+
+                <!-- Category (MSC) -->
+                <Button  Content="Category (M S C)" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+
+                <!-- Category (VED) -->
+                <Button  Content="Category (V E D)" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+
+                <!-- Dues In/Out -->
+                <Button Grid.Row="9" Content="Dues In/Out" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+            </StackPanel>
+
+            <!-- Bottom Section -->
+            <StackPanel Grid.Row="10" Margin="10,0">
+                <Button Content="Create Report" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
+                <Button Content="Export to MS Excel" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
+                <Button Content="Lock Demand" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
+                <Button Content="Delete Demand" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
+                <Button Content="Auth Signatory" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+</Page>

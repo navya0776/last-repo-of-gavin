@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="IMS.UserControls.SideDashboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IMS.UserControls"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             mc:Ignorable="d" d:DesignHeight="450" >
+
+    <Grid x:Name="SideBar" Visibility="Collapsed">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidebarColumn" Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <StackPanel Background="#498CE3" Grid.Column="0" x:Name="SidebarStack" >
+            <!-- Sidebar Buttons -->
+            <StackPanel x:Name="MenuButtons">
+                <Expander Header="STORE"  Margin="5" AutomationProperties.IsColumnHeader="True" FontSize="18" >
+                    <StackPanel>
+                        <Expander Header="LEDGER AND OS">
+                        <StackPanel>
+                            <Button Content="LEDGER MAINTAINANCE" Click="ledger_Click" Style="{DynamicResource SidebarButtonStyle}" />
+                            <Button Content="OVERHAUL SCALE" Style="{DynamicResource SidebarButtonStyle}"
+ />
+                        </StackPanel>
+                    </Expander>
+                    <Expander Header="PROVISIONING">
+                        <StackPanel>
+                            <Button Content="ADV PROV DEMAND" Click="APprovisioning_Click" Style="{DynamicResource SidebarButtonStyle}" />
+                                <Button Content="SUPPLY DEMAND" Style="{DynamicResource SidebarButtonStyle}" />
+                            </StackPanel>
+                    </Expander>
+                        <Expander Header="RECEIPT" >
+                            <Expander.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="Black" FontSize="18"/>
+                                </DataTemplate>
+                            </Expander.HeaderTemplate>
+                            <StackPanel>
+                                <Button Content="SERVICABLE STORES" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="REPAIRABLE STORES" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="PRINT RECEIPT VOUCHERS" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="GENERATE CRV" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="PRINT CRV" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="LINK INDENT WITH EQPT" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="INSP AND REJECTION NOTE" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="LP ITEM QUERY" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="AUTO PAGE LINK" Style="{DynamicResource SidebarButtonStyle}"/>
+                            </StackPanel>
+                        </Expander>
+                        <Expander Header="ISSUE" >
+                            <StackPanel>
+                                <Button Content="ISSUE ON SELECTION" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="AUTO ISSUE" Style="{DynamicResource SidebarButtonStyle}" />
+                                <Button Content="TRANSFER OF ITEMS" Style="{DynamicResource SidebarButtonStyle}" />
+                                <Button Content="ISS REPAIRABLE ITEMS" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="PRINT IV FORMAT (1)" Style="{DynamicResource SidebarButtonStyle}" />
+                                <Button Content="PRINT IV FORMAT (2)" Style="{DynamicResource SidebarButtonStyle}"/>
+                                <Button Content="PRINT Tfr VOUCHER" Style="{DynamicResource SidebarButtonStyle}" />
+
+                            </StackPanel>
+                        </Expander>
+                        <Button Content="Alert" />
+                    </StackPanel>
+                </Expander>
+                <Expander Header="CDS" Margin="5" FontSize="18" />
+                <Expander Header="PURCHASE" Margin="5" FontSize="18" />
+                <Expander Header="SALE" Margin="5" FontSize="18" />
+                <Expander Header="REPORTS" Margin="5" FontSize="18" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Main Content -->
+
+    </Grid>
+</UserControl>

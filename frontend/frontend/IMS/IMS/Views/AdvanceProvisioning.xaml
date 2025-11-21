@@ -1,0 +1,103 @@
+﻿<Page x:Class="IMS.Views.AdvanceProvisioning"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:IMS.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AdvanceProvisioning">
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="103*"/>
+            <RowDefinition Height="267*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- Equipment -->
+        <Grid Grid.Row="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+
+            <Grid Grid.Row="0" Background="#498CE3">
+                <TextBlock Text="Equipment" FontSize="16" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            </Grid>
+            <ListBox x:Name="Equipments" SelectionChanged="Equipments_SelectionChanged" DisplayMemberPath="EquipmentName" Grid.Row="1" Margin="0,0,0,0" >
+            </ListBox>
+        </Grid>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="#498CE3">
+            <TextBlock Text="Provisioning" FontSize="24" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+
+        </Grid>
+
+        <!--Main Content-->
+        <DataGrid Grid.Row="1" Grid.Column="1" Name="LedgerDataGrid"
+                  Margin="0,0,0,0"
+           AutoGenerateColumns="False"
+           CanUserAddRows="False"
+           CanUserResizeRows="False"
+           HeadersVisibility="Column"
+           Background="White"
+           BorderBrush="Gray" BorderThickness="0,0,1,1"
+           ColumnHeaderHeight="35"
+           FontSize="12" Grid.RowSpan="2" >
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#498Ce3"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontSize" Value="10"/>
+                    <Setter Property="Height" Value="30"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                    <Setter Property="Margin" Value="0,0,0,0" />
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+
+            <DataGrid.Columns >
+
+                    <DataGridTextColumn Header="Demand No" Binding="{Binding DemandNo}" Width="2*" />
+                    <DataGridTextColumn Header="Eqpt Code" Binding="{Binding EquipmentCode}" Width="*" />
+                    <DataGridTextColumn Header="Equipment" Binding="{Binding EquipmentName}" Width="2.5*" />
+                    <DataGridTextColumn Header="No Eqpt" Binding="{Binding Quantity}" Width="*" />
+                    <DataGridTextColumn Header="Fin Year" Binding="{Binding FinancialYear}" Width="1.5*" />
+                    <DataGridTextColumn Header="Dem Type" Binding="{Binding DemandType}" Width="*" />
+                    <DataGridTextColumn Header="Full Recd" Binding="{Binding FullReceived}" Width="*" />
+                    <DataGridTextColumn Header="Part Recd" Binding="{Binding PartialReceived}" Width="*" />
+                    <DataGridTextColumn Header="Outs" Binding="{Binding Outstanding}" Width="*" />
+                    <DataGridTextColumn Header="% Recd" Binding="{Binding PercentageReceived}" Width="*" />
+                    <DataGridCheckBoxColumn Header="Select" Binding="{Binding IsSelected}" Width="*" />
+
+
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+        <!--Footer-->
+        <Grid Grid.Row="3" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="left" VerticalAlignment="Center" >
+                <RadioButton x:Name="SelectAllRadio" Content="Select All" Margin="20,0,20,0" Checked="SelectAllRadio_Checked"/>
+                <RadioButton x:Name="APDemand" Content="AP Demand" Margin="0,0,20,0" Checked="APDemand_Checked"/>
+                <RadioButton x:Name="SupplyDemand" Content="Supply Demand" Margin="0,0,20,0" Checked="SupplyDemand_Checked"/>
+            </StackPanel>
+            <Button  x:Name="Generate" Content="Generate New" Foreground="Black" Width="120" Height="30" Margin="290,0,0,0" Style="{DynamicResource LedgerButtonStyle}" Click="Generate_Click" />
+            <Button x:Name="Analysis" Content="Demand Analysis" Width="120" Height="30" Margin="550,0,0,0" Style="{DynamicResource LedgerButtonStyle}" Click="Analysis_Click" />
+
+
+        </Grid>
+
+
+    </Grid>
+</Page>

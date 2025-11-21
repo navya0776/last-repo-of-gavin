@@ -1,0 +1,96 @@
+﻿<Page x:Class="IMS.Views.IssueRepairableStores"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:IMS.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="IssueRepairableStores">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" >
+            <TextBlock Text="Customer" VerticalAlignment="Center" Margin="10,0,10,0" />
+            <ComboBox Width="180" Height="30">
+                <ComboBoxItem />
+            </ComboBox>
+            <TextBlock Text="Ledger" VerticalAlignment="Center" Margin="10,0,10,0" />
+            <ComboBox Width="100" Height="30">
+                <ComboBoxItem />
+            </ComboBox>
+            <TextBlock Text="Demand No" VerticalAlignment="Center" Margin="10,0,10,0" />
+            <TextBox Width="150" Height="30" />
+            <TextBlock Text="Date" VerticalAlignment="Center" Margin="10,0,10,0" />
+            <DatePicker Width="100" Height="30" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <DataGrid Grid.Row="1" Grid.Column="0"
+                      x:Name="StoresDataGrid"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      Margin="5">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#81B5F7"/>
+                        <Setter Property="Foreground" Value="black"/>
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="0.5"/>
+                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Height" Value="60"/>
+                        <Setter Property="FontFamily" Value="CorpSansRd" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridColumnHeader">
+                                    <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Padding="6">
+                                        <TextBlock Text="{TemplateBinding Content}"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Ledg pg" Width="*"/>
+                    <DataGridTextColumn Header="Scale No" Width="*"/>
+                    <DataGridTextColumn Header="Part No" Width="*"/>
+                    <DataGridTextColumn Header="In lieu part no" Width="*"/>
+                    <DataGridTextColumn Header="Nomen" Width="*"/>
+                    <DataGridTextColumn Header="A_U" Width="*"/>
+                    <DataGridTextColumn Header="No off" Width="*"/>
+                    <DataGridTextColumn Header="Scl Auth" Width="*"/>
+                    <DataGridTextColumn Header="Rep Stock" Width="*"/>
+                    <DataGridTextColumn Header="To Issue" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+            <StackPanel Orientation="Horizontal"  Margin="5"  >
+                <Button Content="Issue and Save" Width="100" Margin="0,0,10,0" Style="{DynamicResource LedgerButtonStyle}" />
+                <Button Content="Search" Width="70"  Margin="0,0,10,0" Style="{DynamicResource LedgerButtonStyle}"/>
+                <Button Content="Close" Width="70"  Margin="0,0,10,0" Style="{DynamicResource LedgerButtonStyle}"/>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5"  >
+                <TextBlock Text="Go to page" Width="70" VerticalAlignment="Center" />
+                <TextBox Width="100" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5"  >
+                <TextBlock Text="Scl" Width="30" VerticalAlignment="Center" />
+                <TextBox Width="100" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

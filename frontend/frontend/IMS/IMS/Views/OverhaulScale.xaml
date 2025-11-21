@@ -1,0 +1,85 @@
+﻿<Page x:Class="IMS.Views.OverhaulScale"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:IMS.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="OverhaulScale">
+
+    <Grid Background="white">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <TextBlock Text="Equipment" FontSize="16" FontWeight="Bold" Foreground="#003366" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+            <ComboBox x:Name="EquipmentComboBox" Margin="10,10,10,10" Height="20" Width="200"/>
+        </StackPanel>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Item Group" FontSize="16" FontWeight="Bold" Foreground="#003366" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+            <ListBox x:Name="ItemGroupListBox" Grid.Row="1" Margin="0,0,0,0" >
+            </ListBox>
+        </Grid>
+        <DataGrid Grid.Row="1" Grid.Column="1" Name="OverhaulScaleDataGrid"
+           AutoGenerateColumns="True"
+           CanUserAddRows="False"
+           CanUserResizeRows="False"
+           HeadersVisibility="Column"
+           Background="White"
+           BorderBrush="Gray" BorderThickness="0,0,1,1"
+           ColumnHeaderHeight="35"
+                  VerticalScrollBarVisibility="Auto"
+           FontSize="12" SelectionChanged="OverhaulScaleDataGrid_SelectionChanged" >
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#498Ce3"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontSize" Value="10"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/> 
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="OS No" Binding="{Binding ItemCode}" Width="50"/>
+                <DataGridTextColumn Header="ISG No" Binding="{Binding ItemName}" Width="50"/>
+                <DataGridTextColumn Header="SSG No" Binding="{Binding CurrentScale}" Width="50"/>
+                <DataGridTextColumn Header="Part No" Binding="{Binding RecommendedScale}" Width="120"/>
+                <DataGridTextColumn Header="In lieu Part No" Binding="{Binding LastOverhaulDate}" Width="150"/>
+                <DataGridTextColumn Header="Nomen" Binding="{Binding NextOverhaulDate}" Width="100"/>
+                <DataGridTextColumn Header="A_U" Binding="{Binding NextOverhaulDate}" Width="20"/>
+                <DataGridTextColumn Header="No Off" Binding="{Binding NextOverhaulDate}" Width="50"/>
+                <DataGridTextColumn Header="Auth" Binding="{Binding NextOverhaulDate}" Width="50"/>
+                <DataGridTextColumn Header="Stock" Binding="{Binding NextOverhaulDate}" Width="50"/>
+                <DataGridTextColumn Header="Card" Binding="{Binding NextOverhaulDate}" Width="50"/>
+                <DataGridTextColumn Header="Rate" Binding="{Binding NextOverhaulDate}" Width="50"/>
+                <DataGridTextColumn Header="VED" Binding="{Binding NextOverhaulDate}" Width="50"/>
+                <DataGridTextColumn Header="MSC" Binding="{Binding NextOverhaulDate}" Width="50"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,10,10">
+            <Button x:Name="ExportButton" Content="Export" Width="80" Height="30" Margin="0,0,5,0" Foreground="White" Click="ExportButton_Click" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button x:Name="RemoveLinkButton" Content="Remove Link" Width="80" Height="30" Margin="0,0,5,0"  Foreground="White" Click="RemoveLinkButton_Click" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button x:Name="AddLinkButton" Content="Add Link" Width="80" Height="30" Margin="0,0,5,0"  Foreground="White" Click="RemoveLinkButton_Click" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button x:Name="IndexModeButton" Content="Index Mode" Width="80" Height="30" Margin="0,0,5,0"  Foreground="White" Click="IndexModeButton_Click" Style="{DynamicResource LedgerButtonStyle}"/>
+            <TextBlock x:Name="StatusTextBlock" Text="Go To Page" VerticalAlignment="Center" Margin="30,0,0,0"/>
+            <TextBox x:Name="PageNumberTextBox" Width="60" Height="25" Margin="5,0,0,0" VerticalAlignment="Center"/>
+            <TextBlock x:Name="GoTo" Text="Go To" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBox x:Name="GoToTextBlock" Width="60" Height="25" Margin="5,0,0,0" VerticalAlignment="Center"/>
+            <RadioButton x:Name="OS" Content="OS" Margin="10,0,0,0" VerticalAlignment="Center" Checked="OSRadio_Checked"/>
+            <RadioButton x:Name="ISG" Content="ISG" Margin="10,0,0,0" VerticalAlignment="Center" Checked="ISGRadio_Checked"/>
+            <RadioButton x:Name="SSG" Content="SSG" Margin="10,0,0,0" VerticalAlignment="Center" Checked="SSGRadio_Checked"/>
+        </StackPanel>
+    </Grid>
+</Page>
