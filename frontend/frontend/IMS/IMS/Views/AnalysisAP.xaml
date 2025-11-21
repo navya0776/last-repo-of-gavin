@@ -41,25 +41,25 @@
             </DataGrid.ColumnHeaderStyle>
 
             <DataGrid.Columns >
-                <DataGridTextColumn Header="Page No" Binding="{Binding PageNo}" Width="*" />
-                <DataGridTextColumn Header="Scale No" Binding="{Binding ScaleNo}" Width="*" />
-                <DataGridTextColumn Header="Part No" Binding="{Binding PartNo}" Width="2*" />
-                <DataGridTextColumn Header="Nomenclature" Binding="{Binding Nomen}" Width="2.5*" />
-                <DataGridTextColumn Header="A_U" Binding="{Binding AU}" Width="*" />
+                <DataGridTextColumn Header="Page No" Binding="{Binding Page_no}" Width="*" />
+                <DataGridTextColumn Header="Scale No" Binding="{Binding Scale_no}" Width="*" />
+                <DataGridTextColumn Header="Part No" Binding="{Binding Part_no}" Width="2*" />
+                <DataGridTextColumn Header="Nomenclature" Binding="{Binding Nomenclature}" Width="2.5*" />
+                <DataGridTextColumn Header="A_U" Binding="{Binding A_u}" Width="*" />
                 <DataGridTextColumn Header="Auth" Binding="{Binding Auth}" Width="2*" />
-                <DataGridTextColumn Header="Curr Stock Balance" Binding="{Binding CurrStck}" Width="*" />
-                <DataGridTextColumn Header="DuesIn" Binding="{Binding DuesIn}" Width="*" />
-                <DataGridTextColumn Header="Outs Reqd" Binding="{Binding OutsReqd}" Width="*" />
-                <DataGridTextColumn Header="Stk N_Yr" Binding="{Binding StkN}" Width="*" />
-                <DataGridTextColumn Header="Reqd as OHS" Binding="{Binding ReqdOHS}" Width="*" />
-                <DataGridTextColumn Header="Cons Ptrn Qty/Eq" Binding="{Binding Ptrn}" Width="*" />
-                <DataGridTextColumn Header="Reqd as per Cons" Binding="{Binding ReqdCons}" Width="*" />
-                <DataGridTextColumn Header="Qty Demand" Binding="{Binding QtyDem}" Width="*" />
-                <DataGridTextColumn Header="Received" Binding="{Binding Received}" Width="*" />
-                <DataGridTextColumn Header="Depot Ctrl" Binding="{Binding DepotCtrl}" Width="*" />
-                <DataGridTextColumn Header="Dep Ctrl dt" Binding="{Binding DepCtrlDt}" Width="*" />
-                <DataGridTextColumn Header="D E L " Binding="{Binding Received}" Width="0.5*" />
-                <DataGridTextColumn Header="Sub Dem No" Binding="{Binding Received}" Width="*" />
+                <DataGridTextColumn Header="Curr Stock Balance" Binding="{Binding Curr_stk_bal}" Width="*" />
+                <DataGridTextColumn Header="DuesIn" Binding="{Binding Dues_in}" Width="*" />
+                <DataGridTextColumn Header="Outs Reqd" Binding="{Binding Outs_Reqd}" Width="*" />
+                <DataGridTextColumn Header="Stk N_Yr" Binding="{Binding stk_N_yr}" Width="*" />
+                <DataGridTextColumn Header="Reqd as OHS" Binding="{Binding Reqd_as_OHS}" Width="*" />
+                <DataGridTextColumn Header="Cons Ptrn Qty/Eq" Binding="{Binding Cons_pattern}" Width="*" />
+                <DataGridTextColumn Header="Qty Dem" Binding="{Binding qty_dem}" Width="*" />
+                <DataGridTextColumn Header="Received" Binding="{Binding Recd}" Width="*" />
+                <DataGridTextColumn Header="Depot Ctrl" Binding="{Binding Dept_ctrl}" Width="*" />
+                <DataGridTextColumn Header="Dep Ctrl dt" Binding="{Binding Dept_ctrl_dt}" Width="*" />
+                <DataGridTextColumn Header="Sub Dem No" Binding="{Binding demand_no}" Width="*" />
+
+
             </DataGrid.Columns>
 
         </DataGrid>

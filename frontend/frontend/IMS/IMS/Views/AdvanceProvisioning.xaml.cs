@@ -1,118 +1,153 @@
-﻿using System;
+﻿using IMS.Models;
+using IMS.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace IMS.Views
 {
-    /// <summary>
-    /// Interaction logic for AdvanceProvisioning.xaml
-    /// </summary>
     public partial class AdvanceProvisioning : Page
     {
-        private ICollectionView _ledgerView;
-        public ObservableCollection<APEntry> APItems { get; set; }
+        private ICollectionView _view;
+
+        public ObservableCollection<DemandModel.DemandResponse> DemandList { get; set; }
         public ObservableCollection<string> EquipmentList { get; set; }
 
-        private string _selectedEquipment= null;
+        // Active filters
+        private string _selectedEquipment = null;      // e.g. "Engine", "Pump"
+        private string _selectedDemandType = null;     // "APD", "SPD", or null
 
         public AdvanceProvisioning()
         {
             InitializeComponent();
-            LoadData();
-            _ledgerView = CollectionViewSource.GetDefaultView(APItems);
-            LedgerDataGrid.ItemsSource = _ledgerView;
+            LoadDemands();
         }
 
-        private void LoadData()
+        // --------------------------------------------------------------------
+        // ⭐ LOAD ALL DEMANDS FROM BACKEND
+        // Route: GET /demand/
+        // --------------------------------------------------------------------
+        private async void LoadDemands()
         {
-            // Example: Replace with your real code to fetch data
-            APItems = new()
+            try
             {
-                new APEntry { DemandType = "Advanced Provision", EquipmentName = "Bolt", Quantity = "10" },
-                new APEntry { DemandType = "Supply Demand", EquipmentName = "Nut", Quantity = "20" }
-            };
+                var data = await ApiService.GetAsync<List<DemandModel.DemandResponse>>("/demand/");
 
-            LedgerDataGrid.ItemsSource = APItems;
-            EquipmentList = new ObservableCollection<string>(APItems.Select(a => a.EquipmentName).Distinct());
-            Equipments.ItemsSource = EquipmentList;
+                if (data == null)
+                {
+                    MessageBox.Show("No demand data returned from server.");
+                    return;
+                }
+
+                DemandList = new ObservableCollection<DemandModel.DemandResponse>(data);
+
+                _view = CollectionViewSource.GetDefaultView(DemandList);
+                LedgerDataGrid.ItemsSource = _view;
+
+                EquipmentList = new ObservableCollection<string>(
+                    data.Select(x => x.equipment).Distinct()
+                );
+
+                Equipments.ItemsSource = EquipmentList;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load demands:\n" + ex.Message);
+            }
         }
 
- 
+        // --------------------------------------------------------------------
+        // ⭐ APPLY ALL ACTIVE FILTERS (TYPE + EQUIPMENT)
+        // --------------------------------------------------------------------
+        private void ApplyFilters()
+        {
+            if (_view == null) return;
 
+            _view.Filter = item =>
+            {
+                var row = item as DemandModel.DemandResponse;
+
+                bool equipmentMatch =
+                    _selectedEquipment == null || row.equipment == _selectedEquipment;
+
+                bool typeMatch =
+                    _selectedDemandType == null || row.demand_type == _selectedDemandType;
+
+                return equipmentMatch && typeMatch;
+            };
+        }
+
+        // --------------------------------------------------------------------
+        // ⭐ EQUIPMENT FILTER (ListBox)
+        // --------------------------------------------------------------------
+        private void Equipments_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _selectedEquipment = Equipments.SelectedItem as string;
+            ApplyFilters();
+        }
+
+        // --------------------------------------------------------------------
+        // ⭐ SELECT ALL (clears only demand type filter)
+        // --------------------------------------------------------------------
+        private void SelectAllRadio_Checked(object sender, RoutedEventArgs e)
+        {
+            _selectedDemandType = null;
+            ApplyFilters();
+        }
+
+        // --------------------------------------------------------------------
+        // ⭐ AP DEMAND FILTER (APD)
+        // --------------------------------------------------------------------
+        private void APDemand_Checked(object sender, RoutedEventArgs e)
+        {
+            _selectedDemandType = "APD";
+            ApplyFilters();
+        }
+
+        // --------------------------------------------------------------------
+        // ⭐ SUPPLY DEMAND FILTER (SPD)
+        // --------------------------------------------------------------------
+        private void SupplyDemand_Checked(object sender, RoutedEventArgs e)
+        {
+            _selectedDemandType = "SPD";
+            ApplyFilters();
+        }
+
+        // --------------------------------------------------------------------
+        // ⭐ NAVIGATE TO ANALYSIS PAGE
+        // --------------------------------------------------------------------
+        private void Analysis_Click(object sender, RoutedEventArgs e)
+        {
+            if (LedgerDataGrid.SelectedItem is not DemandModel.DemandResponse row)
+            {
+                MessageBox.Show("Please select a demand first.");
+                return;
+            }
+
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.MainFrame.Navigate(new AnalysisAP(row.demand_no));
+        }
+
+        // --------------------------------------------------------------------
+        // ⭐ GENERATE NEW AP DEMAND POPUP
+        // --------------------------------------------------------------------
         private void Generate_Click(object sender, RoutedEventArgs e)
         {
             var popup = new Windows.GenerateNewAP();
             popup.Owner = Application.Current.MainWindow;
-            popup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            bool? result = popup.ShowDialog();
-            if (result == true)
+
+            if (popup.ShowDialog() == true)
             {
-                // Refresh data after successful generation
-                LoadData();
-                _ledgerView.Refresh();
+                LoadDemands(); // refresh grid after creating
             }
         }
 
-        private void Equipments_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void Analysis_Click(object sender, RoutedEventArgs e)
-        {
-            var mainWindow = (MainWindow)Application.Current.MainWindow;
-            mainWindow.MainFrame.Navigate(new Views.AnalysisAP());
-        }
-
-        private void Report_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void APDemand_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SelectAllRadio_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SupplyDemand_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
+        // Unused handlers kept to avoid warnings
+        private void Report_Click(object sender, RoutedEventArgs e) { }
     }
-
-    public class APEntry
-    {
-        public string DemandNo { get; set; }
-        public string EquipmentCode { get; set; }
-        public string EquipmentName { get; set; }
-        public string Quantity { get; set; }
-        public string FinancialYear { get; set; }
-        public string FullReceived { get; set; }
-        public string PartialReceived { get; set; }
-        public string Outstanding { get; set; }
-        public string PercentageReceived { get; set; }
-        public string DemandType { get; set; }
-        public int IsSelected { get; set; }
-    }
-
-
-
 }

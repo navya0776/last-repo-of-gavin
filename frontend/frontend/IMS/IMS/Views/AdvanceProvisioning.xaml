@@ -67,17 +67,17 @@
 
             <DataGrid.Columns >
 
-                    <DataGridTextColumn Header="Demand No" Binding="{Binding DemandNo}" Width="2*" />
-                    <DataGridTextColumn Header="Eqpt Code" Binding="{Binding EquipmentCode}" Width="*" />
-                    <DataGridTextColumn Header="Equipment" Binding="{Binding EquipmentName}" Width="2.5*" />
-                    <DataGridTextColumn Header="No Eqpt" Binding="{Binding Quantity}" Width="*" />
-                    <DataGridTextColumn Header="Fin Year" Binding="{Binding FinancialYear}" Width="1.5*" />
-                    <DataGridTextColumn Header="Dem Type" Binding="{Binding DemandType}" Width="*" />
-                    <DataGridTextColumn Header="Full Recd" Binding="{Binding FullReceived}" Width="*" />
-                    <DataGridTextColumn Header="Part Recd" Binding="{Binding PartialReceived}" Width="*" />
-                    <DataGridTextColumn Header="Outs" Binding="{Binding Outstanding}" Width="*" />
-                    <DataGridTextColumn Header="% Recd" Binding="{Binding PercentageReceived}" Width="*" />
-                    <DataGridCheckBoxColumn Header="Select" Binding="{Binding IsSelected}" Width="*" />
+                <DataGridTextColumn Header="Demand No" Binding="{Binding demand_no}" />
+                <DataGridTextColumn Header="Eqpt Code" Binding="{Binding eqpt_code}" />
+                <DataGridTextColumn Header="Equipment" Binding="{Binding equipment}" />
+                <DataGridTextColumn Header="No Eqpt" Binding="{Binding no_equipment}" />
+                <DataGridTextColumn Header="Fin Year" Binding="{Binding fin_year}" />
+                <DataGridTextColumn Header="Dem Type" Binding="{Binding demand_type}" />
+                <DataGridTextColumn Header="Full Recd" Binding="{Binding full_received}" />
+                <DataGridTextColumn Header="Part Recd" Binding="{Binding part_received}" />
+                <DataGridTextColumn Header="Outs" Binding="{Binding outstanding}" />
+                <DataGridTextColumn Header="% Recd" Binding="{Binding percent_received}" />
+
 
 
 

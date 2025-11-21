@@ -1,12 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static IMS.Models.DemandModel;
 
-namespace IMS.ViewModels
+namespace IMS.Windows
 {
-    internal class GenerateApViewModel
+    public class GenerateApViewModel
     {
+        public DmdJunctionCreate Model { get; set; }
+
+        public GenerateApViewModel()
+        {
+            Model = new DmdJunctionCreate();
+        }
+
+        // Basic validation
+        public bool IsValid()
+        {
+            return !string.IsNullOrWhiteSpace(Model.Page_no)
+                && !string.IsNullOrWhiteSpace(Model.eqpt_code)
+                && Model.Auth >= 0;
+        }
     }
 }

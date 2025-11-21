@@ -11,14 +11,14 @@ namespace IMS
     /// </summary>
     public partial class App : Application
     {
-        //protected override void OnStartup(StartupEventArgs e)
-        //{
-        //    base.OnStartup(e);
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
-        //    // Start Splash Video instead of Login
-        //    var splash = new Windows.SplashScreen();
-        //    splash.Show();
-        //}
+            // Start Splash Video instead of Login
+        var login = new Windows.LoginWindow();
+            login.Show();
+        }
 
 
         public class StringNullOrEmptyToVisibilityConverter : IValueConverter

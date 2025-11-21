@@ -155,5 +155,37 @@ namespace IMS.Services
         //    return true;
         //}
 
+        // ------------------------------
+        // GENERIC GET
+        // ------------------------------
+        public static async Task<T?> GetAsync<T>(string endpoint)
+        {
+            var resp = await _client.GetAsync(endpoint);
+            resp.EnsureSuccessStatusCode();
+
+            return await resp.Content.ReadFromJsonAsync<T>();
+        }
+
+        // ------------------------------
+        // GENERIC POST
+        // ------------------------------
+        public static async Task<T?> PostAsync<T>(string endpoint, object body)
+        {
+            var resp = await _client.PostAsJsonAsync(endpoint, body);
+            resp.EnsureSuccessStatusCode();
+
+            return await resp.Content.ReadFromJsonAsync<T>();
+        }
+
+        // ------------------------------
+        // GENERIC DELETE
+        // ------------------------------
+        public static async Task DeleteAsync(string endpoint)
+        {
+            var resp = await _client.DeleteAsync(endpoint);
+            resp.EnsureSuccessStatusCode();
+        }
+
+
     }
 }
