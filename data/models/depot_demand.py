@@ -1,42 +1,97 @@
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Boolean
+from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Boolean, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
+from datetime import date
+from typing import Optional
 
 
 class Demand(Base):
     __tablename__ = "Demand_table"
 
     eqpt_code: Mapped[str] = mapped_column(
-        String, ForeignKey("master_table.eqpt_code"), nullable=False, index=True
+        String, ForeignKey("equipments.eqpt_code"), nullable=False
     )
+
     demand_no: Mapped[int] = mapped_column(
         Integer, primary_key=True, nullable=False, autoincrement=True
     )
-    demand_type: Mapped[Enum] = mapped_column(
+
+    demand_type: Mapped[str] = mapped_column(
         Enum("APD", "SPD", name="dmd_type_enum"), nullable=False
     )
+
     eqpt_name: Mapped[str] = mapped_column(
-        String(11), ForeignKey("master_table.ledger_name"), nullable=False
+        String(100), ForeignKey("equipments.equipment_name"), nullable=False
     )
 
     fin_year: Mapped[str] = mapped_column(
-        String(9),  # 'YYYY-YYYY' → 9 chars
-        nullable=False,
-        doc="Financial year in format YYYY-YYYY",
+        String(9), nullable=False, index=True, doc="Financial year in format YYYY-YYYY"
     )
 
-    demand_auth: Mapped[int] = mapped_column(Integer, default=0)
+    # existing / previously present fields
+    demand_auth: Mapped[Optional[str]] = mapped_column(String(100))
     full_received: Mapped[int] = mapped_column(Integer, default=0)
     part_received: Mapped[int] = mapped_column(Integer, default=0)
     outstanding: Mapped[int] = mapped_column(Integer, default=0)
     percent_received: Mapped[float] = mapped_column(Float, default=0.0)
+    remarks: Mapped[Optional[str]] = mapped_column(String(255))
 
-    eqpt: Mapped["MasterTable"] = relationship(
-        "MasterTable", back_populates="dmd", uselist=False, foreign_keys=[eqpt_code]
-    )
+    # Store / Unit details
+    store_code: Mapped[str | None] = mapped_column(String(20))
+    make: Mapped[str | None] = mapped_column(String(50))
+    scale_or_ssg_ref: Mapped[str | None] = mapped_column(String(50))
 
-    dmd_details: Mapped[list["Dmd_junction"]] = relationship(
-        "Dmd_junction", back_populates="demand"
+    # Date ranges
+    ap_demand_date_from: Mapped[date | None] = mapped_column(Date)
+    ap_demand_date_to: Mapped[date | None] = mapped_column(Date)
+
+    consumption_pattern_from: Mapped[date | None] = mapped_column(Date)
+    consumption_pattern_to: Mapped[date | None] = mapped_column(Date)
+
+    demand_range_from: Mapped[int | None] = mapped_column(Integer)
+    demand_range_to: Mapped[int | None] = mapped_column(Integer)
+
+    # Counts displayed in UI
+    no_of_apd_demand_placed: Mapped[int] = mapped_column(Integer, default=0)
+    no_of_apd_completed: Mapped[int] = mapped_column(Integer, default=0)
+    no_of_eopt_for_spares: Mapped[int] = mapped_column(Integer, default=0)
+    no_of_eopt_outs_for_repair: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Dropdowns / Selects
+    depot: Mapped[str | None] = mapped_column(String(50))
+    city: Mapped[str | None] = mapped_column(String(50))
+    prefix: Mapped[str | None] = mapped_column(String(30))
+
+    # Ledger / Scale fields
+    oh_scale_ssg: Mapped[bool] = mapped_column(Boolean, default=False)
+    demand_index_ledger_page: Mapped[bool] = mapped_column(Boolean, default=False)
+    demand_index_oh_scale: Mapped[bool] = mapped_column(Boolean, default=False)
+    demand_index_demand_no: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # Demand type options
+    is_adv_prov_demand: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_supplementary_demand: Mapped[bool] = mapped_column(Boolean, default=False)
+    consumtion_for_the_year: Mapped[int] = mapped_column(Integer, default=0)
+
+    # Selection options
+    is_all_scaled_items: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_on_selection: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # Additional fields observed from UI
+    ahq_sr: Mapped[str | None] = mapped_column(String(10))
+    section: Mapped[str | None] = mapped_column(String(50))
+    ledger_code: Mapped[str | None] = mapped_column(String(50))
+    ledger_name: Mapped[str | None] = mapped_column(String(100))
+
+    date_of_issue: Mapped[date | None] = mapped_column(Date)
+    scale_issue_no: Mapped[str | None] = mapped_column(String(50))
+
+    # soft relationship to equipment table (no FK)
+    equipment = relationship(
+        "Equipment",
+        primaryjoin="foreign(Demand.eqpt_code) == Equipment.eqpt_code",
+        back_populates="demands",
+        viewonly=True,
     )
 
 

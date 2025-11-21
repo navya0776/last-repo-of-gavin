@@ -136,6 +136,7 @@ class DemandCreate(BaseModel):
 
     is_adv_prov_demand: Optional[bool] = False
     is_supplementary_demand: Optional[bool] = False
+    consumtion_for_the_year: int = 0
 
     is_all_scaled_items: Optional[bool] = False
     is_on_selection: Optional[bool] = False
