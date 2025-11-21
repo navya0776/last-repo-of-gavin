@@ -15,11 +15,11 @@ from backend.services.demand import (
 )
 from backend.utils.users import UserPermissions
 from backend.schemas.demand import (
-    DmdJunctionCreate,
+    DemandCreate,
     DemandResponse,
     DmdJunctionResponse,
+    EquiptmentResponse,
 )
-from backend.schemas.ledger.ledgers import LedgerResponse
 
 router = APIRouter()
 
@@ -29,7 +29,7 @@ router = APIRouter()
 # ===========================================
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_ap_demand(
-    request: DmdJunctionCreate,
+    request: DemandCreate,
     permissions: UserPermissions,
     session: AsyncSession = Depends(get_db),
 ):
@@ -146,7 +146,7 @@ async def list_demand(
 # ===========================================
 # ⚙️ LIST EQUIPMENTS
 # ===========================================
-@router.get("/equipments/", response_model=list[LedgerResponse])
+@router.get("/equipments/", response_model=list[EquiptmentResponse])
 async def list_all_equipments(
     permissions: UserPermissions, session: AsyncSession = Depends(get_db)
 ):

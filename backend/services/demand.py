@@ -3,16 +3,16 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from data.models import Demand, Dmd_junction
+from data.models import Demand, Dmd_junction, Equipment
 from backend.schemas.demand import (
+    DemandCreate,
     DemandResponse,
-    DmdJunctionCreate,
     DmdJunctionResponse,
+    EquiptmentResponse,
 )
-from backend.schemas.ledger.ledgers import LedgerResponse
 
 
-async def create_demand(request: DmdJunctionCreate, session: AsyncSession):
+async def create_demand(request: DemandCreate, session: AsyncSession):
     result = await session.execute(
         select(Demand).where(Demand.eqpt_code == request.eqpt_code)
     )
@@ -94,10 +94,10 @@ async def _unlock_demand(demand_no: int, session: AsyncSession):
     demand.is_locked = True
 
 
-async def _list_all_equipment(session: AsyncSession) -> list[LedgerResponse]:
-    result = await session.execute(select(Demand))
+async def _list_all_equipment(session: AsyncSession) -> list[EquiptmentResponse]:
+    result = await session.execute(select(Equipment))
     equipments = result.scalars().all()
-    return [LedgerResponse.model_validate(eqpt) for eqpt in equipments]
+    return [EquiptmentResponse.model_validate(eqpt) for eqpt in equipments]
 
 
 async def _list_demands(
