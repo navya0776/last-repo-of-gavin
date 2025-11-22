@@ -10,11 +10,16 @@ from .ledgers import Ledger
 class MasterTable(Base):
     __tablename__ = "master_table"
 
+    Master_id: Mapped[int] = mapped_column(
+        Integer, nullable=False, primary_key=True, autoincrement=True
+    )
+
     Ledger_code: Mapped[str] = mapped_column(
         String(4), primary_key=True, nullable=False
     )
-    eqpt_code: Mapped[str] = mapped_column(String(4), unique=True, nullable=False)
-    ledger_name: Mapped[str] = mapped_column(String(11), unique=True, nullable=False)
+
+    eqpt_code: Mapped[str] = mapped_column(String(4), nullable=False)
+    ledger_name: Mapped[str] = mapped_column(String(11), nullable=False)
 
     # equipment name added
     eqpt_name: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -23,7 +28,7 @@ class MasterTable(Base):
         "Demand",
         back_populates="eqpt",
         cascade="all, delete",
-        foreign_keys=[Demand.eqpt_code],
+        foreign_keys=[Demand.master_id]
     )
 
     cds_Eqpt: Mapped["CDS"] = relationship("CDS", back_populates="Eqpt_cds")
@@ -32,7 +37,7 @@ class MasterTable(Base):
         "Ledger",
         back_populates="Eqpt",
         cascade="all, delete",
-        foreign_keys=[Ledger.Ledger_code],
+        foreign_keys=[Ledger.Master_id],
     )
 
     job: Mapped[list["JobMaster"]] = relationship(
@@ -43,9 +48,5 @@ class MasterTable(Base):
         "cds_table",
         back_populates="",
         cascade="all, delete",
-        foreign_keys=[cds_table.eqpt_code],
-    )
-
-    dmd_by_name: Mapped[list["Demand"]] = relationship(
-        "Demand", back_populates="master_eqpt_name", foreign_keys=[Demand.eqpt_name]
+        foreign_keys=[cds_table.Master_id],
     )

@@ -26,9 +26,10 @@ class Ledger(Base):
         Integer, ForeignKey("stores.store_id"), nullable=False
     )
     Master_id: Mapped[int] = mapped_column(Integer,
-                                             ForeignKey(
-                                             "master_table.Master_id"),
-                                             nullable=False)
+                                           ForeignKey(
+                                               "master_table.Master_id"),
+                                           nullable=False)
+
     Ledger_code: Mapped[str] = mapped_column(String(4),
                                              nullable=False)
 

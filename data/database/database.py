@@ -1,12 +1,16 @@
 from logging import getLogger
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 
 loggers = getLogger(__name__)
+# project root (adjust if needed)
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+load_dotenv(BASE_DIR / ".env_backend")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-
-#DATABASE_URL="postgresql+psycopg://admin:pass@localhost:5432/ims"
 if not DATABASE_URL:
     raise RuntimeError(
         "DATABASE_URL not set. Export DATABASE_URL."

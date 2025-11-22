@@ -5,5 +5,8 @@ all:
 test:
 	curl -X POST http://localhost:8000/auth/login -d '{"username":"admin","password":"admin"}' -H "Content-Type: application/json"
 
-login:
+login_db:
 	@docker compose exec db psql -U admin -d ims
+
+login_app:
+	@docker compose exec backend bash
