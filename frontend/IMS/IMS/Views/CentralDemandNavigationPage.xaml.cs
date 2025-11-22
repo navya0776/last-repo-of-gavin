@@ -1,4 +1,5 @@
 ﻿using IMS.Models;
+using IMS.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,21 +24,32 @@ namespace IMS.Views
     /// </summary>
     public partial class CentralDemandNavigationPage : Page
     {
+        public ObservableCollection<CDS> CDSList { get; set; }
+
         public CentralDemandNavigationPage()
         {
             InitializeComponent();
-            ObservableCollection<IMS.Models.CDS> _activeCDS = new();
+            CDSList = new ObservableCollection<CDS>();
+            DataContext = this;
 
+            LoadCDS();
         }
 
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void LoadCDS()
         {
-
-        }
-
-        private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow main = (MainWindow)Application.Current.MainWindow;
+            try
+            {
+                var list = await ApiService.GetCDSAsync();
+                CDSList.Clear();
+                foreach (var item in list)
+                    CDSList.Add(item);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to load CDS data.\n" + ex.Message,
+                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
+
 }

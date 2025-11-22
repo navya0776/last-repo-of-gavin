@@ -186,6 +186,19 @@ namespace IMS.Services
             resp.EnsureSuccessStatusCode();
         }
 
+        // ------------------------------
+        // GET CDS LIST (Central Demand)
+        // ------------------------------
+        public static async Task<List<CDS>> GetCDSAsync()
+        {
+            var resp = await _client.GetAsync("cds/");
+            resp.EnsureSuccessStatusCode();
+
+            var json = await resp.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<CDS>>(json) ?? new List<CDS>();
+        }
+
+
 
     }
 }

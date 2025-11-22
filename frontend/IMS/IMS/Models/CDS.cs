@@ -1,79 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IMS.Models
 {
-        public class CDS
-        {
-            public bool SEL { get; set; }
+    public class CDS
+    {
+        public bool SEL { get; set; }
 
-            public string LedgPage { get; set; }
-            public string OHSNo { get; set; }
-            public string PartNo { get; set; }
-            public string Spart_No { get; set; }
-            public string Nomen { get; set; }
-            public string AU { get; set; }
-            public string NoOff { get; set; }
-            public string OHSAuth { get; set; }
+        // ===== Primary identifiers =====
+        public int job_no { get; set; }
+        public DateTime? job_date { get; set; }
+        public string ledger_page { get; set; }
 
-            public string Dem { get; set; }
-            public string AddlDem { get; set; }
+        // ===== Item details =====
+        public int? ohs_no { get; set; }
+        public string part_number { get; set; }
+        public string spart_no { get; set; }
+        public string nomenclature { get; set; }
+        public string auth_officer { get; set; }
 
-            public string OSSIss { get; set; }
-            public string CDSIss { get; set; }
-            public string CDSStk { get; set; }
+        // ===== Demand / Addl Demand =====
+        public int? dem_ref_no { get; set; }
+        public int? add_dem_no { get; set; }
 
-            public string JobNo { get; set; }
-            public DateTime? JobDate { get; set; }
+        // ===== Stock & Issue Details =====
+        public string curr_stock { get; set; }
+        public string now_issue_qty { get; set; }
+        public string recd_qty { get; set; }
+        public DateTime? date_nr { get; set; }
 
-            public string DemNo { get; set; }
-            public DateTime? DemDt { get; set; }
+        // ===== OSS Issue series =====
+        public int? oss_qty1 { get; set; }
+        public string oss_iv1 { get; set; }
+        public DateTime? oss_ivdt1 { get; set; }
 
-            public string AddiDno { get; set; }
-            public DateTime? AddiDemdt { get; set; }
+        public int? oss_qty2 { get; set; }
+        public string oss_iv2 { get; set; }
+        public DateTime? oss_ivdt2 { get; set; }
 
-            public bool LPR { get; set; }
-            public string LPRQty { get; set; }
-            public string LPRNo { get; set; }
-            public DateTime? LPRdt { get; set; }
+        public int? oss_qty3 { get; set; }
+        public string oss_iv3 { get; set; }
+        public DateTime? oss_ivdt3 { get; set; }
 
-            public string DemandCtrlNo { get; set; }
-            public DateTime? DemandCtrlDate { get; set; }
+        // ===== CDS Issue series =====
+        public string cds_iv1 { get; set; }
+        public DateTime? cds_ivdt1 { get; set; }
+        public int? cds_qty2 { get; set; }
+        public string cds_iv2 { get; set; }
+        public DateTime? cds_ivdt2 { get; set; }
 
-            public string CurrStk { get; set; }
-            public string NowIssue { get; set; }
+        // ===== Extra CDS fields =====
+        public string cds_qty1 { get; set; }   // If exist
+        public string cds_qty3 { get; set; }   // If exist
+        public string cds_iv3 { get; set; }
+        public DateTime? cds_ivdt3 { get; set; }
 
-            public string RecdQty { get; set; }
-            public DateTime? DateNR { get; set; }
+        // ===== LPR =====
+        public int? lpr_qty { get; set; }
+        public string lpr_no { get; set; }
+        public DateTime? lpr_date { get; set; }
 
-            public string Qty1 { get; set; }
-            public string OSSIV1 { get; set; }
-            public DateTime? OSSIV_dt1 { get; set; }
+        // ===== Demand Control =====
+        public string demand_ctrl_no { get; set; }
+        public DateTime? demand_ctrl_date { get; set; }
 
-            public string Qty2 { get; set; }
-            public string OSSIV2 { get; set; }
-            public DateTime? OSSIV_dt2 { get; set; }
-
-            public string Qty3 { get; set; }
-            public string OSSIV3 { get; set; }
-            public DateTime? OSSIV_dt3 { get; set; }
-
-            public string CDSqt1 { get; set; }
-            public string CDSIV1 { get; set; }
-            public DateTime? CDSIV_dt1 { get; set; }
-
-            public string CDSqt2 { get; set; }
-            public string CDSIV2 { get; set; }
-            public DateTime? CDSIV_dt2 { get; set; }
-
-            public string CDSqt3 { get; set; }
-            public string CDSIV3 { get; set; }
-            public DateTime? CDSIV_dt3 { get; set; }
-
-            public string DemID { get; set; }
-        }
+        // ===== Dem ID =====
+        public string dem_id { get; set; }
     }
-
+}
