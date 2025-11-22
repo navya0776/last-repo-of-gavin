@@ -47,6 +47,7 @@ async def main():
     await init_db()
     CSV_PATH = os.path.join(
         os.path.dirname(__file__),
+
         "csv/scripts/msteqpt.csv"  # replace with your file name
     )
     await import_master_table_csv(CSV_PATH)

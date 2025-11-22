@@ -21,8 +21,10 @@ class MasterTable(Base):
     eqpt_code: Mapped[str] = mapped_column(String(4), nullable=False)
     ledger_name: Mapped[str] = mapped_column(String(11), nullable=False)
 
-    # equipment name added
-    eqpt_name: Mapped[str] = mapped_column(String(50), nullable=False)
+    eqpt_name: Mapped[str] = mapped_column(
+        String(15),
+        nullable=False
+    )
 
     dmd: Mapped[list["Demand"]] = relationship(
         "Demand",
