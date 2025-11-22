@@ -10,7 +10,7 @@ class Demand(Base):
     __tablename__ = "Demand_table"
 
     eqpt_code: Mapped[str] = mapped_column(
-        String, ForeignKey("equipments.eqpt_code"), nullable=False
+        String, ForeignKey("master_table.eqpt_code"), nullable=False
     )
 
     demand_no: Mapped[int] = mapped_column(
@@ -22,7 +22,7 @@ class Demand(Base):
     )
 
     eqpt_name: Mapped[str] = mapped_column(
-        String(100), ForeignKey("equipments.equipment_name"), nullable=False
+        String(100), ForeignKey("master_table.eqpt_name"), nullable=False
     )
 
     fin_year: Mapped[str] = mapped_column(

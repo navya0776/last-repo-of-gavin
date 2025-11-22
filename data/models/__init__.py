@@ -7,7 +7,6 @@ from .users import User
 from .lpr import LPR
 from .lpr_junction import LPR_Junction
 from .floating_indent import Indent
-from .equipments import Equipment
 
 __all__ = [
     "Base",
@@ -24,5 +23,4 @@ __all__ = [
     "LPR",
     "LPR_Junction",
     "Indent",
-    "Equipment",
 ]

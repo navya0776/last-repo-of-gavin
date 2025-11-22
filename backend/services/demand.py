@@ -3,7 +3,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from data.models import Demand, Dmd_junction, Equipment
+from data.models import Demand, Dmd_junction, MasterTable
 from backend.schemas.demand import (
     DemandCreate,
     DemandResponse,
@@ -12,6 +12,7 @@ from backend.schemas.demand import (
 )
 
 
+# TODO: Change this according to the newly found "On selection" feature in APD
 async def create_demand(request: DemandCreate, session: AsyncSession):
     result = await session.execute(
         select(Demand).where(Demand.eqpt_code == request.eqpt_code)
@@ -53,7 +54,7 @@ async def _get_demand(
 
 async def _delete_demand(demand_no: int, session: AsyncSession):
     result = await session.execute(
-        select(Dmd_junction).where(Dmd_junction.demand_no == int(demand_no))
+        select(Demand).where(Demand.demand_no == int(demand_no))
     )
     demand = result.scalar_one_or_none()
     if not demand:
@@ -68,7 +69,7 @@ async def _delete_demand(demand_no: int, session: AsyncSession):
 
 async def _lock_demand(demand_no: int, session: AsyncSession):
     result = await session.execute(
-        select(Dmd_junction).where(Dmd_junction.demand_no == int(demand_no))
+        select(Demand).where(Demand.demand_no == int(demand_no))
     )
     demand = result.scalar_one_or_none()
     if not demand:
@@ -82,7 +83,7 @@ async def _lock_demand(demand_no: int, session: AsyncSession):
 
 async def _unlock_demand(demand_no: int, session: AsyncSession):
     result = await session.execute(
-        select(Dmd_junction).where(Dmd_junction.demand_no == int(demand_no))
+        select(Demand).where(Demand.demand_no == int(demand_no))
     )
     demand = result.scalar_one_or_none()
     if not demand:
@@ -95,7 +96,7 @@ async def _unlock_demand(demand_no: int, session: AsyncSession):
 
 
 async def _list_all_equipment(session: AsyncSession) -> list[EquiptmentResponse]:
-    result = await session.execute(select(Equipment))
+    result = await session.execute(select(MasterTable))
     equipments = result.scalars().all()
     return [EquiptmentResponse.model_validate(eqpt) for eqpt in equipments]
 
