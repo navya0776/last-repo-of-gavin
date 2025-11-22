@@ -192,8 +192,6 @@ class cds_table(Base):
 
     grp: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
     head: Mapped[str] = mapped_column(String(15), nullable=False)
-    db: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
-    # ---- RELATIONSHIPS ----
 
     # ---- RELATIONSHIPS ----
     eqpt: Mapped["MasterTable"] = relationship(
