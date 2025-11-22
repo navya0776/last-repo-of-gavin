@@ -1,13 +1,12 @@
 # models/audit.py
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List
-from sqlalchemy import (
-    Column, Integer, String, DateTime, ForeignKey, JSON, Enum as SAEnum
-)
+from sqlalchemy import (Column, Integer, String, DateTime, ForeignKey, JSON, Enum as SAEnum)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
-# IST helper (used only for default display — DB should store UTC in prod)
+from datetime import datetime, timedelta, timezone
+
 IST = timezone(timedelta(hours=5, minutes=30))
 
 
@@ -102,21 +101,11 @@ class AuditLog(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     activity_id: Mapped[str] = mapped_column(String(120), nullable=False, unique=True, index=True)
-    username: Mapped[str] = mapped_column(String(120),ForeignKey("users.username", ondelete="SET NULL"),nullable=True,)
+    username: Mapped[str] = mapped_column(String(120),ForeignKey("users.username"),nullable=False,)
     action: Mapped[ActionTypeEnum] = mapped_column(SAEnum(ActionTypeEnum, native_enum=False), nullable=False)
     resource_type: Mapped[ResourceTypeEnum] = mapped_column(SAEnum(ResourceTypeEnum, native_enum=False), nullable=False)
     resource_id: Mapped[str] = mapped_column(String(120), nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.now)
+    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True),nullable=False,default=lambda: datetime.now(IST))
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="success")
     error_message: Mapped[Optional[str]] = mapped_column(String(400), nullable=True)
-    session_id: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
-class ChangeDetail(Base):
-    __tablename__ = "change_detail"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    audit_id: Mapped[int] = mapped_column(Integer, ForeignKey("audit_log.id", ondelete="CASCADE"), nullable=False)
-    field_name: Mapped[str] = mapped_column(String(120), nullable=False)
-    old_value: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    new_value: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-
-    audit: Mapped[AuditLog] = relationship("AuditLog", back_populates="change_details")
+    session_id: Mapped[str] = mapped_column(String(120), nullable=False)
