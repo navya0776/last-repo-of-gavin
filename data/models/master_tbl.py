@@ -15,7 +15,7 @@ class MasterTable(Base):
     )
 
     Ledger_code: Mapped[str] = mapped_column(
-        String(4), primary_key=True, nullable=False
+        String(4), nullable=False
     )
 
     eqpt_code: Mapped[str] = mapped_column(String(4), nullable=False)

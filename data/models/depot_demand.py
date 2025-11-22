@@ -1,7 +1,6 @@
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Boolean, Date
+from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
-from datetime import date
 
 from .base import Base
 
@@ -46,6 +45,8 @@ class Demand(Base):
     outstanding: Mapped[int] = mapped_column(Integer, default=0)
     percent_received: Mapped[float] = mapped_column(Float, default=0.0)
     remarks: Mapped[Optional[str]] = mapped_column(String(255))
+    is_locked: Mapped[bool] = mapped_column(Boolean,
+                                            nullable=False)
 
     # --- RELATIONSHIPS ---- #
 
@@ -72,8 +73,6 @@ class Dmd_junction(Base):
     demand_no: Mapped[int] = mapped_column(Integer,
                                            nullable=False)
 
-    is_locked: Mapped[bool] = mapped_column(Boolean,
-                                            nullable=False)
 
     Scale_no: Mapped[str] = mapped_column(String(10), nullable=False)
     Part_no: Mapped[str] = mapped_column(String(10), nullable=False)
