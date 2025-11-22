@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Integer, String, Date
+from sqlalchemy import ForeignKey, Integer, String, Date, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 from datetime import date
@@ -65,9 +65,52 @@ class JobMaster(Base):
     VIR_DT3: Mapped[int] = mapped_column(Integer, nullable=True)
     VIR_DEM3: Mapped[int] = mapped_column(Integer, nullable=True)
     VIR_ISS3: Mapped[int] = mapped_column(Integer, nullable=True)
-    Eqpt: Mapped["MasterTable"] = relationship("MasterTable", back_populates="job")
+    # ---- Add Job ----
+    job_prefix: Mapped[str | None] = mapped_column(String(20))
+    qty_on_job: Mapped[int | None] = mapped_column(Integer)
+    job_suffix: Mapped[str | None] = mapped_column(String(20))
+    depot: Mapped[str | None] = mapped_column(String(50))
+    dep_wo: Mapped[str | None] = mapped_column(String(50))
+    wo_date: Mapped[date | None] = mapped_column(Date)
+    nature_rep: Mapped[str | None] = mapped_column(String(20))
+    dt_received: Mapped[date | None] = mapped_column(Date)
+    prod_started: Mapped[date | None] = mapped_column(Date)
+    qty_completed: Mapped[int | None] = mapped_column(Integer)
+    remarks: Mapped[str | None] = mapped_column(String(255))
+    ahq_srl: Mapped[str | None] = mapped_column(String(50))
+    make: Mapped[str | None] = mapped_column(String(50))
+    model: Mapped[str | None] = mapped_column(String(50))
+    ch_no: Mapped[str | None] = mapped_column(String(50))
+    cum_tot: Mapped[int | None] = mapped_column(Integer)
+    VIR_supp: Mapped[int | None] = mapped_column(Integer)
+    ohs: Mapped[str | None] = mapped_column(String(50))
+    date_completed: Mapped[date | None] = mapped_column(Date)
+    catalogue_ref: Mapped[str | None] = mapped_column(String(50))
+    em_ba_no_eng: Mapped[str | None] = mapped_column(String(50))
+    tgt_date: Mapped[date | None] = mapped_column(Date)
+    unit: Mapped[str | None] = mapped_column(String(10))
+    eng_no: Mapped[str | None] = mapped_column(String(20))
+    eng_job: Mapped[str | None] = mapped_column(String(20))
+    eng_job_date: Mapped[date | None] = mapped_column(Date)
+    sub_assy_job: Mapped[str | None] = mapped_column(String(20))
+    sub_assy_date: Mapped[date | None] = mapped_column(Date)
+    bd_srl: Mapped[str | None] = mapped_column(String(20))
+    prog: Mapped[float | None] = mapped_column(Float)
+    gang_ldr: Mapped[str | None] = mapped_column(String(50))
+
+    # ---- Relationships ----
+    Eqpt: Mapped["MasterTable"] = relationship(
+        "MasterTable", back_populates="job")
     jobs: Mapped[list["CDS"]] = relationship("CDS", back_populates="demands")
     job_lpr: Mapped["LPR"] = relationship("LPR", back_populates="lpr_job")
+
+    # Many-to-many relationship to Ledger via association table `job_ledger`
+    ledgers: Mapped[list["Ledger"]] = relationship(
+        "Ledger",
+        secondary="job_ledger",
+        back_populates="jobs",
+        lazy="select",
+    )
 
 
 # ===========================
@@ -108,14 +151,12 @@ class CDS(Base):
 
 class CdsJunction(Base):
     __tablename__ = "cds_junction"
-    # ---- PRIMARY KEYS ---- #
-    demand_no: Mapped[int] = mapped_column(Integer, ForeignKey("cds.dem_id"),
-                                           primary_key=True)
-    # ---- FOREIGN KEYS ---- #
+    ledger_page_id: Mapped[int] = mapped_column(Integer,
+                                            primary_key=True)
+    demand_no: Mapped[int] = mapped_column(Integer, ForeignKey("cds.dem_id"))
     ledger_page: Mapped[str] = mapped_column(String(20),
                                              ForeignKey("ledger.ledger_page"),
-                                             primary_key=True)
-    # ---- OTHER FIELDS ---- #
+                                             )
     ohs_no: Mapped[int] = mapped_column(Integer, nullable=True)
     part_number: Mapped[str] = mapped_column(String(50), nullable=True)
     spart_no: Mapped[str] = mapped_column(String(50), nullable=True)

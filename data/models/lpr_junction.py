@@ -27,6 +27,8 @@ class LPR_Junction(Base):
     so_no: Mapped[str] = mapped_column(String(20), nullable=True)
     so_date: Mapped[date] = mapped_column(Date, nullable=True)
     vendor: Mapped[str] = mapped_column(String(100), nullable=True)
+    grp: Mapped[str] = mapped_column(String(20), nullable=True)
+    lpr_date: Mapped[date] = mapped_column(Date, nullable=True)
 
     # ----- RELATIONSHIPS -----
     lpr: Mapped["LPR"] = relationship("LPR", back_populates="lpr_junctions")

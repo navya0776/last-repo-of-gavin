@@ -1,6 +1,7 @@
 from sqlalchemy import Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
+from .orders import OrderJunction
 
 
 # 1️⃣ AllStores table
@@ -84,3 +85,41 @@ class Ledger(Base):
 
     ledger_lpr_junc: Mapped["LPR_Junction"] = relationship(
         "LPR_Junction", back_populates="lpr_ledger_junc")
+
+    # Many-to-many relationship to JobMaster via association table `job_ledger`
+    jobs: Mapped[list["JobMaster"]] = relationship(
+        "JobMaster",
+        secondary="job_ledger",
+        back_populates="ledgers",
+        lazy="select",
+    )
+
+    # relationship to OrderJunction
+    ledger_order_items: Mapped[list["OrderJunction"]] = relationship(
+    "OrderJunction",
+    back_populates="ledger",
+    foreign_keys=[OrderJunction.ledger_page]
+    )
+    
+    ledger_billings: Mapped[list["Billing"]] = relationship(
+    "Billing",
+    back_populates="ledger",
+    cascade="all, delete-orphan"
+)
+
+
+# Association table for many-to-many between JobMaster and Ledger
+class JobLedger(Base):
+    __tablename__ = "job_ledger"
+
+    job_no: Mapped[str] = mapped_column(
+        String(6),
+        ForeignKey("job_master.job_no"),
+        primary_key=True,
+    )
+
+    ledger_page: Mapped[str] = mapped_column(
+        String(20),
+        ForeignKey("ledger.ledger_page"),
+        primary_key=True,
+    )

@@ -22,9 +22,6 @@ class LPR(Base):
     # qty: Mapped[int] = mapped_column(Integer, nullable=True)
 
     # ----- RELATIONSHIPS -----
-    lpr_job: Mapped["JobMaster"] = relationship(
-        "JobMaster", back_populates="job_lpr")
-    lpr_junctions: Mapped[list["LPR_Junction"]] = relationship(
-        "LPR_Junction", back_populates="lpr", cascade="all, delete-orphan")
-    indent_items: Mapped[list["Indent"]] = relationship(
-        "Indent", back_populates="lpr")
+    lpr_job: Mapped["JobMaster"] = relationship("JobMaster", back_populates="job_lpr")
+    lpr_junctions: Mapped[list["LPR_Junction"]] = relationship("LPR_Junction", back_populates="lpr",cascade="all, delete-orphan")
+    indent_items: Mapped[list["FloatingIndent"]] = relationship("FloatingIndent", back_populates="lpr")
