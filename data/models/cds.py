@@ -146,9 +146,14 @@ class cds_table(Base):
     __tablename__ = "cds_table"
 
     # ---- COMPOSITE PRIMARY KEY ----
+    Master_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("master_table.Master_id"),
+    )
+
     ledger_code: Mapped[str] = mapped_column(
         String(4),
-        ForeignKey("master_table.Ledger_code"),
+        nullable=False
     )
 
     eqpt_code: Mapped[str] = mapped_column(

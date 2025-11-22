@@ -5,6 +5,8 @@ import os
 loggers = getLogger(__name__)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+#DATABASE_URL="postgresql+psycopg://admin:pass@localhost:5432/ims"
 if not DATABASE_URL:
     raise RuntimeError(
         "DATABASE_URL not set. Export DATABASE_URL."
