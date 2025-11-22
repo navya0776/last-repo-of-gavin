@@ -1,36 +1,32 @@
-from typing import List, Optional, Any, Dict
-from pydantic import BaseModel, Field
+# models/audit.py
 from datetime import datetime, timezone, timedelta
-from enum import Enum
+from typing import Optional, List
+from sqlalchemy import (
+    Column, Integer, String, DateTime, ForeignKey, JSON, Enum as SAEnum
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from .base import Base
 
-# Define Indian Standard Time (UTC +5:30)
+# IST helper (used only for default display — DB should store UTC in prod)
 IST = timezone(timedelta(hours=5, minutes=30))
 
 
-# ------------------------------
-# ENUMS
-# ------------------------------
-class ActionType(str, Enum):
-    """Enumeration of all possible actions in the system."""
+# --- Define string enums (mirror values from your logs.py) ---
+from enum import Enum
 
-    # Store actions
+
+class ActionTypeEnum(str, Enum):
     STORE_CREATED = "store_created"
     STORE_UPDATED = "store_updated"
     STORE_DELETED = "store_deleted"
-
-    # Ledger actions
     LEDGER_CREATED = "ledger_created"
     LEDGER_UPDATED = "ledger_updated"
     LEDGER_DELETED = "ledger_deleted"
     LEDGER_ENTRY_ADDED = "ledger_entry_added"
     LEDGER_ENTRY_MODIFIED = "ledger_entry_modified"
-
-    # Equipment actions
     EQUIPMENT_ADDED = "equipment_added"
     EQUIPMENT_UPDATED = "equipment_updated"
     EQUIPMENT_REMOVED = "equipment_removed"
-
-    # Stock actions
     STOCK_ADDED = "stock_added"
     STOCK_REDUCED = "stock_reduced"
     STOCK_TRANSFERRED = "stock_transferred"
@@ -39,8 +35,6 @@ class ActionType(str, Enum):
     REP_STOCK_UPDATED = "rep_stock_updated"
     SERV_STOCK_UPDATED = "serv_stock_updated"
     CDS_STOCK_UPDATED = "cds_stock_updated"
-
-    # Demand actions
     DEMAND_CREATED = "demand_created"
     DEMAND_UPDATED = "demand_updated"
     DEMAND_APPROVED = "demand_approved"
@@ -50,21 +44,13 @@ class ActionType(str, Enum):
     DEMAND_DELETED = "demand_deleted"
     SUB_DEMAND_ADDED = "sub_demand_added"
     SUB_DEMAND_UPDATED = "sub_demand_updated"
-
-    # Part actions
     PART_ADDED = "part_added"
     PART_UPDATED = "part_updated"
     PART_REMOVED = "part_removed"
-
-    # Dues actions
     DUES_IN_ADDED = "dues_in_added"
     DUES_IN_RECEIVED = "dues_in_received"
     DUES_IN_UPDATED = "dues_in_updated"
-
-    # Consumption actions
     CONSUMPTION_UPDATED = "consumption_updated"
-
-    # User actions
     USER_LOGIN = "user_login"
     USER_LOGOUT = "user_logout"
     USER_CREATED = "user_created"
@@ -74,30 +60,22 @@ class ActionType(str, Enum):
     USER_PASSWORD_RESET = "user_password_reset"
     USER_ROLE_CHANGED = "user_role_changed"
     USER_PERMISSIONS_UPDATED = "user_permissions_updated"
-
-    # Role and Permission actions
     ROLE_CREATED = "role_created"
     ROLE_UPDATED = "role_updated"
     ROLE_DELETED = "role_deleted"
     PERMISSION_CREATED = "permission_created"
     PERMISSION_UPDATED = "permission_updated"
     PERMISSION_DELETED = "permission_deleted"
-
-    # Report actions
     REPORT_GENERATED = "report_generated"
     REPORT_EXPORTED = "report_exported"
     REPORT_VIEWED = "report_viewed"
-
-    # System actions
     BACKUP_CREATED = "backup_created"
     BACKUP_RESTORED = "backup_restored"
     SYSTEM_ERROR = "system_error"
     UNAUTHORIZED_ACCESS_ATTEMPT = "unauthorized_access_attempt"
 
 
-class ResourceType(str, Enum):
-    """Type of resource being logged"""
-
+class ResourceTypeEnum(str, Enum):
     STORE = "store"
     LEDGER = "ledger"
     EQUIPMENT = "equipment"
@@ -109,171 +87,36 @@ class ResourceType(str, Enum):
     PERMISSION = "permission"
     REPORT = "report"
     SYSTEM = "system"
+    CDS = "cds"
+    VENDOR = "vendor"
+    LPR = "lpr"
+    FLOATING_INDENT = "floating_indent"
+    DEPOT_DEMAND = "depot_demand"        # APDemand in your screenshot
+    INDENT = "indent"
+    JOB = "job"  
 
 
-class ChangeDetail(BaseModel):
-    """Details of what changed in an update action"""
+# --- Core audit log table (generic) ---
+class AuditLog(Base):
+    __tablename__ = "audit_log"
 
-    field_name: str
-    old_value: Any
-    new_value: Any
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    activity_id: Mapped[str] = mapped_column(String(120), nullable=False, unique=True, index=True)
+    username: Mapped[str] = mapped_column(String(120),ForeignKey("users.username", ondelete="SET NULL"),nullable=True,)
+    action: Mapped[ActionTypeEnum] = mapped_column(SAEnum(ActionTypeEnum, native_enum=False), nullable=False)
+    resource_type: Mapped[ResourceTypeEnum] = mapped_column(SAEnum(ResourceTypeEnum, native_enum=False), nullable=False)
+    resource_id: Mapped[str] = mapped_column(String(120), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=datetime.now)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="success")
+    error_message: Mapped[Optional[str]] = mapped_column(String(400), nullable=True)
+    session_id: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
+class ChangeDetail(Base):
+    __tablename__ = "change_detail"
 
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    audit_id: Mapped[int] = mapped_column(Integer, ForeignKey("audit_log.id", ondelete="CASCADE"), nullable=False)
+    field_name: Mapped[str] = mapped_column(String(120), nullable=False)
+    old_value: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    new_value: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
 
-class AuditLog(BaseModel):
-    """Main audit log model - aligned with your existing schemas"""
-
-    activity_id: str  # Unique identifier for the log entry
-    user_id: str  # From User model
-    action: ActionType  # Type of action performed (using ActionType enum values)
-    resource_type: (
-        ResourceType  # Type of resource affected (using ResourceType enum values)
-    )
-    resource_id: str  # ID of the affected resource
-    timestamp: str = Field(default_factory=lambda: datetime.now(IST).isoformat())
-
-    # Status and outcome
-    status: str = "success"  # success, failed, pending, unauthorized
-    error_message: str | None = None  # If status is failed
-
-    # Request context
-    session_id: str | None = None
-
-
-class LedgerAuditLog(BaseModel):
-    """Specialized audit log for ledger operations - aligned with LedgerMaintenance"""
-
-    activity_id: str
-    user_id: str
-    action: str
-    timestamp: str = Field(default_factory=lambda: datetime.now(IST).isoformat())
-
-    ledger_page: str
-    ohs_number: int | None = None
-    isg_number: int | None = None
-    ssg_number: int | None = None
-    part_number: int
-    nomenclature: str
-
-    # Store context
-    store_id: str
-    equipment: str | None = None
-    equipment_code: int | None = None
-
-    changes: list[ChangeDetail] | None = None
-    details: dict[str, Any] = Field(default_factory=dict)
-    stock_changes: dict[str, Any] | None = None
-
-    username: str | None = None
-
-
-class DemandAuditLog(BaseModel):
-    """Specialized audit log for demand operations - aligned with Demand and Details"""
-
-    activity_id: str
-    user_id: str
-    action: str
-    timestamp: str = Field(default_factory=lambda: datetime.now(IST).isoformat())
-
-    demand_number: int
-    demand_type: str
-    equipment_code: int
-    equipment: str
-    financial_year: str
-
-    # Sub-demand (if applicable) - from Details model
-    sub_demand_number: int | None = None
-    part_number: int | None = None
-    nomenclature: str | None = None
-
-    # Store context
-    store_id: str
-    location: str | None = None
-
-    number_of_equiment: int | None = None
-    total_demand: int | None = None
-    quantity_demanded: int | None = None
-    recieved: int | None = None
-    outstanding: int | None = None
-
-    previous_status: str | None = None
-    current_status: str | None = None
-
-    changes: list[ChangeDetail] | None = None
-    details: dict[str, Any] = Field(default_factory=dict)
-
-    approved_by: str | None = None
-    rejected_by: str | None = None
-    rejection_reason: str | None = None
-
-    username: str | None = None
-    full_name: str | None = None
-
-
-class StockMovementLog(BaseModel):
-    """Specialized log for stock movements - aligned with LedgerMaintenance stock fields"""
-
-    activity_id: str
-    user_id: str
-    timestamp: str = Field(default_factory=lambda: datetime.now(IST).isoformat())
-
-    part_number: int
-    nomenclature: str
-    ledger_page: str
-
-    # Equipment context - from StoreLedgerDocument
-    equipment: str | None = None
-    equipment_code: int | None = None
-
-    # Store context - from AllStores
-    store_id: str
-    location: str | None = None
-
-    # Movement type
-    movement_type: str  # "in", "out", "transfer", "adjustment"
-    quantity: int
-
-    # Stock category and changes - aligned with LedgerMaintenance fields
-    stock_category: str  # "unsv_stock", "rep_stock", "serv_stock", "cds_unsv_stock", "cds_rep_stock", "cds_serv_stock"
-    stock_before: int
-    stock_after: int
-
-    # Transfer details (if applicable)
-    from_location: str | None = None
-    to_location: str | None = None
-
-    # Context
-    reason: str
-    reference_document: str | None = None  # Demand number, receipt number, etc.
-
-    # OHS/ISG/SSG context from LedgerMaintenance
-    ohs_number: int | None = None
-    isg_number: int | None = None
-    ssg_number: int | None = None
-
-    # Approval
-    approved_by: str | None = None
-
-    # User details
-    username: str | None = None
-
-
-class PartAuditLog(BaseModel):
-    """Audit log for part-level operations - aligned with AllParts"""
-
-    activity_id: str
-    user_id: str
-    action: str
-    timestamp: str = Field(default_factory=lambda: datetime.now(IST).isoformat())
-
-    part_number: int
-    nomenclature: str
-
-    total_stock: Optional[int] = None
-    dues_in: Optional[int] = None
-    dues_out: Optional[int] = None
-    demanded: Optional[int] = None
-
-    used_in_equipments: Optional[List[Dict[str, Any]]] = None
-    changes: Optional[List[ChangeDetail]] = None
-    details: Dict[str, Any] = Field(default_factory=dict)
-    username: Optional[str] = None
+    audit: Mapped[AuditLog] = relationship("AuditLog", back_populates="change_details")
