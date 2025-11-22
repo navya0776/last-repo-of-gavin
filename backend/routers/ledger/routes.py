@@ -49,6 +49,7 @@ async def get_all_ledger(
 async def get_ledger_page(
     permissions: UserPermissions,
     ledger_code: str,
+    session: AsyncSession = Depends(get_db),
 ):
     if permissions.ledger.read:
         return await get_ledger_pages(ledger_code, session)

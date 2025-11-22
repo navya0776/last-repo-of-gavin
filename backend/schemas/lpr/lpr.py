@@ -5,7 +5,7 @@ from typing import Optional
 # BASE SCHEMA
 # ================================
 class LPRBase(BaseModel):
-    job_no: int
+    job_no: str
     srl: Optional[int] = None
     scale: Optional[str] = None
     part_no: Optional[str] = None

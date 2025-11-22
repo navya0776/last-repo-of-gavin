@@ -6,7 +6,7 @@ from typing import Optional
 # ---------------------------------------------------
 class IndentBase(BaseModel):
     prev_indent: Optional[int] = None
-    job_no: Optional[int] = None
+    job_no: Optional[str] = None
     job_comp_type: Optional[str] = None
     eqpt_code: Optional[str] = None
     ledger_code: Optional[str] = None

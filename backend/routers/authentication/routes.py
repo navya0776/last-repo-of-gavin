@@ -1,5 +1,4 @@
 import asyncio
-from datetime import datetime, timedelta
 from hashlib import sha256
 from logging import getLogger
 from uuid import uuid4
@@ -11,7 +10,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.schemas.authentication import ForgetPasswordRequest, LoginRequest
 from backend.core.middleware import get_current_user
-from backend.schemas.users import User as UserModel
 
 from data.database import get_redis, get_db
 from data.models.users import User
@@ -66,8 +64,6 @@ async def login(credentials: LoginRequest, session: AsyncSession = Depends(get_d
     response.set_cookie(key="session_id", value=session_id, httponly=True, max_age=None)
 
     return response
-
-
 
 
 @app.post("/logout")
@@ -128,6 +124,5 @@ async def forget_password(
 
     exists.new_user = False
     exists.password = sha256(new_user.new_password.encode()).hexdigest()
-    await session.commit()
 
     return status.HTTP_200_OK

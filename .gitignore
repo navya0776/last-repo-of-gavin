@@ -131,6 +131,7 @@ celerybeat.pid
 
 # Environments
 .env
+.env_*
 .venv
 env/
 venv/
@@ -209,3 +210,4 @@ packages/
 
 versions
 issues.txt
+csv

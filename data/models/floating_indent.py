@@ -13,7 +13,7 @@ class Indent(Base):
 
     # ----- OTHER FIELDS (NO FKs) -----
     prev_indent: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    job_no: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    job_no: Mapped[str | None] = mapped_column(String(6), nullable=True)
     job_comp_type: Mapped[str | None] = mapped_column(String(5))
     eqpt_code: Mapped[str | None] = mapped_column(String(4))
     ledger_code: Mapped[str | None] = mapped_column(String(10))

@@ -2,7 +2,10 @@ from datetime import date
 from typing import Optional
 from pydantic import ConfigDict, field_validator, Field
 from ..Basemodel import (
-    CDSBase_primary, AddEquipmentBase, JobMasterBase, CDSBase_secondary,
+    CDSBase_primary,
+    AddEquipmentBase,
+    JobMasterBase,
+    CDSBase_secondary,
 )
 
 # ========= CDS primary ==========
@@ -12,17 +15,22 @@ class CDSView_primary(CDSBase_primary):
     pass
     model_config = ConfigDict(from_attributes=True)
 
+
 # ========= Add Equipment ==========
 
 
 class AddEquipmentCreate(AddEquipmentBase):
-    grp: str = Field(..., min_length=4,
-                     description="""
+    grp: str = Field(
+        ...,
+        min_length=4,
+        description="""
                      Group is the name of the equipment group and must be at
-                     least 4 characters long""")
+                     least 4 characters long""",
+    )
 
-    head: str = Field(..., min_length=4,
-                      description="Head must be at least 4 characters long")
+    head: str = Field(
+        ..., min_length=4, description="Head must be at least 4 characters long"
+    )
 
     equipment_name: str = Field(..., min_length=4)
 
@@ -44,6 +52,7 @@ class AddEquipmentView(AddEquipmentBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 # ========= JobMaster ==========
 
 
@@ -63,7 +72,6 @@ class JobMasterCreate(JobMasterBase):
 
 
 class JobMasterView(JobMasterBase):
-
     eqpt_code: str
     Rmks: Optional[str] = None
     no_comp: Optional[int] = None

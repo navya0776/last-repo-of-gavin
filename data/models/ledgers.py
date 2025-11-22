@@ -25,9 +25,12 @@ class Ledger(Base):
     store_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("stores.store_id"), nullable=False
     )
+    Master_id: Mapped[int] = mapped_column(Integer,
+                                           ForeignKey(
+                                               "master_table.Master_id"),
+                                           nullable=False)
+
     Ledger_code: Mapped[str] = mapped_column(String(4),
-                                             ForeignKey(
-                                             "master_table.Ledger_code"),
                                              nullable=False)
 
     ledger_page: Mapped[str] = mapped_column(String(20), nullable=False,
@@ -75,7 +78,7 @@ class Ledger(Base):
     )
 
     Eqpt: Mapped["MasterTable"] = relationship("MasterTable", back_populates="legder",
-                                               uselist=False, foreign_keys=[Ledger_code])
+                                               uselist=False, foreign_keys=[Master_id])
     cds_ledger: Mapped["CdsJunction"] = relationship(
         "CdsJunction", back_populates="ledger_cds")
 

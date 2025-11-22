@@ -2,6 +2,7 @@ from sqlalchemy import Integer, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
+
 class LPR(Base):
     __tablename__ = "lpr"
 
@@ -9,7 +10,8 @@ class LPR(Base):
     lpr_no: Mapped[int] = mapped_column(Integer, primary_key=True)
 
     # ----- FOREIGN KEYS -----
-    job_no: Mapped[int] = mapped_column(Integer, ForeignKey("job_master.job_no"))
+    job_no: Mapped[str] = mapped_column(
+        String(6), ForeignKey("job_master.job_no"))
 
     # # ----- FIELDS -----
     # srl: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -20,6 +22,9 @@ class LPR(Base):
     # qty: Mapped[int] = mapped_column(Integer, nullable=True)
 
     # ----- RELATIONSHIPS -----
-    lpr_job: Mapped["JobMaster"] = relationship("JobMaster", back_populates="job_lpr")
-    lpr_junctions: Mapped[list["LPR_Junction"]] = relationship("LPR_Junction", back_populates="lpr",cascade="all, delete-orphan")
-    indent_items: Mapped[list["Indent"]] = relationship("Indent", back_populates="lpr")
+    lpr_job: Mapped["JobMaster"] = relationship(
+        "JobMaster", back_populates="job_lpr")
+    lpr_junctions: Mapped[list["LPR_Junction"]] = relationship(
+        "LPR_Junction", back_populates="lpr", cascade="all, delete-orphan")
+    indent_items: Mapped[list["Indent"]] = relationship(
+        "Indent", back_populates="lpr")

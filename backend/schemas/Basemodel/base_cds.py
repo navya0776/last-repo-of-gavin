@@ -6,8 +6,7 @@ from ..ledger.ledgers import LedgerMaintenanceBase
 
 
 class CDSBase_primary(BaseModel):
-    eqpt_name: str
-    Database: str
+    equipment_name: str
     head: str
     eqpt_code: str
     ledger_code: str

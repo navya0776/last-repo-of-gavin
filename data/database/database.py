@@ -1,8 +1,14 @@
 from logging import getLogger
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 
 loggers = getLogger(__name__)
+# project root (adjust if needed)
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+load_dotenv(BASE_DIR / ".env_backend")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
