@@ -15,22 +15,11 @@ namespace IMS
         {
             base.OnStartup(e);
 
-            Windows.LoginWindow login = new Windows.LoginWindow();
-            bool? result = login.ShowDialog();
-
-            if (result == true)
-            {
-                MainWindow main = new MainWindow();
-                main.Show();
-            }
-            else
-            {
-                // exit app if login fails
-            }
-
-            //MainWindow main = new MainWindow();
-            //main.Show();
+            // Start Splash Video instead of Login
+            var login = new Windows.LoginWindow();
+            login.Show();
         }
+
 
         public class StringNullOrEmptyToVisibilityConverter : IValueConverter
         {

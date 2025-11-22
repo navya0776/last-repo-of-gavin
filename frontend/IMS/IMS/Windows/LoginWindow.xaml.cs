@@ -1,5 +1,4 @@
-﻿
-using DocumentFormat.OpenXml.Office2016.Excel;
+﻿using DocumentFormat.OpenXml.Office2016.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using IMS.Services;
 using IMS.Views;
@@ -15,7 +14,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -25,19 +23,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-
-
-
 namespace IMS.Windows
 {
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
-
-
     public partial class LoginWindow : Window
     {
-
         public class LoginResponse
         {
             public string message { get; set; }
@@ -52,7 +41,7 @@ namespace IMS.Windows
             PasswordWatermark.Visibility = Visibility.Visible;
         }
 
-        private void UsernameBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void UsernameBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             UsernameWatermark.Visibility =
                 string.IsNullOrWhiteSpace(UsernameBox.Text)
@@ -77,15 +66,14 @@ namespace IMS.Windows
                 return;
             }
 
-
             var payload = new { username = UsernameBox.Text, password = PasswordBox.Password };
 
+            // ✔ FIX → use ONLY ApiClient
             var data = await ApiClient.PostAsync<LoginResponse>("auth/login", payload);
-
 
             if (data == null)
             {
-                MessageBox.Show("Invalid credentials!");
+                ShowError("Invalid credentials!");
                 return;
             }
 
@@ -96,62 +84,27 @@ namespace IMS.Windows
             if (data.is_admin)
             {
                 main.MainFrame.Navigate(new AdminDashboatd());
-                main.Show();
             }
             else
             {
                 if (data.is_new_user)
                 {
-                    main.Show();
                     var popup = new ChangePasswordWindow();
                     popup.ShowDialog();
-
                 }
 
-                //main.MainFrame.Navigate(new Dashboard());
+                // navigate to normal dashboard if needed
+                // main.MainFrame.Navigate(new Dashboard());
             }
-
-
 
             this.Hide();
         }
-
-
-
-
-
-
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private async Task<LoginResponse?> Authenticate(string username, string password)
-        {
-            var payload = new
-            {
-                username,
-                password
-            };
-
-            try
-            {
-                HttpResponseMessage response =
-                    await Services.ApiClient._client.PostAsJsonAsync("auth/login", payload);
-
-                if (!response.IsSuccessStatusCode)
-                    return null;
-
-                var data = await response.Content.ReadFromJsonAsync<LoginResponse>();
-                return data;
-            }
-            catch
-            {
-                MessageBox.Show("Could not connect to server!");
-                return null;
-            }
-        }
         private void ShowError(string message)
         {
             ErrorText.Text = message;
@@ -163,8 +116,4 @@ namespace IMS.Windows
             ErrorPopup.IsOpen = false;
         }
     }
-
-
-
-
-    }
+}

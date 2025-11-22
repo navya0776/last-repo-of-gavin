@@ -118,12 +118,19 @@
                 <!-- Row 0 -->
                 <TextBlock Grid.Column="0" Style="{StaticResource Lbl}" Text="Equipment" Height="16" Margin="0,0,6,0"/>
                 <DockPanel Grid.Row="0" Grid.Column="1">
-                    <ComboBox x:Name="cmbEquipment" MinWidth="230" />
+                    <ComboBox x:Name="cmbEquipment"
+                          MinWidth="230"
+                          ItemsSource="{Binding EquipmentList}"
+                          DisplayMemberPath="eqpt_name"
+                          SelectedValuePath="eqpt_code"
+                          SelectedValue="{Binding Model.eqpt_code, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
 
                 <TextBlock Grid.Column="2" Style="{StaticResource Lbl}" Text="AHQ Srl" Height="16" Margin="126,0,4,0"/>
-                <TextBox x:Name="txtAhq" Grid.Row="0" Grid.Column="3"
-                         Style="{StaticResource PinkBox}"  Margin="1,0,109,5"/>
+                <TextBox x:Name="txtAhq"
+                         Grid.Row="0" Grid.Column="3"
+                         Style="{StaticResource PinkBox}"
+                         Text="{Binding Model.demand_no, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Grid.Column="4" Style="{StaticResource Lbl}" Text="Fin Year" Height="16" Margin="110,0,6,0"/>
                 <ComboBox x:Name="cmbFinYear" Grid.Row="0" Grid.Column="5" Margin="10,1,175,38" Grid.RowSpan="2"
@@ -136,9 +143,11 @@
                 <!-- Row 1 -->
                 <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Lbl}" Text="Store Code" Height="16" Margin="0,0,6,0"/>
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                    <TextBox x:Name="txtStore" Width="44" />
+                    <TextBox x:Name="txtStore" Width="44"
+                         Text="{Binding Model.Page_no, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="  Eqpt Code" VerticalAlignment="Center" Margin="6,0,6,0"/>
-                    <TextBox x:Name="txtEqptCode" Width="60"/>
+                    <TextBox x:Name="txtEqptCode" Width="60"
+                         Text="{Binding Model.eqpt_code, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
                 <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Lbl}" Text="Eqpt" Height="16" Margin="147,0,5,0"/>
@@ -178,8 +187,8 @@
 
                 <!-- Row 4 -->
                 <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource Lbl}" Text="DemandAuth" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="4" Grid.Column="1" 
-                         />
+                <TextBox Grid.Row="4" Grid.Column="1"
+                         Text="{Binding Model.Auth, UpdateSourceTrigger=PropertyChanged}" />
 
 
 
@@ -209,13 +218,13 @@
                 <!-- Row 6 -->
                 <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource Lbl}" Text="Consumption pattern" Height="16" Margin="0,0,6,0"/>
                 <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                    <DatePicker x:Name="dpConsFrom" Width="118"/>
-                    <TextBlock Text=" to " VerticalAlignment="Center"/>
-                    <DatePicker x:Name="dpConsTo" Width="118"/>
+                    <TextBox Text="{Binding Model.Cons_pattern, UpdateSourceTrigger=PropertyChanged}" Width="118"/>
                 </StackPanel>
 
                 <TextBlock Grid.Row="6" Grid.Column="2" Style="{StaticResource Lbl}" Text="No of eqpt completed" Height="16" Margin="45,0,10,0"/>
-                <TextBox Grid.Row="6" Grid.Column="3" Style="{StaticResource NumBox}" Text="0" Margin="73,0,73,0"/>
+                <TextBox Grid.Row="6" Grid.Column="3"
+                         Style="{StaticResource NumBox}"
+                         Text="{Binding Model.qty_dem, UpdateSourceTrigger=PropertyChanged}" />
 
                 <!-- Row 7 -->
                 <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource Lbl}" Text="Demand No" Height="16" Margin="0,0,6,0"/>

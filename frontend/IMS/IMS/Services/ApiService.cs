@@ -17,7 +17,7 @@ namespace IMS.Services
     {
         private static readonly CookieContainer _cookies = new CookieContainer();
         private static readonly HttpClient _client;
-        private static HttpClientHandler _handler;  
+        private static HttpClientHandler _handler;
 
 
         static ApiService()
@@ -62,11 +62,11 @@ namespace IMS.Services
             PrintCookies();
 
             Debug.WriteLine("✅ Login succeeded");
-    //        var cookies = ((HttpClientHandler)_handler).CookieContainer
-    //.GetCookies(new Uri("http://localhost:8000/"));
+            //        var cookies = ((HttpClientHandler)_handler).CookieContainer
+            //.GetCookies(new Uri("http://localhost:8000/"));
 
-    //        foreach (Cookie cookie in cookies)
-    //            Console.WriteLine($"🍪 Cookie stored: {cookie.Name} = {cookie.Value}");
+            //        foreach (Cookie cookie in cookies)
+            //            Console.WriteLine($"🍪 Cookie stored: {cookie.Name} = {cookie.Value}");
 
 
             // HttpClientHandler is already storing cookies automatically
@@ -154,6 +154,38 @@ namespace IMS.Services
         //    resp.EnsureSuccessStatusCode();
         //    return true;
         //}
+
+        // ------------------------------
+        // GENERIC GET
+        // ------------------------------
+        public static async Task<T?> GetAsync<T>(string endpoint)
+        {
+            var resp = await _client.GetAsync(endpoint);
+            resp.EnsureSuccessStatusCode();
+
+            return await resp.Content.ReadFromJsonAsync<T>();
+        }
+
+        // ------------------------------
+        // GENERIC POST
+        // ------------------------------
+        public static async Task<T?> PostAsync<T>(string endpoint, object body)
+        {
+            var resp = await _client.PostAsJsonAsync(endpoint, body);
+            resp.EnsureSuccessStatusCode();
+
+            return await resp.Content.ReadFromJsonAsync<T>();
+        }
+
+        // ------------------------------
+        // GENERIC DELETE
+        // ------------------------------
+        public static async Task DeleteAsync(string endpoint)
+        {
+            var resp = await _client.DeleteAsync(endpoint);
+            resp.EnsureSuccessStatusCode();
+        }
+
 
     }
 }
