@@ -23,19 +23,20 @@ class Stores(Base):
 class Ledger(Base):
     __tablename__ = "ledger"
 
+    ledger_id: Mapped[int] = mapped_column(Integer, primary_key=True,
+                                         autoincrement=True)
     store_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("stores.store_id"), nullable=False
+        Integer, ForeignKey("stores.store_id"), nullable=True
     )
     Master_id: Mapped[int] = mapped_column(Integer,
                                            ForeignKey(
                                                "master_table.Master_id"),
-                                           nullable=False)
+                                           nullable=True)
 
     Ledger_code: Mapped[str] = mapped_column(String(4),
-                                             nullable=False)
+                                             nullable=True)
 
-    ledger_page: Mapped[str] = mapped_column(String(20), nullable=False,
-                                             primary_key=True)
+    ledger_page: Mapped[str] = mapped_column(String(20), nullable=True)
     ohs_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
     isg_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
     ssg_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
@@ -98,7 +99,7 @@ class Ledger(Base):
     ledger_order_items: Mapped[list["OrderJunction"]] = relationship(
     "OrderJunction",
     back_populates="ledger",
-    foreign_keys=[OrderJunction.ledger_page]
+    foreign_keys=[OrderJunction.ledger_id]
     )
     
     ledger_billings: Mapped[list["Billing"]] = relationship(
@@ -118,8 +119,8 @@ class JobLedger(Base):
         primary_key=True,
     )
 
-    ledger_page: Mapped[str] = mapped_column(
-        String(20),
-        ForeignKey("ledger.ledger_page"),
+    ledger_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("ledger.ledger_id"),
         primary_key=True,
     )

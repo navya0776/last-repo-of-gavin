@@ -7,7 +7,7 @@ class LPR(Base):
     __tablename__ = "lpr"
 
     # ----- PRIMARY KEY -----
-    lpr_no: Mapped[int] = mapped_column(Integer, primary_key=True)
+    lpr_no: Mapped[str] = mapped_column(String(10), primary_key=True)
 
     # ----- FOREIGN KEYS -----
     job_no: Mapped[str] = mapped_column(
