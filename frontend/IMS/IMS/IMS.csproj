@@ -9,9 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\alert.png" />
     <None Remove="Assets\back.png" />
+    <None Remove="Assets\bg_gavinSpark.png" />
+    <None Remove="Assets\help.png" />
     <None Remove="Assets\jsconfig1.json" />
     <None Remove="Assets\logo.png" />
+    <None Remove="Assets\menu.png" />
     <None Remove="Assets\SAPEAA.png" />
     <None Remove="Assets\user.png" />
   </ItemGroup>
@@ -31,10 +35,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\alert.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\back.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\bg_gavinSpark.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\help.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\menu.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\SAPEAA.png">

@@ -57,20 +57,29 @@ namespace IMS.Views
             {
                 SelectedUsername.Text = selectedUser.username;
                 SelectedRole.Text = selectedUser.role;
+                MessageBox.Show(JsonSerializer.Serialize(selectedUser.permissions));
 
                 PermissionsPanel.Children.Clear();
-                foreach (PropertyInfo prop in typeof(Permissions).GetProperties())
+
+                var perms = selectedUser.permissions;
+
+                foreach (var prop in typeof(Permissions).GetProperties())
                 {
-                    var perm = (BasePermissions)prop.GetValue(selectedUser.permissions);
-                    var permText = new TextBlock
+                    var permValue = prop.GetValue(perms) as BasePermissions;
+
+                    // FIX: if backend sent null → replace with {read = false, write = false}
+                    if (permValue == null)
+                        permValue = new BasePermissions { read = false, write = false };
+
+                    PermissionsPanel.Children.Add(new TextBlock
                     {
-                        Text = $"{prop.Name}: Read = {perm.read}, Write = {perm.write}",
+                        Text = $"{prop.Name}: Read = {permValue.read}, Write = {permValue.write}",
                         Margin = new Thickness(2)
-                    };
-                    PermissionsPanel.Children.Add(permText);
+                    });
                 }
             }
         }
+
 
 
         private Permissions BuildPermissions()
@@ -80,7 +89,6 @@ namespace IMS.Views
             {
         "ledger",
         "apd",
-        "overhaul_scale",
         "recieve_voucher",
         "issue_voucher",
         "local_purchase_indent",
@@ -111,6 +119,7 @@ namespace IMS.Views
                 // Look for checkboxes named like LedgerRead, LedgerWrite, etc.
                 var readCheckbox = FindName($"{key.First().ToString().ToUpper() + key.Substring(1)}Read") as CheckBox;
                 var writeCheckbox = FindName($"{key.First().ToString().ToUpper() + key.Substring(1)}Write") as CheckBox;
+
 
                 var prop = typeof(Permissions).GetProperty(key);
                 if (prop != null)

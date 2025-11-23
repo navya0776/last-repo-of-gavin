@@ -1,4 +1,5 @@
 ﻿using IMS.Models;
+using IMS.SAPEAAviews;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -198,7 +199,63 @@ namespace IMS.Services
             return JsonConvert.DeserializeObject<List<CDS>>(json) ?? new List<CDS>();
         }
 
+        public static async Task<List<MasterListItem>> GetMasterListAsync()
+        {
+            var resp = await _client.GetAsync("cds/master-list");
+            resp.EnsureSuccessStatusCode();
 
+            var json = await resp.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<MasterListItem>>(json)
+                   ?? new List<MasterListItem>();
+        }
+
+        public static async Task<bool> AddEquipmentAsync(AddEquipmentPayload payload)
+        {
+            var resp = await _client.PostAsJsonAsync("cds/", payload);
+
+            if (!resp.IsSuccessStatusCode)
+                return false;
+
+            return true;
+        }
+        public static async Task<List<JobMasterItem>> GetJobMasterAsync(string eqptCode)
+        {
+            var resp = await _client.GetAsync($"cds/job-master/{eqptCode}");
+            resp.EnsureSuccessStatusCode();
+
+            var json = await resp.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<JobMasterItem>>(json)
+                   ?? new List<JobMasterItem>();
+        }
+
+        public static async Task<bool> AddJobMasterAsync(JobMasterPayload payload)
+        {
+            var resp = await _client.PostAsJsonAsync("cds/job-master", payload);
+
+            if (!resp.IsSuccessStatusCode)
+                return false;
+
+            return true;
+        }
+        public static async Task<List<JobMasterItem>> GetJobsAsync(string eqptCode)
+        {
+            var resp = await _client.GetAsync($"cds/job-master/{eqptCode}");
+            resp.EnsureSuccessStatusCode();
+
+            var json = await resp.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<JobMasterItem>>(json)
+                   ?? new List<JobMasterItem>();
+        }
+
+        public static async Task<List<LPRItem>> GetLPRListAsync()
+        {
+            var resp = await _client.GetAsync("lpr/");
+            resp.EnsureSuccessStatusCode();
+
+            var json = await resp.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<LPRItem>>(json)
+                   ?? new List<LPRItem>();
+        }
 
     }
 }

@@ -25,7 +25,57 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="200"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="#2DB8B3"/>
+            <Setter Property="BorderThickness" Value="5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#AcademySans"/>
+            <Setter Property="Template">
 
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <!-- soft shadow -->
+                            <Border CornerRadius="10" Background="#00000000">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="15" ShadowDepth="10" Opacity="0.35"/>
+                                </Border.Effect>
+                            </Border>
+
+                            <!-- button body -->
+                            <Border x:Name="Body" CornerRadius="10"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+
+
+                                    <TextBlock Text="{TemplateBinding Content}" 
+                                       Margin="0,14,0,16" FontSize="24" Padding="10" TextWrapping="Wrap" TextAlignment="Center"
+                                       FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- hover -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Body" Property="Background" Value="{StaticResource Orange}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource Orange}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Body" Property="Background" Value="#D85F53"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
 
         <!-- DASHBOARD BUTTON STYLE -->

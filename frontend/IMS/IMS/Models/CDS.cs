@@ -7,7 +7,8 @@ namespace IMS.Models
         public bool SEL { get; set; }
 
         // ===== Primary identifiers =====
-        public int job_no { get; set; }
+        public string job_no { get; set; }
+        public string eqpt_code { get; set; }
         public DateTime? job_date { get; set; }
         public string ledger_page { get; set; }
 
@@ -66,4 +67,43 @@ namespace IMS.Models
         // ===== Dem ID =====
         public string dem_id { get; set; }
     }
+
+
+    public class MasterListItem
+    {
+        public string ledger_code { get; set; }
+        public string eqpt_code { get; set; }
+        public string ledger_name { get; set; }
+        public string head { get; set; }
+    }
+
+    public class AddEquipmentPayload
+    {
+        public string equipment_name { get; set; }
+        public string eqpt_code { get; set; }
+        public string ledger_code { get; set; }
+        public string grp { get; set; }
+    }
+
+    public class CDSItem
+    {
+        public string equipment_name { get; set; }
+        public string eqpt_code { get; set; }
+        public string ledger_code { get; set; }
+        public string grp { get; set; }
+    }
+
+    public class JobMasterItem
+    {
+        public string job_name { get; set; }
+        public string eqpt_code { get; set; }
+    }
+
+    public class JobMasterPayload
+    {
+        public string job_name { get; set; }
+        public string eqpt_code { get; set; }
+    }
+
+
 }

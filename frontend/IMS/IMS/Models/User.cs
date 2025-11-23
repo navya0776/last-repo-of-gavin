@@ -17,7 +17,6 @@ namespace IMS.Models
     {
         public BasePermissions ledger { get; set; }
         public BasePermissions apd { get; set; }
-        public BasePermissions overhaul_scale { get; set; }
         public BasePermissions recieve_voucher { get; set; }
         public BasePermissions issue_voucher { get; set; }
         public BasePermissions local_purchase_indent { get; set; }

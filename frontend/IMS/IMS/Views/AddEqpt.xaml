@@ -22,6 +22,13 @@
             <TextBlock Text="Group" VerticalAlignment="Center" Margin="10,0,10,0" />
             <TextBox x:Name="GroupTextBox" Width="100" Height="30"/>
         </StackPanel>
+        <DataGrid x:Name="EquipmentDataGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False" HeadersVisibility="Column" CanUserAddRows="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Equipment Code" Binding="{Binding eqpt_code}" Width="*"/>
+                <DataGridTextColumn Header="Eqpt Code" Binding="{Binding ledger_code}" Width="*"/>
+                <DataGridTextColumn Header="Ledger" Binding="{Binding ledger_name}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
         <StackPanel Orientation="Horizontal" Grid.Row="2" >
             <TextBlock Text="Ledger" VerticalAlignment="Center" Margin="10,0,10,0" />

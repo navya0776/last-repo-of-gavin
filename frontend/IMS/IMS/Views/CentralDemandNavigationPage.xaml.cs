@@ -26,22 +26,30 @@ namespace IMS.Views
     {
         public ObservableCollection<CDS> CDSList { get; set; }
 
-        public CentralDemandNavigationPage()
-        {
-            InitializeComponent();
-            CDSList = new ObservableCollection<CDS>();
-            DataContext = this;
+            private string _eqptCode;
 
-            LoadCDS();
-        }
+            public CentralDemandNavigationPage(string eqptCode)
+            {
+                InitializeComponent();
+                _eqptCode = eqptCode;
+
+                CDSList = new ObservableCollection<CDS>();
+                DataContext = this;
+
+                LoadCDS();
+            }
+
 
         private async void LoadCDS()
         {
             try
             {
-                var list = await ApiService.GetCDSAsync();
+                var list = await ApiService.GetCDSAsync(); // all CDS
                 CDSList.Clear();
-                foreach (var item in list)
+
+                var filtered = list.Where(x => x.eqpt_code == _eqptCode);
+
+                foreach (var item in filtered)
                     CDSList.Add(item);
             }
             catch (Exception ex)

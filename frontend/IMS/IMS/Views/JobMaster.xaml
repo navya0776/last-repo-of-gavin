@@ -58,7 +58,8 @@
                           RowHeight="24"
                           AlternatingRowBackground="#ECFCEE"
                           Background="#FDEEEE"
-                          FrozenColumnCount="2">
+                          FrozenColumnCount="2"
+                          ItemsSource="{Binding JobList}">
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Job No" Binding="{Binding JobNo}" Width="70"/>

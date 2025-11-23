@@ -44,12 +44,15 @@ namespace IMS.Views
 
         //private void LedgerButton_Click(object sender, RoutedEventArgs e)
         //{
-        //    MessageBox.Show("Open Ledger & OS Page");
+        //    var mainWindow = (MainWindow)Application.Current.MainWindow;
+        //    mainWindow.MainFrame.Navigate(new Ledger());
         //}
-        //private void Provisioning_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MessageBox.Show("Open Ledger & OS Page");
-        //}
+        private void Provisioning_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.MainFrame.Navigate(new AdvanceProvisioning());
+
+        }
         //private void LedgerMaintenance_Click(object sender, RoutedEventArgs e)
         //{
         //    MessageBox.Show("Open Ledger & OS Page");
@@ -120,8 +123,17 @@ namespace IMS.Views
             currentButton = clickedButton;
         }
 
+        private void Ledger_click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.MainFrame.Navigate(new Ledger());
+        }
 
-
+        private void Reciept_click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (MainWindow)Application.Current.MainWindow;
+            mainWindow.MainFrame.Navigate(new Ledger());
+        }
     }
 
 }

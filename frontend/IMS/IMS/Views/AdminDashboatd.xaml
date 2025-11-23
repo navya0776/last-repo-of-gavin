@@ -152,11 +152,6 @@
                         </StackPanel>
 
                         <!-- Overhaul -->
-                        <StackPanel Margin="5">
-                            <TextBlock Text="Overhaul Scale" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="OverhaulRead" Content="Read"/>
-                            <CheckBox x:Name="OverhaulWrite" Content="Write"/>
-                        </StackPanel>
 
                         <!-- Receive -->
                         <StackPanel Margin="5">
