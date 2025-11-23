@@ -57,8 +57,8 @@ class OrderJunction(Base):
     order_no: Mapped[int] = mapped_column(
         Integer, ForeignKey("orders.order_no"), primary_key=True
     )
-    ledger_page: Mapped[str] = mapped_column(
-        String(20), ForeignKey("ledger.ledger_page"), primary_key=True
+    ledger_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("ledger.ledger_id"), primary_key=True
     )
     vendor_code: Mapped[int] = mapped_column(
         Integer

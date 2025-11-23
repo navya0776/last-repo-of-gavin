@@ -62,8 +62,8 @@ class Demand(Base):
 class Dmd_junction(Base):
     __tablename__ = "demand_junc_ledger"
     # ---- PRIMARY KEY ---- #
-    Page_no: Mapped[str] = mapped_column(
-        String(20), ForeignKey("ledger.ledger_page"), nullable=False, primary_key=True
+    Page_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("ledger.ledger_id"), nullable=False, primary_key=True
     )
     # ---- FOREIGN KEYS ---- #
     dmd_id: Mapped[int] = mapped_column(
@@ -92,7 +92,7 @@ class Dmd_junction(Base):
 
     # ---- RELATIONSHIPS ---- #
     dmd_ledgers: Mapped["Ledger"] = relationship(
-        "Ledger", back_populates="ledger_dmd", foreign_keys=[Page_no]
+        "Ledger", back_populates="ledger_dmd", foreign_keys=[Page_id]
     )
 
     demand: Mapped["Demand"] = relationship("Demand",
