@@ -1,7 +1,6 @@
 services:
   backend:
-    env_file:
-      - .env
+    env_file: ./.env_backend
     build: .
     container_name: backend
     ports:
@@ -12,8 +11,7 @@ services:
     restart: always
 
   db:
-    env_file:
-      - .env
+    env_file: ./.env_db
     image: postgres:18
     container_name: postgres
     ports:

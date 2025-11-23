@@ -1,7 +1,7 @@
 from sqlalchemy import Enum, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from .base import Base
+from .orders import OrderJunction
 
 
 # 1️⃣ AllStores table
@@ -26,12 +26,14 @@ class Ledger(Base):
     store_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("stores.store_id"), nullable=False
     )
+    Master_id: Mapped[int] = mapped_column(Integer,
+                                           ForeignKey(
+                                               "master_table.Master_id"),
+                                           nullable=False)
+
     Ledger_code: Mapped[str] = mapped_column(String(4),
-                                             ForeignKey("eqpt.Ledger_code"),
                                              nullable=False)
-    Ledger_name: Mapped[str] = mapped_column(
-        String(50), nullable=False
-    )
+
     ledger_page: Mapped[str] = mapped_column(String(20), nullable=False,
                                              primary_key=True)
     ohs_number: Mapped[str | None] = mapped_column(String(50))
@@ -72,7 +74,52 @@ class Ledger(Base):
 
     # Relationship to store
     store: Mapped["Stores"] = relationship("Stores", back_populates="ledgers")
-    Eqpt: Mapped["Equipment"] = relationship("Equipment", back_populates="legder",
-                                             uselist=False)
+    ledger_dmd: Mapped[list["Dmd_junction"]] = relationship(
+        "Dmd_junction", back_populates="dmd_ledgers", cascade="all, delete"
+    )
+
+    Eqpt: Mapped["MasterTable"] = relationship("MasterTable", back_populates="legder",
+                                               uselist=False, foreign_keys=[Master_id])
     cds_ledger: Mapped["CdsJunction"] = relationship(
         "CdsJunction", back_populates="ledger_cds")
+
+    ledger_lpr_junc: Mapped["LPR_Junction"] = relationship(
+        "LPR_Junction", back_populates="lpr_ledger_junc")
+
+    # Many-to-many relationship to JobMaster via association table `job_ledger`
+    jobs: Mapped[list["JobMaster"]] = relationship(
+        "JobMaster",
+        secondary="job_ledger",
+        back_populates="ledgers",
+        lazy="select",
+    )
+
+    # relationship to OrderJunction
+    ledger_order_items: Mapped[list["OrderJunction"]] = relationship(
+    "OrderJunction",
+    back_populates="ledger",
+    foreign_keys=[OrderJunction.ledger_page]
+    )
+    
+    ledger_billings: Mapped[list["Billing"]] = relationship(
+    "Billing",
+    back_populates="ledger",
+    cascade="all, delete-orphan"
+)
+
+
+# Association table for many-to-many between JobMaster and Ledger
+class JobLedger(Base):
+    __tablename__ = "job_ledger"
+
+    job_no: Mapped[str] = mapped_column(
+        String(6),
+        ForeignKey("job_master.job_no"),
+        primary_key=True,
+    )
+
+    ledger_page: Mapped[str] = mapped_column(
+        String(20),
+        ForeignKey("ledger.ledger_page"),
+        primary_key=True,
+    )

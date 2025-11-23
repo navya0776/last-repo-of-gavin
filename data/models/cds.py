@@ -1,4 +1,4 @@
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Date
+from sqlalchemy import ForeignKey, Integer, String, Date, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 from datetime import date
@@ -16,14 +16,20 @@ from datetime import date
 
 
 # ===========================
-# Task Master
+# Job Master
 # ===========================
 class JobMaster(Base):
     __tablename__ = "job_master"
 
-    job_no: Mapped[int] = mapped_column(Integer, primary_key=True)
+    # ---- PRIMARY KEY ---- #
+    job_no: Mapped[str] = mapped_column(String(6), primary_key=True)
+    # --- FOREIGN KEY ---- #
+    master_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("master_table.Master_id"), nullable=False)
+
+    # ---- OTHER FIELDS ---- #
     eqpt_code: Mapped[str] = mapped_column(
-        String(4), ForeignKey("eqpt.eqpt_code"))
+        String(4), nullable=False)
     eqpt_name: Mapped[str] = mapped_column(String(50))
     job_date: Mapped[date] = mapped_column(Date)
     no_eqpt: Mapped[int] = mapped_column(Integer)
@@ -59,8 +65,53 @@ class JobMaster(Base):
     VIR_DT3: Mapped[int] = mapped_column(Integer, nullable=True)
     VIR_DEM3: Mapped[int] = mapped_column(Integer, nullable=True)
     VIR_ISS3: Mapped[int] = mapped_column(Integer, nullable=True)
-    Eqpt: Mapped["Equipment"] = relationship("Equipment", back_populates="job")
+    # ---- Add Job ----
+    job_prefix: Mapped[str | None] = mapped_column(String(20))
+    qty_on_job: Mapped[int | None] = mapped_column(Integer)
+    job_suffix: Mapped[str | None] = mapped_column(String(20))
+    depot: Mapped[str | None] = mapped_column(String(50))
+    dep_wo: Mapped[str | None] = mapped_column(String(50))
+    wo_date: Mapped[date | None] = mapped_column(Date)
+    nature_rep: Mapped[str | None] = mapped_column(String(20))
+    dt_received: Mapped[date | None] = mapped_column(Date)
+    prod_started: Mapped[date | None] = mapped_column(Date)
+    qty_completed: Mapped[int | None] = mapped_column(Integer)
+    remarks: Mapped[str | None] = mapped_column(String(255))
+    ahq_srl: Mapped[str | None] = mapped_column(String(50))
+    make: Mapped[str | None] = mapped_column(String(50))
+    model: Mapped[str | None] = mapped_column(String(50))
+    ch_no: Mapped[str | None] = mapped_column(String(50))
+    cum_tot: Mapped[int | None] = mapped_column(Integer)
+    VIR_supp: Mapped[int | None] = mapped_column(Integer)
+    ohs: Mapped[str | None] = mapped_column(String(50))
+    date_completed: Mapped[date | None] = mapped_column(Date)
+    catalogue_ref: Mapped[str | None] = mapped_column(String(50))
+    em_ba_no_eng: Mapped[str | None] = mapped_column(String(50))
+    tgt_date: Mapped[date | None] = mapped_column(Date)
+    unit: Mapped[str | None] = mapped_column(String(10))
+    eng_no: Mapped[str | None] = mapped_column(String(20))
+    eng_job: Mapped[str | None] = mapped_column(String(20))
+    eng_job_date: Mapped[date | None] = mapped_column(Date)
+    sub_assy_job: Mapped[str | None] = mapped_column(String(20))
+    sub_assy_date: Mapped[date | None] = mapped_column(Date)
+    bd_srl: Mapped[str | None] = mapped_column(String(20))
+    prog: Mapped[float | None] = mapped_column(Float)
+    gang_ldr: Mapped[str | None] = mapped_column(String(50))
+
+    # ---- Relationships ----
+    Eqpt: Mapped["MasterTable"] = relationship(
+        "MasterTable", back_populates="job")
     jobs: Mapped[list["CDS"]] = relationship("CDS", back_populates="demands")
+    job_lpr: Mapped["LPR"] = relationship("LPR", back_populates="lpr_job")
+
+    # Many-to-many relationship to Ledger via association table `job_ledger`
+    ledgers: Mapped[list["Ledger"]] = relationship(
+        "Ledger",
+        secondary="job_ledger",
+        back_populates="jobs",
+        lazy="select",
+    )
+
 
 # ===========================
 # CDS Table
@@ -68,22 +119,30 @@ class JobMaster(Base):
 
 
 class CDS(Base):
-
     __tablename__ = "cds"
-    dem_no: Mapped[int] = mapped_column(Integer, primary_key=True)
-    job_no: Mapped[int] = mapped_column(Integer, ForeignKey("job_master.job_no"
-                                                            ))
-    eqpt_code: Mapped[str] = mapped_column(String(4),
-                                           ForeignKey("eqpt.eqpt_code"
+    # ---- PRIMARY KEY ---- #
+    dem_id: Mapped[int] = mapped_column(Integer, primary_key=True,
+                                        autoincrement=True)
+    # ---- FOREIGN KEYS ---- #
+    job_no: Mapped[str] = mapped_column(String(6), ForeignKey("job_master.job_no"
+                                                              ))
+    master_id: Mapped[int] = mapped_column(Integer,
+                                           ForeignKey("master_table.Master_id"
                                                       ))
-    job_date: Mapped[date] = mapped_column(Date)
-    dem_date: Mapped[date] = mapped_column(Date, nullable=True)
+    dem_no: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    demands: Mapped["JobMaster"] = relationship("JobMaster",
-                                                back_populates="jobs")
-    Eqpt_cds: Mapped["Equipment"] = relationship("Equipment", back_populates="cds_Eqpt")
+    eqpt_code: Mapped[str] = mapped_column(String(4), nullable=False)
+
+    job_date: Mapped[date] = mapped_column(Date, nullable=False)
+    dem_date: Mapped[date | None] = mapped_column(Date)
+
+    demands: Mapped["JobMaster"] = relationship("JobMaster", back_populates="jobs")
+    Eqpt_cds: Mapped["MasterTable"] = relationship(
+        "MasterTable", back_populates="cds_Eqpt")
+
     cds_cdsJunc: Mapped["CdsJunction"] = relationship("CdsJunction",
                                                       back_populates="cdsJunc_cds")
+
 
 # ===========================
 # JUNCTION TABLE
@@ -92,11 +151,12 @@ class CDS(Base):
 
 class CdsJunction(Base):
     __tablename__ = "cds_junction"
-    demand_no: Mapped[int] = mapped_column(Integer, ForeignKey("cds.dem_no"),
-                                           primary_key=True)
+    ledger_page_id: Mapped[int] = mapped_column(Integer,
+                                            primary_key=True)
+    demand_no: Mapped[int] = mapped_column(Integer, ForeignKey("cds.dem_id"))
     ledger_page: Mapped[str] = mapped_column(String(20),
                                              ForeignKey("ledger.ledger_page"),
-                                             primary_key=True)
+                                             )
     ohs_no: Mapped[int] = mapped_column(Integer, nullable=True)
     part_number: Mapped[str] = mapped_column(String(50), nullable=True)
     spart_no: Mapped[str] = mapped_column(String(50), nullable=True)
@@ -128,7 +188,53 @@ class CdsJunction(Base):
     cds_iv2: Mapped[str] = mapped_column(String(20), nullable=True)
     cds_ivdt2: Mapped[date] = mapped_column(Date, nullable=True)
 
-    cdsJunc_cds:  Mapped["CDS"] = relationship("CDS",
-                                               back_populates="cds_cdsJunc")
+    # ---- RELATIONSHIPS ---- #
+    cdsJunc_cds:  Mapped["CDS"] = relationship(
+        "CDS", back_populates="cds_cdsJunc")
     ledger_cds: Mapped["Ledger"] = relationship(
         "Ledger", back_populates="cds_ledger")
+
+
+# ===========================
+# CDS table
+# ===========================
+
+
+class cds_table(Base):
+    __tablename__ = "cds_table"
+
+    # ---- PRIMARY KEY ---- #
+    cds_id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )
+
+    # ---- FOREIGN KEYS ---- #
+    Master_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("master_table.Master_id"),
+        nullable=False
+    )
+
+    # ---- OTHER FIELDS ----
+
+    equipment_name: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False
+    )
+    ledger_code: Mapped[str] = mapped_column(
+        String(4),
+        nullable=False
+    )
+
+    eqpt_code: Mapped[str] = mapped_column(
+        String(4),
+        nullable=False
+    )
+
+    grp: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
+    head: Mapped[str] = mapped_column(String(15), nullable=False)
+
+    # ---- RELATIONSHIPS ----
+    eqpt: Mapped["MasterTable"] = relationship(
+        "MasterTable",
+        back_populates="added_eqpt", foreign_keys=[Master_id])

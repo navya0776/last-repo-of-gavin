@@ -9,6 +9,8 @@ from backend.routers.admin import admin_router
 from backend.routers.authentication.routes import app as auth_router
 from backend.routers.ledger.routes import router as ledger_router
 from backend.routers.lock.routes import router as lock_router
+from backend.routers.cds import router as cds_router
+from backend.routers.demand.routes import router as demand_router
 
 from data.database import init_db, init_redis, close_db, close_redis
 
@@ -34,6 +36,9 @@ app.include_router(auth_router, prefix="/auth")
 app.include_router(admin_router, prefix="/admin")
 app.include_router(ledger_router, prefix="/ledger")
 app.include_router(lock_router, prefix="/lock")
+app.include_router(cds_router, prefix="/cds")
+app.include_router(demand_router, prefix="/demand")
+
 
 if __name__ == "__main__":
     import uvicorn

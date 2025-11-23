@@ -1,7 +1,7 @@
 import asyncio
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from schemas.ledger import (
+from backend.schemas import (
     LedgerMaintanenceCreate,
     LedgerMaintanenceUpdate,
     LedgerMaintenanceResponse,
@@ -49,6 +49,7 @@ async def get_all_ledger(
 async def get_ledger_page(
     permissions: UserPermissions,
     ledger_code: str,
+    session: AsyncSession = Depends(get_db),
 ):
     if permissions.ledger.read:
         return await get_ledger_pages(ledger_code, session)

@@ -19,9 +19,9 @@ class BasePermissions(BaseModel):
 class Permissions(BaseModel):
     ledger: BasePermissions
     apd: BasePermissions
-    overhaul_scale: BasePermissions
     recieve_voucher: BasePermissions
     issue_voucher: BasePermissions
+    cds: BasePermissions
 
     local_purchase_indent: BasePermissions
     local_purchase_quotation: BasePermissions
