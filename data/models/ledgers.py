@@ -1,8 +1,8 @@
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String
+from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 from .orders import OrderJunction
-
+from datetime import date, datetime
 
 # 1️⃣ AllStores table
 class Stores(Base):
@@ -45,15 +45,14 @@ class Ledger(Base):
     a_u: Mapped[str] = mapped_column(String(10), nullable=True)
     no_off: Mapped[int] = mapped_column(Integer, nullable=True)
     scl_auth: Mapped[int] = mapped_column(Integer, nullable=True)
+    stock: Mapped[int] = mapped_column(Integer, default=0, nullable=True)
     unsv_stock: Mapped[int] = mapped_column(Integer, default=0, nullable=True)
     rep_stock: Mapped[int] = mapped_column(Integer, default=0, nullable=True)
     serv_stock: Mapped[int] = mapped_column(Integer, default=0, nullable=True)
-    msc: Mapped[Enum | None] = mapped_column(Enum("M", "S", "C",
-                                                  name="msc_enum"), nullable=True)
-    ved: Mapped[Enum | None] = mapped_column(Enum("V", "E", "D",
-                                                  name="ved_enum"), nullable=True)
-    in_house: Mapped[Enum | None] = mapped_column(
-        Enum("in_house", "ORD", name="in_house_enum")
+    msc: Mapped[str | None] = mapped_column(String(2), nullable=True)
+    ved: Mapped[str | None] = mapped_column(String(2), nullable=True)
+    in_house: Mapped[str| None] = mapped_column(
+        String(5), nullable=True
     )
     dues_in: Mapped[int | None] = mapped_column(Integer, nullable=True)
     consumption: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -72,6 +71,41 @@ class Ledger(Base):
     lpp_dt: Mapped[str | None] = mapped_column(String(50), nullable=True)
     rate: Mapped[float | None] = mapped_column(Float, nullable=True)
     Rmks: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    # ---- NEW FIELDS YOU ASKED TO ADD ----
+    br_stock: Mapped[int | None] = mapped_column(Integer)
+    br_stock_dt: Mapped[date | None] = mapped_column(Date)
+
+    cab: Mapped[str | None] = mapped_column(String(50))
+
+    dem: Mapped[str | None] = mapped_column(Integer)
+    dem_val: Mapped[float | None] = mapped_column(Float)
+
+
+    lock_dt: Mapped[date | None] = mapped_column(Date)
+
+    npart_no: Mapped[str | None] = mapped_column(String(50))
+    nscl_no: Mapped[str | None] = mapped_column(String(50))
+
+    old_page: Mapped[str | None] = mapped_column(String(20))
+
+    p_stock_dt: Mapped[date | None] = mapped_column(Date)
+
+    qty: Mapped[int | None] = mapped_column(Integer)
+
+    r_stock: Mapped[int | None] = mapped_column(Integer)
+    r_stock_dt: Mapped[date | None] = mapped_column(Date)
+
+    sale_rate: Mapped[float | None] = mapped_column(Float)
+
+    sl: Mapped[str | None] = mapped_column(String(20))
+
+    spart_no: Mapped[str | None] = mapped_column(String(50))
+
+    stock_dt: Mapped[date | None] = mapped_column(Date)
+
+    yn: Mapped[str | None] = mapped_column(String(1))
+    # OR if you want boolean:
+    # yn: Mapped[bool | None] = mapped_column(Boolean)
 
     # Relationship to store
     store: Mapped["Stores"] = relationship("Stores", back_populates="ledgers")
