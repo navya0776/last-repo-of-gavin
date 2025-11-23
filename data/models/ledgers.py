@@ -79,7 +79,7 @@ class Ledger(Base):
     )
 
     Eqpt: Mapped["MasterTable"] = relationship("MasterTable", back_populates="legder",
-                                               uselist=False, foreign_keys=[Master_id])
+                                               foreign_keys=[Master_id])
     cds_ledger: Mapped["CdsJunction"] = relationship(
         "CdsJunction", back_populates="ledger_cds")
 
