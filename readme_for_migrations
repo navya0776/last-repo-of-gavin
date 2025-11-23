@@ -1,0 +1,14 @@
+csv_to_db_migraton (master table)
+#use msteqpt.csv
+
+
+# adding data in ledgermaintance table
+first use master_table_file.py to convert msteqpt.csv to msteqpt_processed.csv
+
+then use insert_masterid_store.py to add master id and store in ledger csv files from msteqpt_processed.csv and msteqpt.csv (store mapping file)
+
+
+
+
+
+
