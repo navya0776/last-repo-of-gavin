@@ -62,7 +62,7 @@
               AlternatingRowBackground="#E8FEE8"
               IsReadOnly="True"
               Margin="10,10,-2340,30" 
-                  HorizontalScrollBarVisibility="Visible" SelectionChanged="DataGrid_SelectionChanged">
+                  HorizontalScrollBarVisibility="Visible" >
 
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="SEL" Binding="{Binding SEL}"/>

@@ -50,6 +50,11 @@ namespace IMS.Views
                                 "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(this);
+        }
     }
 
 }

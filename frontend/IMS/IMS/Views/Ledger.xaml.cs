@@ -4,6 +4,7 @@ using IMS.Helpers;
 using IMS.Models;
 using IMS.Services;
 using IMS.Windows;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.IO;
 
 namespace IMS.Views
 {
@@ -35,6 +37,7 @@ namespace IMS.Views
         {
             InitializeComponent();
             _ = TestBackendConnectionAsync();
+            LoadMockLedgerData();
             // If you already have a cookie from login flow, set it:
             //_api.SetAuthCookie("session", "<cookie-value>", "api.example.com");
 
@@ -43,6 +46,14 @@ namespace IMS.Views
 
             // initial load
             _ = LoadStoresAndInitialDataAsync();
+        }
+        private void LoadMockLedgerData()
+        {
+            var jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/jsconfig1.json");
+            var json = File.ReadAllText(jsonPath);
+            var items = JsonConvert.DeserializeObject<List<LedgerItem>>(json);
+
+            LedgerDataGrid.ItemsSource = items;
         }
 
         private async Task TestBackendConnectionAsync()
@@ -88,7 +99,7 @@ namespace IMS.Views
                 // 1) load stores from backend
                 var stores = await ApiService.GetStoresAsync();
                 //MessageBox.Show($"Fetched {stores.Count} stores");  // 💖 Add this line
-                                                                      // returns list of (store, substores)
+                // returns list of (store, substores)
                 _storesMeta.Clear();
                 foreach (var (store, subs) in stores)
                 {
@@ -230,7 +241,7 @@ namespace IMS.Views
         }
 
 
-   
+
         #endregion
 
         #region Search (client-side)
@@ -318,28 +329,28 @@ namespace IMS.Views
 
         private void ColumnSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
 
-        { 
+        {
             var combo = sender as ComboBox;
             var selected = combo?.SelectedItem;
         }
 
-        private void Reports_Click(object sender, RoutedEventArgs e)
-        {
-            var reportsWindow = new ReportsPageLedger
-            {
-                Owner = Window.GetWindow(this)  // makes it modal to parent
-            };
+        //private void Reports_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var reportsWindow = new ReportsPageLedger
+        //    {
+        //        Owner = Window.GetWindow(this)  // makes it modal to parent
+        //    };
 
-            bool? result = reportsWindow.ShowDialog();
+        //    bool? result = reportsWindow.ShowDialog();
 
-            if (result == true)
-            {
-                string selectedReport = reportsWindow.SelectedReport;
-                MessageBox.Show($"You selected: {selectedReport}", "Report Selected");
+        //    if (result == true)
+        //    {
+        //        string selectedReport = reportsWindow.SelectedReport;
+        //        MessageBox.Show($"You selected: {selectedReport}", "Report Selected");
 
-                // TODO: Call backend analysis API or export logic here
-            }
-        }
+        //        // TODO: Call backend analysis API or export logic here
+        //    }
+        //}
 
         private void LedgerDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -378,9 +389,276 @@ namespace IMS.Views
             LedgerDataGrid.ItemsSource = filtered;
         }
 
+        private async void Reports_Click(object sender, RoutedEventArgs e)
+        {
+            var reportsWindow = new ReportsPageLedger
+            {
+                Owner = Window.GetWindow(this)
+            };
+
+            bool? result = reportsWindow.ShowDialog();
+
+            if (result != true)
+                return;   // User cancelled
+
+            string selectedReport = reportsWindow.SelectedReport;
+
+            if (_currentSubStore == null)
+            {
+                MessageBox.Show("Please select an equipment (sub-store) first.",
+                                "No Equipment Selected");
+                return;
+            }
+
+            switch (selectedReport)
+            {
+                case "Current Stock Report":
+                    await ShowCurrentStockReport();
+                    break;
+
+                case "MSC Analysis Report":
+                    await ShowMSCAnalysisReport();
+                    break;
+
+                case "VED Analysis Report":
+                    await ShowVEDAnalysisReport();
+                    break;
+
+                case "Vital":
+                    await ShowVitalReport();
+                    break;
+
+                case "Desiraable":
+                    await ShowDesirableReport();
+                    break;
+
+                case "Essential":
+                    await ShowEssentialReport();
+                    break;
+
+                case "Scaled items":
+                    await ShowScaledItemsReport();
+                    break;
+
+                case "Non-Scaled Items":
+                    await ShowNonScaledItemsReport();
+                    break;
+
+                case "Must Change":
+                    await ShowMustChangeReport();
+                    break;
+
+                case "Should Change":
+                    await ShowShouldChangeReport();
+                    break;
+
+                case "Could Change":
+                    await ShowCouldChangeReport();
+                    break;
+
+                default:
+                    MessageBox.Show("Unknown report type selected.");
+                    break;
+            }
+        }
+
+        private Task ShowCurrentStockReport()
+        {
+            var rows = _activeLedgerItems
+                .Select((item, idx) => new
+                {
+                    Index = idx + 1,
+                    PartNo = item.part_number,
+                    Nomenclature = item.nomenclature,
+                    A_U = item.a_u,
+                    TotalStock =
+                        item.unsv_stock +
+                        item.rep_stock +
+                        item.serv_stock
+                })
+                .ToList();
+
+            string title = $"CURRENT STOCK REPORT : EQUIPMENT {_currentSubStore.ToUpper()}";
+
+            ReportViewerWindow.ShowReport(title, rows);
+
+            return Task.CompletedTask;
+        }
+
+
+
+        private async Task ShowMSCAnalysisReport()
+        {
+            var items = _activeLedgerItems;
+
+            var rows = items.Select((x, i) => new
+            {
+                SrlNo = i + 1,
+                PartNo = x.part_number,
+                Nomenclature = x.nomenclature,
+                MSC = x.msc
+            }).Where(r => !string.IsNullOrEmpty(r.MSC)).ToList();
+
+            string title = $"MSC ANALYSIS REPORT : EQUIPMENT {_currentSubStore.ToUpper()}";
+
+            ReportViewerWindow.ShowReport(title, rows);
+        }
+
+        private async Task ShowVEDAnalysisReport()
+        {
+            var rows = _activeLedgerItems.Select((x, i) => new
+            {
+                SrlNo = i + 1,
+                PartNo = x.part_number,
+                Nomenclature = x.nomenclature,
+                VED = x.ved
+            }).Where(r => !string.IsNullOrWhiteSpace(r.VED)).ToList();
+
+            string title = $"VED ANALYSIS REPORT : EQUIPMENT {_currentSubStore.ToUpper()}";
+
+            ReportViewerWindow.ShowReport(title, rows);
+        }
+
+        private async Task ShowVitalReport()
+        {
+            var items = _activeLedgerItems.Where(x => x.ved == "V").ToList();
+            var rows = items.Select((x, i) => new
+            {
+                SrlNo = i + 1,
+                PartNo = x.part_number,
+                Nomenclature = x.nomenclature,
+                VED = x.ved
+            }).ToList();
+            string title = $"VITAL ITEMS REPORT : EQUIPMENT {_currentSubStore.ToUpper()}";
+            ReportViewerWindow.ShowReport(title, rows);
+
+        }
+
+        private async Task ShowDesirableReport()
+        {
+            var items = _activeLedgerItems.Where(x => x.ved == "D").ToList();
+            var rows = items.Select((x, i) => new
+            {
+                SrlNo = i + 1,
+                PartNo = x.part_number,
+                Nomenclature = x.nomenclature,
+                VED = x.ved
+            }).ToList();
+            string title = $"DESIRABLE ITEMS REPORT : EQUIPMENT {_currentSubStore.ToUpper()}";
+            ReportViewerWindow.ShowReport(title, rows);
+
+
+        }
+        private async Task ShowEssentialReport()
+        {
+            var items = _activeLedgerItems.Where(x => x.ved == "E").ToList();
+            var rows = items.Select((x, i) => new
+            {
+                SrlNo = i + 1,
+                PartNo = x.part_number,
+                Nomenclature = x.nomenclature,
+                VED = x.ved
+            }).ToList();
+            string title = $"ESSENTIAL ITEMS REPORT : EQUIPMENT {_currentSubStore.ToUpper()}";
+            ReportViewerWindow.ShowReport(title, rows);
+        }
+
+        private async Task ShowScaledItemsReport()
+        {
+            var items = _activeLedgerItems.Where(x => x.scl_auth > 0).ToList();
+            var rows = items.Select((x, i) => new
+            {
+                SrlNo = i + 1,
+                PartNo = x.part_number,
+                Nomenclature = x.nomenclature,
+                ScaleAuth = x.scl_auth
+            }).ToList();
+            string title = $"SCALED ITEMS REPORT : EQUIPMENT {_currentSubStore.ToUpper()}";
+            ReportViewerWindow.ShowReport(title, rows);
+        }
+        private async Task ShowNonScaledItemsReport()
+        {
+            var rows = _activeLedgerItems
+                .Where(x => x.scl_auth == 0)
+                .Select((x, i) => new
+                {
+                    SrlNo = i + 1,
+                    PartNo = x.part_number,
+                    Nomenclature = x.nomenclature,
+                    ScaleAuth = x.scl_auth
+                })
+                .ToList();
+
+            string title = $"NON-SCALED ITEMS REPORT : EQUIPMENT {_currentSubStore.ToUpper()}";
+
+            ReportViewerWindow.ShowReport(title, rows);
+        }
+        private async Task ShowMustChangeReport()
+        {
+            var rows = _activeLedgerItems
+                .Where(x => x.msc?.Equals("M", StringComparison.OrdinalIgnoreCase) == true)
+                .Select((x, i) => new
+                {
+                    SrlNo = i + 1,
+                    OSNo = x.ohs_number,
+                    PartNo = x.part_number,
+                    Nomenclature = x.nomenclature,
+                    AU = x.a_u,
+                    NoOff = x.no_off,
+                    ScaleAuth = x.scl_auth,
+                    CAT = x.group
+                })
+                .ToList();
+
+            string title = $"LIST OF MUST CHANGE ITEMS : EQUIPMENT {_currentSubStore.ToUpper()}";
+
+            ReportViewerWindow.ShowReport(title, rows);
+        }
+
+
+        private async Task ShowShouldChangeReport()
+        {
+            var rows = _activeLedgerItems
+                .Where(x => x.msc?.Equals("S", StringComparison.OrdinalIgnoreCase) == true)
+                .Select((x, i) => new
+                {
+                    SrlNo = i + 1,
+                    OSNo = x.ohs_number,
+                    PartNo = x.part_number,
+                    Nomenclature = x.nomenclature,
+                    AU = x.a_u,
+                    NoOff = x.no_off,
+                    ScaleAuth = x.scl_auth,
+                    CAT = x.group
+                })
+                .ToList();
+
+            string title = $"LIST OF SHOULD CHANGE ITEMS : EQUIPMENT {_currentSubStore.ToUpper()}";
+
+            ReportViewerWindow.ShowReport(title, rows);
+        }
+
+        private async Task ShowCouldChangeReport()
+        {
+            var rows = _activeLedgerItems
+                .Where(x => x.msc?.Equals("C", StringComparison.OrdinalIgnoreCase) == true)
+                .Select((x, i) => new
+                {
+                    SrlNo = i + 1,
+                    OSNo = x.ohs_number,
+                    PartNo = x.part_number,
+                    Nomenclature = x.nomenclature,
+                    AU = x.a_u,
+                    NoOff = x.no_off,
+                    ScaleAuth = x.scl_auth,
+                    CAT = x.group
+                })
+                .ToList();
+
+            string title = $"LIST OF COULD CHANGE ITEMS : EQUIPMENT {_currentSubStore.ToUpper()}";
+
+            ReportViewerWindow.ShowReport(title, rows);
+        }
+
     }
-
-
 }
-
-

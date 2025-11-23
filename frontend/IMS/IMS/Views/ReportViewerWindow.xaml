@@ -1,0 +1,78 @@
+﻿<Window x:Class="IMS.Views.ReportViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Report Viewer"
+        Height="700" Width="1000"
+        Background="#F5F7FA"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid>
+
+        <!-- TOP BAR -->
+        <Border Background="#1F2A44" Height="60" VerticalAlignment="Top">
+            <DockPanel LastChildFill="True">
+                <TextBlock x:Name="TitleBlock"
+                           Foreground="White"
+                           FontWeight="Bold"
+                           FontSize="22"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,40,0"/>
+
+                <Button Content="X"
+                        Width="30" Height="30"
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Click="CloseButton_Click"
+                        DockPanel.Dock="Right"/>
+            </DockPanel>
+        </Border>
+
+        <!-- MAIN AREA -->
+        <Grid Margin="10,70,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- TOOLBAR -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <Button Content="Export to Word"
+                        Width="130" Margin="0,0,10,0"
+                        Click="ExportWord_Click"
+                        Style="{StaticResource LedgerButtonStyle}"/>
+
+                <Button Content="Export to Excel"
+                        Width="130" Margin="0,0,10,0"
+                        Click="ExportExcel_Click"
+                        Style="{StaticResource LedgerButtonStyle}"/>
+
+                <Button Content="Print"
+                        Width="90"
+                        Click="Print_Click"
+                        Style="{StaticResource LedgerButtonStyle}"/>
+
+                <TextBox x:Name="SearchBox"
+                         Width="200"
+                         Margin="20,0,0,0"
+                         VerticalAlignment="Center"
+                         TextChanged="SearchBox_TextChanged"/>
+            </StackPanel>
+
+            <!-- DATA GRID -->
+            <DataGrid x:Name="ReportGrid"
+                      Grid.Row="1"
+                      AutoGenerateColumns="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All"
+                      HeadersVisibility="Column"
+                      RowHeight="26"
+                      ColumnHeaderHeight="28"
+                      Background="White"
+                      BorderBrush="#DDDDDD"/>
+        </Grid>
+    </Grid>
+</Window>

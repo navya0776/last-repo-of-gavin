@@ -27,6 +27,7 @@ namespace IMS.Models
         public BasePermissions local_purchase_pay { get; set; }
         public BasePermissions local_purchase_query { get; set; }
         public BasePermissions local_purchase_ammend { get; set; }
+        public BasePermissions cds { get; set; }
     }
 
     // Represents a full user creation payload

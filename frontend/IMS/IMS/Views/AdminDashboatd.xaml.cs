@@ -89,7 +89,8 @@ namespace IMS.Views
         "local_purchase_ordinance",
         "local_purchase_pay",
         "local_purchase_query",
-        "local_purchase_ammend"
+        "local_purchase_ammend",
+        "cds"
     };
 
             var permissions = new Permissions();
