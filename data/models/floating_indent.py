@@ -9,7 +9,7 @@ class Indent(Base):
     indent_no: Mapped[int] = mapped_column(Integer, primary_key=True)
 
     # ----- FOREIGN KEY -----
-    lpr_no: Mapped[int] = mapped_column(Integer, ForeignKey("lpr.lpr_no"), nullable=False)
+    lpr_no: Mapped[str] = mapped_column(String(10), ForeignKey("lpr.lpr_no"), nullable=False)
 
     # ----- OTHER FIELDS (NO FKs) -----
     prev_indent: Mapped[int | None] = mapped_column(Integer, nullable=True)

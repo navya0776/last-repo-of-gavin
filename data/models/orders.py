@@ -90,7 +90,7 @@ class OrderJunction(Base):
     negotiable_amount: Mapped[Float | None] = mapped_column(Float)
 
     # =============== LPR DETAILS ===============
-    lpr_no: Mapped[int | None] = mapped_column(Integer)
+    lpr_no: Mapped[str | None] = mapped_column(String(10))
     lpr_date: Mapped[Date | None] = mapped_column(Date)
 
     # =============== JOB DETAILS ===============
