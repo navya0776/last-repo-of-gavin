@@ -7,6 +7,25 @@
     >
     <Application.Resources>
 
+        <SolidColorBrush x:Key="TealDark" Color="#1E6B83"/>
+        <SolidColorBrush x:Key="Teal" Color="#05B5A8"/>
+        <SolidColorBrush x:Key="Orange" Color="#E96C5F"/>
+
+        <!-- DataGrid row highlighting -->
+        <Style x:Key="HoverableRow" TargetType="DataGridRow">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E8F9F7"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#CDEFEA"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
 
 
         <!-- DASHBOARD BUTTON STYLE -->
@@ -31,6 +50,8 @@
                 </Setter.Value>
             </Setter>
 
+            
+            
             <!-- Button Content Template -->
             <Setter Property="Template">
                 <Setter.Value>

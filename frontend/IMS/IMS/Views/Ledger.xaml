@@ -173,7 +173,11 @@
           Grid.Column="1"
           Name="LedgerDataGrid"
           AutoGenerateColumns="False"
+                      CanUserSortColumns="True"
+                        CanUserAddRows="False"
+                     
           HeadersVisibility="Column"
+                      CanUserResizeRows="True"
           ColumnWidth="*"
           SelectionChanged="LedgerDataGrid_SelectionChanged">
                 <DataGrid.ColumnHeaderStyle>
@@ -206,12 +210,12 @@
 
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Index" Binding="{Binding idx}" Width="Auto" />
-                    <DataGridTextColumn Header="Ledger Page" Binding="{Binding ledger_page}" Width="*" />
-                    <DataGridTextColumn Header="OHS No" Binding="{Binding ohs_number}" Width="*" />
-                    <DataGridTextColumn Header="ISG No" Binding="{Binding isg_number}" Width="*" />
-                    <DataGridTextColumn Header="SSG No" Binding="{Binding ssg_number}" Width="*" />
-                    <DataGridTextColumn Header="Part No" Binding="{Binding part_number}" Width="*" />
-                    <DataGridTextColumn Header="Nomenclature" Binding="{Binding nomenclature}" Width="2*" />
+                    <DataGridTextColumn Header="Ledger Page" Binding="{Binding ledger_page}" Width="Auto" />
+                    <DataGridTextColumn Header="OHS No" Binding="{Binding ohs_number}" Width="Auto" />
+                    <DataGridTextColumn Header="ISG No" Binding="{Binding isg_number}" Width="Auto" />
+                    <DataGridTextColumn Header="SSG No" Binding="{Binding ssg_number}" Width="Auto" />
+                    <DataGridTextColumn Header="Part No" Binding="{Binding part_number}" Width="Auto" />
+                    <DataGridTextColumn Header="Nomenclature" Binding="{Binding nomenclature}" Width="Auto" />
                     <DataGridTextColumn Header="A/U" Binding="{Binding a_u}" Width="Auto" />
                     <DataGridTextColumn Header="No Off" Binding="{Binding no_off}" Width="Auto" />
                     <DataGridTextColumn Header="Scl Auth" Binding="{Binding scl_auth}" Width="Auto" />
@@ -222,13 +226,13 @@
                     <DataGridTextColumn Header="VED" Binding="{Binding ved}" Width="Auto" />
                     <DataGridTextColumn Header="In-House" Binding="{Binding in_house}" Width="Auto" />
                     <DataGridTextColumn Header="Bin No" Binding="{Binding bin_number}" Width="Auto" />
-                    <DataGridTextColumn Header="Group" Binding="{Binding group}" Width="*" />
+                    <DataGridTextColumn Header="Group" Binding="{Binding group}" Width="Auto" />
                     <DataGridTextColumn Header="CDS Unsv" Binding="{Binding cds_unsv_stock}" Width="Auto" />
                     <DataGridTextColumn Header="CDS Rep" Binding="{Binding cds_rep_stock}" Width="Auto" />
                     <DataGridTextColumn Header="CDS Serv" Binding="{Binding cds_serv_stock}" Width="Auto" />
                     <DataGridTextColumn Header="LPP" Binding="{Binding lpp}" Width="Auto" />
                     <DataGridTextColumn Header="Rate" Binding="{Binding rate}" Width="Auto" />
-                    <DataGridTextColumn Header="Remarks" Binding="{Binding rmks}" Width="*" />
+                    <DataGridTextColumn Header="Remarks" Binding="{Binding rmks}" Width="Auto" />
                     <DataGridTextColumn Header="LPP Date" Binding="{Binding lpp_dt}" Width="Auto" />
                 </DataGrid.Columns>
             </DataGrid>

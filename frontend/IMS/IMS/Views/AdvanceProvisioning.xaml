@@ -47,7 +47,7 @@
                   Margin="0,0,0,0"
            AutoGenerateColumns="False"
            CanUserAddRows="False"
-           CanUserResizeRows="False"
+           CanUserResizeRows="True"
            HeadersVisibility="Column"
            Background="White"
            BorderBrush="Gray" BorderThickness="0,0,1,1"
@@ -92,7 +92,7 @@
                 <RadioButton x:Name="APDemand" Content="AP Demand" Margin="0,0,20,0" Checked="APDemand_Checked"/>
                 <RadioButton x:Name="SupplyDemand" Content="Supply Demand" Margin="0,0,20,0" Checked="SupplyDemand_Checked"/>
             </StackPanel>
-            <Button  x:Name="Generate" Content="Generate New" Foreground="Black" Width="120" Height="30" Margin="290,0,0,0" Style="{DynamicResource LedgerButtonStyle}" Click="Generate_Click" />
+            <Button  x:Name="Generate" Content="Generate New" Width="120" Height="30" Margin="290,0,0,0" Style="{DynamicResource LedgerButtonStyle}" Click="Generate_Click" />
             <Button x:Name="Analysis" Content="Demand Analysis" Width="120" Height="30" Margin="550,0,0,0" Style="{DynamicResource LedgerButtonStyle}" Click="Analysis_Click" />
 
 
