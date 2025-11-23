@@ -1,10 +1,10 @@
 import csv
 import os
 
-MASTER_FILE = "csv/test/msteqpt_processed.csv"        # master converted file
+MASTER_FILE = "csv/msteqpt_processed.csv"        # master converted file
 STORE_MAP_FILE = "csv/scripts/msteqpt.csv"
 LEDGER_FOLDER = "csv/ledger"         # folder containing ledger CSVs
-OUTPUT_FOLDER = "csv/test/mapped_ledgers"
+OUTPUT_FOLDER = "csv/output_ledgers"
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
