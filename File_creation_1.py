@@ -52,7 +52,7 @@ async def main():
 
     OUTPUT_CSV = os.path.join(
         os.path.dirname(__file__),
-        "csv/msteqpt_processed.csv"
+        "csv/test/msteqpt_processed.csv"
     )
 
     await convert_csv(INPUT_CSV, OUTPUT_CSV)

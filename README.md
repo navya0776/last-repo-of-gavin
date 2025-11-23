@@ -1,5 +1,6 @@
-## Contributing
-1. Please read the [Contributing Guidelines](docs/CONTRIBUTING.md) before submitting pull requests.
-2. Please read the [backend README.md](backend/README.md) before submitting before installing dependencies and making changes in the ```backend ```and ```data ```
-3. Please read the [data README.md](data/README.md) before making changes in ```data```
-4. Please read the [frontend README.md](frontend/README.md) before making changes in ```frontend```
+## The Mapping is done so that you know what each files tell and means
+
+a. **Migration_master_tbl.py** – Migrates master-table data from `final_csv/msteqpt.csv`.
+b. **File_creation_1.py** – Generates an intermediate file used to build a ledger that links `store_id` and `master_id`.
+c. **File_creation_2.py** – Produces the `mapped_ledger` folder, where each ledger file is named using the paired `master_id` and `store_id`.
+
