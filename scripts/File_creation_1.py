@@ -47,12 +47,12 @@ async def convert_csv(input_csv_path: str, output_csv_path: str):
 async def main():
     INPUT_CSV = os.path.join(
         os.path.dirname(__file__),
-        "csv/scripts/msteqpt.csv"
+        "../migrations/msteqpt.csv"
     )
 
     OUTPUT_CSV = os.path.join(
         os.path.dirname(__file__),
-        "csv/test/msteqpt_processed.csv"
+        "../migrations/msteqpt_processed.csv"
     )
 
     await convert_csv(INPUT_CSV, OUTPUT_CSV)

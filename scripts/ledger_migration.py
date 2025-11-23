@@ -192,7 +192,7 @@ async def main():
 
     folder = os.path.join(
         os.path.dirname(__file__),
-        "csv/output_ledgers"    # <-- change your folder here
+        "../migrations/ledgers"
     )
 
     await import_all_ledgers(folder)
