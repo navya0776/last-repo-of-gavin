@@ -83,46 +83,28 @@ async def logout(user: dict[str, str] = Depends(get_current_user)):
 
 @app.post("/forget-password")
 async def forget_password(
-    new_user: ForgetPasswordRequest, session: AsyncSession = Depends(get_db)
+    body: ForgetPasswordRequest,
+    session: AsyncSession = Depends(get_db)
 ):
-    """
-    Reset a user's password if they are marked as a new user.
-
-    This endpoint allows a new user to set their password for the first time.
-    It validates the user's existence in the database, updates their password,
-    and marks the `new_user` field as `False` after a successful reset.
-
-    Steps:
-        1. Check if the username exists in the users collection.
-        2. If the user is not found, log a critical error and raise HTTP 500.
-        3. If found, update the password and set `new_user` to False.
-        4. Return HTTP 200 OK on success.
-
-    Args:
-        new_user (ForgetPasswordRequest): Pydantic model containing the username and new password details.
-        users (UserCollection): MongoDB collection handler for user records.
-
-    Returns:
-        int: HTTP 200 OK on successful password reset.
-
-    Raises:
-        HTTPException:
-            - 500 if the user record does not exist.
-    """
-    exists = await session.scalar(
-        select(User).where(User.username == new_user.username)
+    user = await session.scalar(
+        select(User).where(User.username == body.username)
     )
 
-    if exists is None:
-        logger.critical(
-            "New user forget password conditions matched but user does not exist in database"
-        )
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Only first-time change allowed
+    if user.new_user is False:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal Server Error!",
+            status_code=403,
+            detail="Password can only be changed during first login."
         )
 
-    exists.new_user = False
-    exists.password = sha256(new_user.new_password.encode()).hexdigest()
+    # Save new password
+    user.password = sha256(body.new_password.encode()).hexdigest()
+    user.new_user = False
 
-    return status.HTTP_200_OK
+    await session.commit()
+    await session.refresh(user)
+
+    return {"message": "Password updated successfully"}

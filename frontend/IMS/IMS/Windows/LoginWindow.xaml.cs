@@ -22,7 +22,6 @@ namespace IMS.Windows
             UsernameWatermark.Visibility = Visibility.Visible;
             PasswordWatermark.Visibility = Visibility.Visible;
 
-            // ENTER navigation
             UsernameBox.KeyDown += TxtUsername_KeyDown;
             PasswordBox.KeyDown += TxtPassword_KeyDown;
         }
@@ -57,7 +56,7 @@ namespace IMS.Windows
 
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(UsernameWatermark.Text) ||
+            if (string.IsNullOrWhiteSpace(UsernameBox.Text) ||
                 string.IsNullOrWhiteSpace(PasswordBox.Password))
             {
                 ShowError("Username and password required!");
@@ -78,6 +77,8 @@ namespace IMS.Windows
                 return;
             }
 
+            var username = UsernameBox.Text;
+
             var main = new MainWindow();
             Application.Current.MainWindow = main;
             main.Show();
@@ -85,6 +86,17 @@ namespace IMS.Windows
             if (data.is_admin)
             {
                 main.MainFrame.Navigate(new AdminDashboatd());
+            }
+            else
+            {
+                if (data.is_new_user)
+                {
+                    ChangePasswordWindow cp = new ChangePasswordWindow(username);
+                    cp.Owner = main;
+                    cp.ShowDialog();
+                }
+
+                main.MainFrame.Navigate(new MainDashboard());
             }
 
             this.Hide();
@@ -100,6 +112,5 @@ namespace IMS.Windows
         {
             ErrorPopup.IsOpen = false;
         }
-
     }
 }

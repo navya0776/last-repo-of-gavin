@@ -265,13 +265,12 @@ namespace IMS.Services
                 new_password = newPassword
             };
 
-            var resp = await _client.PostAsJsonAsync("forget-password", payload);
+            var response = await ApiClient.PostAsync<dynamic>("auth/forget-password", payload);
 
-            if (!resp.IsSuccessStatusCode)
-                return false;
-
-            return true;
+            return response != null;
         }
+
+
 
         public static async Task<bool> CreateDemandAsync(DemandCreate payload)
         {
