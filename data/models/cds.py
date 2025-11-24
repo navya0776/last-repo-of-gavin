@@ -73,7 +73,6 @@ class JobMaster(Base):
     cum_tot: Mapped[int | None] = mapped_column(Integer, nullable=True)
     VIR_supp: Mapped[int | None] = mapped_column(Integer, nullable=True)
     ohs: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    date_completed: Mapped[date | None] = mapped_column(Date, nullable=True)
     catalogue_ref: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
     # em_ba_no_eng
@@ -87,7 +86,9 @@ class JobMaster(Base):
     em_ba_no_eng_8: Mapped[str | None] = mapped_column(String(50), nullable=True)
     em_ba_no_eng_9: Mapped[str | None] = mapped_column(String(50), nullable=True)
     em_ba_no_eng_10: Mapped[str | None] = mapped_column(String(50), nullable=True)
-
+    em_ba_no_eng_11: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    em_ba_no_eng_12: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    
     # table_date_completed
     table_date_completed_1: Mapped[date | None] = mapped_column(Date, nullable=True)
     table_date_completed_2: Mapped[date | None] = mapped_column(Date, nullable=True)
@@ -99,6 +100,8 @@ class JobMaster(Base):
     table_date_completed_8: Mapped[date | None] = mapped_column(Date, nullable=True)
     table_date_completed_9: Mapped[date | None] = mapped_column(Date, nullable=True)
     table_date_completed_10: Mapped[date | None] = mapped_column(Date, nullable=True)
+    table_date_completed_11: Mapped[date | None] = mapped_column(Date, nullable=True)
+    table_date_completed_12: Mapped[date | None] = mapped_column(Date, nullable=True)
 
     # tgt_date
     tgt_date_1: Mapped[date | None] = mapped_column(Date, nullable=True)
@@ -111,7 +114,9 @@ class JobMaster(Base):
     tgt_date_8: Mapped[date | None] = mapped_column(Date, nullable=True)
     tgt_date_9: Mapped[date | None] = mapped_column(Date, nullable=True)
     tgt_date_10: Mapped[date | None] = mapped_column(Date, nullable=True)
-
+    tgt_date_11: Mapped[date | None] = mapped_column(Date, nullable=True)
+    tgt_date_12: Mapped[date | None] = mapped_column(Date, nullable=True)
+    
     # unit
     unit_1: Mapped[str | None] = mapped_column(String(10), nullable=True)
     unit_2: Mapped[str | None] = mapped_column(String(10), nullable=True)
@@ -123,7 +128,9 @@ class JobMaster(Base):
     unit_8: Mapped[str | None] = mapped_column(String(10), nullable=True)
     unit_9: Mapped[str | None] = mapped_column(String(10), nullable=True)
     unit_10: Mapped[str | None] = mapped_column(String(10), nullable=True)
-
+    unit_11: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    unit_12: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    
     # eng_no
     eng_no_1: Mapped[str | None] = mapped_column(String(20), nullable=True)
     eng_no_2: Mapped[str | None] = mapped_column(String(20), nullable=True)
@@ -135,6 +142,8 @@ class JobMaster(Base):
     eng_no_8: Mapped[str | None] = mapped_column(String(20), nullable=True)
     eng_no_9: Mapped[str | None] = mapped_column(String(20), nullable=True)
     eng_no_10: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    eng_no_11: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    eng_no_12: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # eng_job
     eng_job_1: Mapped[str | None] = mapped_column(String(20), nullable=True)
@@ -147,6 +156,8 @@ class JobMaster(Base):
     eng_job_8: Mapped[str | None] = mapped_column(String(20), nullable=True)
     eng_job_9: Mapped[str | None] = mapped_column(String(20), nullable=True)
     eng_job_10: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    eng_job_11: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    eng_job_12: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # eng_job_date
     eng_job_date_1: Mapped[date | None] = mapped_column(Date, nullable=True)
@@ -159,6 +170,8 @@ class JobMaster(Base):
     eng_job_date_8: Mapped[date | None] = mapped_column(Date, nullable=True)
     eng_job_date_9: Mapped[date | None] = mapped_column(Date, nullable=True)
     eng_job_date_10: Mapped[date | None] = mapped_column(Date, nullable=True)
+    eng_job_date_11: Mapped[date | None] = mapped_column(Date, nullable=True)
+    eng_job_date_12: Mapped[date | None] = mapped_column(Date, nullable=True)
 
     # sub_assy_no
     sub_assy_no_1: Mapped[str | None] = mapped_column(String(50), nullable=True)
@@ -171,6 +184,8 @@ class JobMaster(Base):
     sub_assy_no_8: Mapped[str | None] = mapped_column(String(50), nullable=True)
     sub_assy_no_9: Mapped[str | None] = mapped_column(String(50), nullable=True)
     sub_assy_no_10: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    sub_assy_no_11: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    sub_assy_no_12: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
 
     # sub_assy_job
@@ -184,6 +199,8 @@ class JobMaster(Base):
     sub_assy_job_8: Mapped[str | None] = mapped_column(String(20), nullable=True)
     sub_assy_job_9: Mapped[str | None] = mapped_column(String(20), nullable=True)
     sub_assy_job_10: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    sub_assy_job_11: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    sub_assy_job_12: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # sub_assy_date
     sub_assy_date_1: Mapped[date | None] = mapped_column(Date, nullable=True)
@@ -196,6 +213,8 @@ class JobMaster(Base):
     sub_assy_date_8: Mapped[date | None] = mapped_column(Date, nullable=True)
     sub_assy_date_9: Mapped[date | None] = mapped_column(Date, nullable=True)
     sub_assy_date_10: Mapped[date | None] = mapped_column(Date, nullable=True)
+    sub_assy_date_11: Mapped[date | None] = mapped_column(Date, nullable=True)
+    sub_assy_date_12: Mapped[date | None] = mapped_column(Date, nullable=True)
 
     # bd_srl
     bd_srl_1: Mapped[str | None] = mapped_column(String(20), nullable=True)
@@ -208,6 +227,8 @@ class JobMaster(Base):
     bd_srl_8: Mapped[str | None] = mapped_column(String(20), nullable=True)
     bd_srl_9: Mapped[str | None] = mapped_column(String(20), nullable=True)
     bd_srl_10: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    bd_srl_11: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    bd_srl_12: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # prog
     prog_1: Mapped[float | None] = mapped_column(Float, nullable=True)
@@ -220,6 +241,8 @@ class JobMaster(Base):
     prog_8: Mapped[float | None] = mapped_column(Float, nullable=True)
     prog_9: Mapped[float | None] = mapped_column(Float, nullable=True)
     prog_10: Mapped[float | None] = mapped_column(Float, nullable=True)
+    prog_11: Mapped[float | None] = mapped_column(Float, nullable=True)
+    prog_12: Mapped[float | None] = mapped_column(Float, nullable=True)
 
     # gang_ldr
     gang_ldr_1: Mapped[str | None] = mapped_column(String(50), nullable=True)
@@ -232,6 +255,8 @@ class JobMaster(Base):
     gang_ldr_8: Mapped[str | None] = mapped_column(String(50), nullable=True)
     gang_ldr_9: Mapped[str | None] = mapped_column(String(50), nullable=True)
     gang_ldr_10: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    gang_ldr_11: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    gang_ldr_12: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
 
     # ---- Relationships ----
