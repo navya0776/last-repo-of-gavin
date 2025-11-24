@@ -287,7 +287,7 @@ async def main():
     # ⚠️ CHANGE THIS PATH TO YOUR CSV FILE
     csv_path = os.path.join(
         os.path.dirname(__file__),
-        "final job master/jobmaster_with_master_id.csv"
+        "../migrations/jobmaster_with_master_id.csv"
     )
 
     await import_single_jobmaster(csv_path)

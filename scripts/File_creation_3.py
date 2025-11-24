@@ -2,15 +2,15 @@ import os
 import pandas as pd
 from datetime import datetime
 
-INPUT_FOLDER = "csv/vir/master"
-OUTPUT_FOLDER = "csv/filtered_job_csvs"
+INPUT_FOLDER = "migrations/master"
+OUTPUT_FOLDER = "migrations/filtered_job_csvs"
 
 JOBNO_COLUMN = "JOB_NO"
 REQUIRED_COLS = [JOBNO_COLUMN]   # JOB_DT is detected dynamically
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-cutoff_date = datetime(2023, 1, 1)
+cutoff_date = datetime(2020, 1, 1)
 
 def find_job_dt_column(columns):
     """

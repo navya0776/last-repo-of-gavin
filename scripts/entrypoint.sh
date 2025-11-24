@@ -27,6 +27,7 @@ if [ "${MODE}" = "migrate-only" ]; then
   run_script "master_tbl_migration.py"
   run_script "store_migration.py"
   run_script "ledger_migration.py"
+  run_script "jobmaster_migration.py"
   echo "Migrations complete (migrate-only). Exiting."
   exit 0
 fi
@@ -37,6 +38,9 @@ run_script "File_creation_2.py"
 run_script "master_tbl_migration.py"
 run_script "store_migration.py"
 run_script "ledger_migration.py"
+run_script "File_creation_3.py"
+run_script "File_creation_4.py"
+run_script "jobmaster_migration.py"
 
 # Hand off to CMD (exec to replace shell with the process)
 exec "$@"

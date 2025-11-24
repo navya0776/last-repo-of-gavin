@@ -3,9 +3,9 @@ import pandas as pd
 # -----------------------------
 # FILE PATHS — CHANGE THESE
 # -----------------------------
-main_file = "csv/filtered_job_csvs/filtered_mstjob.csv"               # File where you want MASTER_ID added
-mapping_file = "msteqpt_processed.csv"         # File containing eqpt_code + master_id
-output_file = "jobmaster_with_master_id.csv"
+main_file = "migrations/filtered_job_csvs/filtered_mstjob.csv"               # File where you want MASTER_ID added
+mapping_file = "migrations/msteqpt_processed.csv"         # File containing eqpt_code + master_id
+output_file = "migrations/jobmaster_with_master_id.csv"
 
 # -----------------------------
 # COLUMN NAMES — CHANGE IF NEEDED
@@ -41,6 +41,9 @@ if mapping_code_col in df_merged.columns:
 # Move master_id to front
 master_id_col = df_merged.pop(mapping_master_col)
 df_merged.insert(0, mapping_master_col.upper(), master_id_col)
+
+first_four_cols = df_merged.columns[:4]
+df_merged.dropna(subset=first_four_cols, how="all", inplace=True)
 
 # -----------------------------
 # SAVE OUTPUT

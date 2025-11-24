@@ -1,8 +1,8 @@
-all: 
+all: data
 	@echo "Building docker containers backend"
 	@docker compose up -d --build backend
 
-data:
+data: db
 	@echo "Building docker containers backend"
 	@make -C data
 	@sleep 2
