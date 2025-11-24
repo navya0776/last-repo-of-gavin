@@ -8,7 +8,6 @@
         Title="GenerateNewAP" Height="636" Width="1357">
 
     <Window.Resources>
-        <!-- light frame around the whole form -->
         <Style TargetType="GroupBox">
             <Setter Property="Padding" Value="10"/>
             <Setter Property="BorderBrush" Value="#FF9E9E9E"/>
@@ -22,22 +21,18 @@
             </Setter>
         </Style>
 
-        <!-- label column look -->
         <Style x:Key="Lbl" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="10,0,0,0"/>
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
 
-        <!-- pink text boxes from the screenshot -->
         <Style x:Key="PinkBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
             <Setter Property="Background" Value="#FFFF8FA0"/>
-            <!-- saturated pink seen in image -->
             <Setter Property="BorderBrush" Value="#FF8B8B8B"/>
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
 
-        <!-- little "..." picker buttons -->
         <Style x:Key="EllipsisBtn" TargetType="Button">
             <Setter Property="Width" Value="24"/>
             <Setter Property="Height" Value="24"/>
@@ -46,7 +41,6 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
 
-        <!-- numeric textbox helper -->
         <Style x:Key="NumBox" TargetType="TextBox">
             <EventSetter Event="PreviewTextInput" Handler="Numeric_PreviewTextInput"/>
             <Setter Property="HorizontalContentAlignment" Value="Right"/>
@@ -64,6 +58,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- TOP LINE -->
         <DockPanel Margin="0,0,0,8" Grid.ColumnSpan="2">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
                 <TextBlock Text="Generate AP Demand From" FontSize="16" FontWeight="Bold"
@@ -74,107 +69,88 @@
             </StackPanel>
         </DockPanel>
 
+        <!-- MAIN FORM -->
         <GroupBox Header="Demand Details" Grid.ColumnSpan="2" Margin="0,29,0,0" Grid.RowSpan="2">
-            <!-- 6 columns like the screenshot -->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="155"/>
-                    <!-- label -->
-                    <ColumnDefinition Width="Auto"/>
-                    <!-- field -->
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto" MinWidth="325.243"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" MinWidth="325"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- 9 even rows -->
                 <Grid.RowDefinitions>
                     <RowDefinition Height="34"/>
-                    <!-- Equipment -->
                     <RowDefinition Height="34"/>
-                    <!-- Store/Section/Ledger -->
                     <RowDefinition Height="34"/>
-                    <!-- Make/Country -->
                     <RowDefinition Height="34"/>
-                    <!-- Scale/Issue -->
                     <RowDefinition Height="34"/>
-                    <!-- DemandAuth/Prefix/City -->
                     <RowDefinition Height="34"/>
-                    <!-- AP demand date range / placed -->
                     <RowDefinition Height="34"/>
-                    <!-- Consumption / completed -->
                     <RowDefinition Height="34"/>
-                    <!-- Demand No / spares / outs -->
-                    <RowDefinition Height="34"/>
-                    <!-- Demand range / Assy -->
                     <RowDefinition Height="48"/>
-                    <!-- Index / Type / Selection -->
-                    <RowDefinition Height="34" />
-
-                    <RowDefinition Height="34" />
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="34"/>
                 </Grid.RowDefinitions>
 
-                <!-- Row 0 -->
-                <TextBlock Grid.Column="0" Style="{StaticResource Lbl}" Text="Equipment" Height="16" Margin="0,0,6,0"/>
+                <!-- Row 0: Equipment / AHQ / Fin Year -->
+                <TextBlock Grid.Column="0" Style="{StaticResource Lbl}" Text="Equipment" />
                 <DockPanel Grid.Row="0" Grid.Column="1">
                     <ComboBox x:Name="cmbEquipment"
-                          MinWidth="230"
-                          ItemsSource="{Binding EquipmentList}"
-                          DisplayMemberPath="eqpt_name"
-                          SelectedValuePath="eqpt_code"
-                          SelectedValue="{Binding Model.eqpt_code, UpdateSourceTrigger=PropertyChanged}" />
+                              MinWidth="230"
+                              DisplayMemberPath="equipment_name"
+                              SelectedValuePath="eqpt_code"
+                              SelectedValue="{Binding Model.eqpt_code, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
 
-                <TextBlock Grid.Column="2" Style="{StaticResource Lbl}" Text="AHQ Srl" Height="16" Margin="126,0,4,0"/>
+                <TextBlock Grid.Column="2" Style="{StaticResource Lbl}" Text="AHQ Srl" Margin="126,0,4,0"/>
                 <TextBox x:Name="txtAhq"
                          Grid.Row="0" Grid.Column="3"
-                         Style="{StaticResource PinkBox}"
-                         Text="{Binding Model.demand_no, UpdateSourceTrigger=PropertyChanged}" />
+                         Style="{StaticResource PinkBox}" />
 
-                <TextBlock Grid.Column="4" Style="{StaticResource Lbl}" Text="Fin Year" Height="16" Margin="110,0,6,0"/>
-                <ComboBox x:Name="cmbFinYear" Grid.Row="0" Grid.Column="5" Margin="10,1,175,38" Grid.RowSpan="2"
-                          >
-                    <ComboBoxItem>2025–2026</ComboBoxItem>
-                    <ComboBoxItem IsSelected="True">2026–2027</ComboBoxItem>
-                    <ComboBoxItem>2027–2028</ComboBoxItem>
+                <TextBlock Grid.Column="4" Style="{StaticResource Lbl}" Text="Fin Year" Margin="110,0,6,0"/>
+                <ComboBox x:Name="cmbFinYear" Grid.Row="0" Grid.Column="5" Margin="10,1,175,0">
+                    <ComboBoxItem>2025-2026</ComboBoxItem>
+                    <ComboBoxItem IsSelected="True">2026-2027</ComboBoxItem>
+                    <ComboBoxItem>2027-2028</ComboBoxItem>
                 </ComboBox>
 
-                <!-- Row 1 -->
-                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Lbl}" Text="Store Code" Height="16" Margin="0,0,6,0"/>
+                <!-- Row 1: Store / Eqpt code / Eqpt name / Section -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Lbl}" Text="Store Code" />
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                    <TextBox x:Name="txtStore" Width="44"
-                         Text="{Binding Model.Page_no, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox x:Name="txtStore" Width="44" />
                     <TextBlock Text="  Eqpt Code" VerticalAlignment="Center" Margin="6,0,6,0"/>
-                    <TextBox x:Name="txtEqptCode" Width="60"
-                         Text="{Binding Model.eqpt_code, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox x:Name="txtEqptCode" Width="60" Text="{Binding Model.eqpt_code}" />
                 </StackPanel>
 
-                <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Lbl}" Text="Eqpt" Height="16" Margin="147,0,5,0"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource Lbl}" Text="Eqpt" Margin="147,0,5,0"/>
                 <TextBox x:Name="txtEqpt" Grid.Row="1" Grid.Column="3" />
 
-                <TextBlock Grid.Row="1" Grid.Column="4" Style="{StaticResource Lbl}" Text="Section" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="1" Grid.Column="5"/>
+                <TextBlock Grid.Row="1" Grid.Column="4" Style="{StaticResource Lbl}" Text="Section"/>
+                <TextBox x:Name="txtSection" Grid.Row="1" Grid.Column="5"/>
 
-                <!-- Row 2 -->
-                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource Lbl}" Text="Make" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="2" Grid.Column="1"/>
-                <TextBlock Grid.Row="2" Grid.Column="2" Style="{StaticResource Lbl}" Text="Country" Height="16" Margin="128,0,4,0"/>
-                <TextBox Grid.Row="2" Grid.Column="3"/>
+                <!-- Row 2: Make / Country / Ledger -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource Lbl}" Text="Make"/>
+                <TextBox x:Name="txtMake" Grid.Row="2" Grid.Column="1"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="4" Style="{StaticResource Lbl}" Text="Ledger Code" Height="16" Margin="0,0,6,0"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Style="{StaticResource Lbl}" Text="Country" Margin="128,0,4,0"/>
+                <TextBox x:Name="txtCountry" Grid.Row="2" Grid.Column="3"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="4" Style="{StaticResource Lbl}" Text="Ledger Code"/>
                 <StackPanel Grid.Row="2" Grid.Column="5" Orientation="Horizontal">
                     <TextBox x:Name="txtLedgerCode" Width="50"/>
                     <TextBlock Text="  Ledger Name" VerticalAlignment="Center" Margin="6,0,6,0"/>
-                    <TextBox x:Name="txtLedgerName" Width="130" />
+                    <TextBox x:Name="txtLedgerName" Width="130"/>
                     <Button Style="{StaticResource EllipsisBtn}" Click="LedgerPicker_Click"/>
                 </StackPanel>
 
-                <!-- Row 3 -->
-                <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource Lbl}" Text="Scale/SSG ref" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
-                         />
-                <TextBlock Grid.Row="3" Grid.Column="4" Style="{StaticResource Lbl}" Text="Scale Issue No" Height="16" Margin="0,0,6,0"/>
+                <!-- Row 3: Scale/SSG ref / Scale issue -->
+                <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource Lbl}" Text="Scale/SSG ref"/>
+                <TextBox x:Name="txtScaleRef" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="4" Style="{StaticResource Lbl}" Text="Scale Issue No"/>
                 <StackPanel Grid.Row="3" Grid.Column="5" Orientation="Horizontal">
                     <TextBox x:Name="txtScaleIssueNo" Width="80"/>
                     <TextBlock Text="  Date of Issue" VerticalAlignment="Center" Margin="6,0,6,0"/>
@@ -182,110 +158,62 @@
                     <Button Style="{StaticResource EllipsisBtn}" Click="ScalePicker_Click"/>
                 </StackPanel>
 
-                <TextBlock Grid.Row="10" Grid.Column="0" Style="{StaticResource Lbl}" Text="No of eqpt in OS/SSG" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="10" Grid.Column="1" Style="{StaticResource PinkBox}" />
+                <!-- Row 4: DemandAuth / Prefix / City -->
+                <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource Lbl}" Text="Demand Auth"/>
+                <TextBox x:Name="txtDemandAuth" Grid.Row="4" Grid.Column="1"/>
 
-                <!-- Row 4 -->
-                <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource Lbl}" Text="DemandAuth" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="4" Grid.Column="1"
-                         Text="{Binding Model.Auth, UpdateSourceTrigger=PropertyChanged}" />
-
-
-
-                <TextBlock Grid.Row="4" Grid.Column="2" Style="{StaticResource Lbl}" Text="Prefix" Height="16" Margin="138,0,5,0"/>
+                <TextBlock Grid.Row="4" Grid.Column="2" Style="{StaticResource Lbl}" Text="Prefix" Margin="138,0,5,0"/>
                 <TextBox Grid.Row="4" Grid.Column="3" Style="{StaticResource PinkBox}"
-                         Text="SS/APD/BD8A12/ENGINE/" HorizontalAlignment="Center" Width="180"/>
+                         Text="SS/APD/BD8A12/ENGINE/" Width="180"/>
 
-                <TextBlock Grid.Row="4" Grid.Column="4" Style="{StaticResource Lbl}" Text="City" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="4" Grid.Column="5"/>
+                <TextBlock Grid.Row="4" Grid.Column="4" Style="{StaticResource Lbl}" Text="City"/>
+                <TextBox x:Name="txtCity" Grid.Row="4" Grid.Column="5"/>
 
-
-                <TextBlock Grid.Row="11" Grid.Column="0" Style="{StaticResource Lbl}" Text="Depot" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="12" Grid.Column="1" Style="{StaticResource PinkBox}" Margin="0,5,0,0"
-                         />
-
-                <!-- Row 5 -->
-                <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource Lbl}" Text="AP demand date range" Height="16" Margin="0,0,6,0"/>
+                <!-- Row 5: AP demand date range / No. eqpt placed -->
+                <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource Lbl}" Text="AP demand date range"/>
                 <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
                     <DatePicker x:Name="dpAPFrom" Width="118"/>
                     <TextBlock Text=" to " VerticalAlignment="Center"/>
                     <DatePicker x:Name="dpAPTo" Width="118"/>
                 </StackPanel>
 
-                <TextBlock Grid.Row="5" Grid.Column="2" Style="{StaticResource Lbl}" Text="No of eqpt demand placed" Height="16" Margin="18,0,10,0"/>
-                <TextBox Grid.Row="5" Grid.Column="3" Style="{StaticResource NumBox}" Text="0" Margin="73,0,73,0"/>
+                <TextBlock Grid.Row="5" Grid.Column="2" Style="{StaticResource Lbl}" Text="No of eqpt demand placed" Margin="18,0,10,0"/>
+                <TextBox x:Name="txtNoEqptDemandPlaced" Grid.Row="5" Grid.Column="3"
+                         Style="{StaticResource NumBox}" Text="0" Margin="73,0,73,0"/>
 
-                <!-- Row 6 -->
-                <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource Lbl}" Text="Consumption pattern" Height="16" Margin="0,0,6,0"/>
-                <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
-                    <TextBox Text="{Binding Model.Cons_pattern, UpdateSourceTrigger=PropertyChanged}" Width="118"/>
-                </StackPanel>
+                <!-- Row 6: (you can later extend for more fields if you want) -->
+                <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource Lbl}" Text="Remarks"/>
+                <TextBox x:Name="txtRemarks" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="5"/>
 
-                <TextBlock Grid.Row="6" Grid.Column="2" Style="{StaticResource Lbl}" Text="No of eqpt completed" Height="16" Margin="45,0,10,0"/>
-                <TextBox Grid.Row="6" Grid.Column="3"
-                         Style="{StaticResource NumBox}"
-                         Text="{Binding Model.qty_dem, UpdateSourceTrigger=PropertyChanged}" />
-
-                <!-- Row 7 -->
-                <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource Lbl}" Text="Demand No" Height="16" Margin="0,0,6,0"/>
-                <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
-                    <TextBox x:Name="txtDemandNo" Width="110" Style="{StaticResource PinkBox}"/>
-                    <TextBlock Text="  dt " VerticalAlignment="Center" Margin="6,0" RenderTransformOrigin="0.079,0.526"/>
-                    <DatePicker x:Name="dpDemandDt" Width="110"/>
-                </StackPanel>
-
-                <TextBlock Grid.Row="7" Grid.Column="2" Style="{StaticResource Lbl}" Text="No of eqpt for spares demand" Height="16" Margin="0,0,6,0"/>
-                <TextBox Grid.Row="7" Grid.Column="3" Style="{StaticResource NumBox}"  Margin="73,0,73,0"/>
-
-                <TextBlock Grid.Row="7" Grid.Column="4" Style="{StaticResource Lbl}" Text="No of eqpt outs for repair" Height="16" Margin="0,0,6,0"/>
-                <ComboBox Grid.Row="7" Grid.Column="5" Margin="10,0,147,0">
-                    <ComboBoxItem IsSelected="True">0</ComboBoxItem>
-                    <ComboBoxItem>1</ComboBoxItem>
-                    <ComboBoxItem>2</ComboBoxItem>
-                    <ComboBoxItem>3</ComboBoxItem>
-                    <ComboBoxItem>4</ComboBoxItem>
-                </ComboBox>
-
-                <!-- Row 8 -->
-                <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource Lbl}" Text="Demand range" Height="16" Margin="0,0,6,0"/>
+                <!-- Row 8: Demand range / Assy -->
+                <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource Lbl}" Text="Demand range"/>
                 <StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal">
                     <TextBox x:Name="txtRangeFrom" Width="64" Style="{StaticResource PinkBox}" Text="0"/>
                     <TextBlock Text="  to  " VerticalAlignment="Center"/>
                     <TextBox x:Name="txtRangeTo" Width="64" Style="{StaticResource PinkBox}" Text="0"/>
                 </StackPanel>
 
-                <RadioButton Grid.Row="8" Grid.Column="2" GroupName="dtype" Content="Ledg Page" IsChecked="True" Margin="10,5"/>
-                <RadioButton Grid.Row="8" Grid.Column="3" GroupName="dtype" Content="OS/SSG" Margin="10,5"/>
-
-                <TextBlock Grid.Row="8" Grid.Column="4" Style="{StaticResource Lbl}" Text="Assy/Component" Height="16" Margin="0,0,6,0"/>
+                <TextBlock Grid.Row="8" Grid.Column="4" Style="{StaticResource Lbl}" Text="Assy/Component"/>
                 <DockPanel Grid.Row="8" Grid.Column="5" Margin="10,0,119,0">
                     <TextBox x:Name="txtAssy" MinWidth="180" Width="175" Height="35"/>
                     <Button Style="{StaticResource EllipsisBtn}" DockPanel.Dock="Right" Click="AssyPicker_Click"/>
                 </DockPanel>
 
-                <!-- Row 9: index/type/selection lines like the screenshot -->
-                <StackPanel Grid.Row="9" Grid.ColumnSpan="6" Orientation="Horizontal" VerticalAlignment="Center" Height="16">
-                    <TextBlock Text="Demand index" VerticalAlignment="Center" FontWeight="Bold"/>
-                    <RadioButton GroupName="idx" Content="Ledger Page" IsChecked="True" Margin="10,0"/>
-                    <RadioButton GroupName="idx" Content="OH Scale/SSG" Margin="10,0"/>
-                    <RadioButton GroupName="idx" Content="Demand No" Margin="10,0"/>
+                <!-- Row 9: Demand type / selection -->
+                <StackPanel Grid.Row="9" Grid.ColumnSpan="6" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Demand type" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <RadioButton x:Name="rbDemandTypeAPD" Content="Adv. Prov. Demand" IsChecked="True" Margin="10,0"/>
+                    <RadioButton x:Name="rbDemandTypeSPD" Content="Supplementary demand" Margin="10,0"/>
 
-                    <TextBlock Text="   Demand type" Margin="30,0,0,0" VerticalAlignment="Center" FontWeight="Bold"/>
-                    <RadioButton GroupName="dtype" Content="Adv. Prov. Demand" IsChecked="True" Margin="10,0"/>
-                    <RadioButton GroupName="dtype" Content="Supplementary demand" Margin="10,0"/>
-
-
-                </StackPanel>
-
-                <StackPanel Grid.Row="11" Grid.Column="5" Grid.ColumnSpan="3" Orientation="Horizontal">
-                    <TextBlock Text="   " Width="18" />
-                    <RadioButton GroupName="sel" Content="All scaled item" IsChecked="True" Margin="20,0"/>
+                    <TextBlock Text="   Selection" Margin="30,0,0,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <RadioButton GroupName="sel" Content="All scaled item" IsChecked="True" Margin="10,0"/>
                     <RadioButton GroupName="sel" Content="On selection"/>
                 </StackPanel>
+
             </Grid>
         </GroupBox>
 
-
+        <!-- BOTTOM BUTTONS -->
         <Grid Grid.Row="2" Margin="0,10,0,0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

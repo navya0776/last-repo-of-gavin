@@ -2,6 +2,7 @@
 using IMS.Views;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace IMS.Windows
 {
@@ -17,8 +18,25 @@ namespace IMS.Windows
         public LoginWindow()
         {
             InitializeComponent();
+
             UsernameWatermark.Visibility = Visibility.Visible;
             PasswordWatermark.Visibility = Visibility.Visible;
+
+            // ENTER navigation
+            UsernameBox.KeyDown += TxtUsername_KeyDown;
+            PasswordBox.KeyDown += TxtPassword_KeyDown;
+        }
+
+        private void TxtUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                PasswordBox.Focus();
+        }
+
+        private void TxtPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                Login_Click(sender, e);
         }
 
         private void UsernameBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -39,16 +57,19 @@ namespace IMS.Windows
 
         private async void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(UsernameBox.Text) ||
+            if (string.IsNullOrWhiteSpace(UsernameWatermark.Text) ||
                 string.IsNullOrWhiteSpace(PasswordBox.Password))
             {
-                MessageBox.Show("Username and password required!");
+                ShowError("Username and password required!");
                 return;
             }
 
-            var payload = new { username = UsernameBox.Text, password = PasswordBox.Password };
+            var payload = new
+            {
+                username = UsernameBox.Text,
+                password = PasswordBox.Password
+            };
 
-            // ✔ FIX → use ONLY ApiClient
             var data = await ApiClient.PostAsync<LoginResponse>("auth/login", payload);
 
             if (data == null)
@@ -65,24 +86,8 @@ namespace IMS.Windows
             {
                 main.MainFrame.Navigate(new AdminDashboatd());
             }
-            else
-            {
-                if (data.is_new_user)
-                {
-                    var popup = new ChangePasswordWindow();
-                    popup.ShowDialog();
-                }
-
-                // navigate to normal dashboard if needed
-                // main.MainFrame.Navigate(new Dashboard());
-            }
 
             this.Hide();
-        }
-
-        private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
 
         private void ShowError(string message)
@@ -95,5 +100,6 @@ namespace IMS.Windows
         {
             ErrorPopup.IsOpen = false;
         }
+
     }
 }

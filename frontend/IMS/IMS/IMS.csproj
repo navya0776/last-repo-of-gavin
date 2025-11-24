@@ -17,7 +17,9 @@
     <None Remove="Assets\logo.png" />
     <None Remove="Assets\menu.png" />
     <None Remove="Assets\SAPEAA.png" />
+    <None Remove="Assets\triangle_bg.png" />
     <None Remove="Assets\user.png" />
+    <None Remove="Assets\user1.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,7 +58,13 @@
     <Resource Include="Assets\SAPEAA.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\triangle_bg.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\user.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\user1.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

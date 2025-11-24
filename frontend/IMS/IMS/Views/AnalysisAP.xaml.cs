@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using static IMS.Models.DemandModel;
 
 namespace IMS.Views
 {
     public partial class AnalysisAP : Page
     {
-        private int _demandNo;
+        private readonly int _demandNo;
+        private bool _isLocked = false;
+
 
         public AnalysisAP(int demandNo)
         {
@@ -20,42 +21,32 @@ namespace IMS.Views
             LoadDemandDetails();
         }
 
-        // --------------------------------------------------
-        // ⭐ LOAD ALL JUNCTION DETAILS FOR THIS DEMAND
-        // Route hit: GET /demand/detail/{demand_no}
-        // --------------------------------------------------
+        // ---------------------------
+        // LOAD JUNCTION DETAILS
+        // ---------------------------
         private async void LoadDemandDetails()
         {
-            try
-            {
-                var result = await ApiService.GetAsync<List<DmdJunctionResponse>>(
-                    $"/demand/detail/{_demandNo}"
-                );
+            var rows = await ApiService.GetAsync<List<DmdJunctionResponse>>($"demand/detail/{_demandNo}");
 
-                if (result != null)
-                    LedgerDataGrid.ItemsSource = result;
-                else
-                    MessageBox.Show("No data returned from server.");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error loading demand details:\n" + ex.Message);
-            }
+            LedgerDataGrid.ItemsSource = rows;
+
+            // set initial lock state from backend
+            if (rows.Count > 0)
+                _isLocked = rows[0].is_locked;
+
+            LockButton.Content = _isLocked ? "Unlock Demand" : "Lock Demand";
         }
 
-        // --------------------------------------------------
-        // ⭐ LOCK DEMAND
-        // Route hit: POST /demand/{demand_no}/lock
-        // --------------------------------------------------
+
+        // ---------------------------
+        // LOCK DEMAND
+        // ---------------------------
         private async void LockDemand_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                await ApiService.PostAsync<object>(
-                    $"/demand/{_demandNo}/lock", new { }
-                );
-
-                MessageBox.Show("Demand locked successfully.");
+                await ApiService.PostAsync<object>($"demand/{_demandNo}/lock", new { });
+                MessageBox.Show("Demand locked.");
             }
             catch (Exception ex)
             {
@@ -63,18 +54,14 @@ namespace IMS.Views
             }
         }
 
-        // --------------------------------------------------
-        // ⭐ UNLOCK DEMAND
-        // Route hit: POST /demand/{demand_no}/unlock
-        // --------------------------------------------------
+        // ---------------------------
+        // UNLOCK DEMAND
+        // ---------------------------
         private async void UnlockDemand_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                await ApiService.PostAsync<object>(
-                    $"/demand/{_demandNo}/unlock", new { }
-                );
-
+                await ApiService.PostAsync<object>($"demand/{_demandNo}/unlock", new { });
                 MessageBox.Show("Demand unlocked.");
             }
             catch (Exception ex)
@@ -83,10 +70,9 @@ namespace IMS.Views
             }
         }
 
-        // --------------------------------------------------
-        // ⭐ DELETE THE ENTIRE DEMAND
-        // Route hit: DELETE /demand/{demand_no}
-        // --------------------------------------------------
+        // ---------------------------
+        // DELETE DEMAND
+        // ---------------------------
         private async void DeleteDemand_Click(object sender, RoutedEventArgs e)
         {
             var confirm = MessageBox.Show(
@@ -96,13 +82,17 @@ namespace IMS.Views
                 MessageBoxImage.Warning
             );
 
-            if (confirm == MessageBoxResult.No)
+            if (confirm != MessageBoxResult.Yes)
                 return;
 
             try
             {
-                await ApiService.DeleteAsync($"/demand/{_demandNo}");
+                await ApiService.DeleteAsync($"demand/{_demandNo}");
                 MessageBox.Show("Demand deleted.");
+
+                // Navigate back to AP list automatically
+                var main = (MainWindow)Application.Current.MainWindow;
+                main.MainFrame.Navigate(new AdvanceProvisioning());
             }
             catch (Exception ex)
             {
@@ -110,9 +100,39 @@ namespace IMS.Views
             }
         }
 
+        private async void ToggleLock_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_isLocked == false)
+                {
+                    // Lock demand
+                    await ApiService.PostAsync<object>($"demand/{_demandNo}/lock", new { });
+                    _isLocked = true;
+
+                    MessageBox.Show("Demand locked.");
+                    (sender as Button).Content = "Unlock Demand"; // change button label
+                }
+                else
+                {
+                    // Unlock demand
+                    await ApiService.PostAsync<object>($"demand/{_demandNo}/unlock", new { });
+                    _isLocked = false;
+
+                    MessageBox.Show("Demand unlocked.");
+                    (sender as Button).Content = "Lock Demand"; // change button label
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to change lock state:\n" + ex.Message);
+            }
+        }
+
+
         private void LedgerDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Optional — You can show details about selected row here
+            // You can display selected row info here (optional)
         }
     }
 }

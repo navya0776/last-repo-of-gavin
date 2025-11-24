@@ -147,7 +147,7 @@ namespace IMS.Views
             };
 
             var result = await ApiClient.PostAsync<object>("admin/user", newUser);
-            MessageBox.Show(result != null ? "✅ User created successfully!" : "❌ Failed to create user.");
+            MessageBox.Show(result != null ? "User created successfully!" : "Failed to create user.");
         }
 
 
@@ -155,8 +155,50 @@ namespace IMS.Views
 
         private async void DeleteUser_Click(object sender, RoutedEventArgs e)
         {
-            // optional delete implementation
+            if (UsersList.SelectedItem is not UserResponse selectedUser)
+            {
+                MessageBox.Show("Please select a user to delete.");
+                return;
+            }
+
+            // Prevent admin from deleting themselves (optional)
+            if (selectedUser.username == "admin")
+            {
+                MessageBox.Show("Admin user cannot be deleted!");
+                return;
+            }
+
+            // Confirm deletion
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete '{selectedUser.username}'?",
+                "Confirm Delete",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning
+            );
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                // API call to delete the user
+                await ApiService.DeleteAsync($"admin/user/{selectedUser.username}");
+
+                MessageBox.Show($"User '{selectedUser.username}' deleted successfully!");
+
+                // Refresh UI
+                await LoadUsers();
+
+                SelectedUsername.Text = "";
+                SelectedRole.Text = "";
+                PermissionsPanel.Children.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to delete user: {ex.Message}");
+            }
         }
+
 
         private void ViewAuditLogs_Click(object sender, RoutedEventArgs e)
         {

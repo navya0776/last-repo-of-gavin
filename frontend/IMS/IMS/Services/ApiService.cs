@@ -257,5 +257,77 @@ namespace IMS.Services
                    ?? new List<LPRItem>();
         }
 
+        public static async Task<bool> ForgetPasswordAsync(string username, string newPassword)
+        {
+            var payload = new
+            {
+                username = username,
+                new_password = newPassword
+            };
+
+            var resp = await _client.PostAsJsonAsync("forget-password", payload);
+
+            if (!resp.IsSuccessStatusCode)
+                return false;
+
+            return true;
+        }
+
+        public static async Task<bool> CreateDemandAsync(DemandCreate payload)
+        {
+            var resp = await _client.PostAsJsonAsync("demand/", payload);
+            return resp.IsSuccessStatusCode;
+        }
+
+        public static async Task<List<DemandResponse>> GetAllDemandsAsync()
+        {
+            var resp = await _client.GetAsync("demand/");
+            resp.EnsureSuccessStatusCode();
+
+            return await resp.Content.ReadFromJsonAsync<List<DemandResponse>>()
+                   ?? new List<DemandResponse>();
+        }
+
+        public static async Task<List<DemandResponse>> GetDemandByNoAsync(int demandNo)
+        {
+            var resp = await _client.GetAsync($"demand/{demandNo}");
+            resp.EnsureSuccessStatusCode();
+
+            return await resp.Content.ReadFromJsonAsync<List<DemandResponse>>()
+                   ?? new List<DemandResponse>();
+        }
+        public static async Task<bool> DeleteDemandAsync(int demandNo)
+        {
+            var resp = await _client.DeleteAsync($"demand/{demandNo}");
+            return resp.IsSuccessStatusCode;
+        }
+        public static async Task<bool> LockDemandAsync(int demandNo)
+        {
+            var resp = await _client.PostAsync($"demand/{demandNo}/lock", null);
+            return resp.IsSuccessStatusCode;
+        }
+        public static async Task<bool> UnlockDemandAsync(int demandNo)
+        {
+            var resp = await _client.PostAsync($"demand/{demandNo}/unlock", null);
+            return resp.IsSuccessStatusCode;
+        }
+        public static async Task<List<DmdJunctionCreate>> GetDemandDetailsAsync(int demandNo)
+        {
+            var resp = await _client.GetAsync($"demand/detail/{demandNo}");
+            resp.EnsureSuccessStatusCode();
+
+            return await resp.Content.ReadFromJsonAsync<List<DmdJunctionCreate>>()
+                   ?? new List<DmdJunctionCreate>();
+        }
+        public static async Task<List<EquipmentResponse>> GetAllEquipmentsAsync()
+        {
+            var resp = await _client.GetAsync("demand/equipments/");
+            resp.EnsureSuccessStatusCode();
+
+            return await resp.Content.ReadFromJsonAsync<List<EquipmentResponse>>()
+                   ?? new List<EquipmentResponse>();
+        }
+
+
     }
 }

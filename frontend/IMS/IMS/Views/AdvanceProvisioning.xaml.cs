@@ -15,7 +15,7 @@ namespace IMS.Views
     {
         private ICollectionView _view;
 
-        public ObservableCollection<DemandModel.DemandResponse> DemandList { get; set; }
+        public ObservableCollection<DemandResponse> DemandList { get; set; }
         public ObservableCollection<string> EquipmentList { get; set; }
 
         // Active filters
@@ -36,7 +36,7 @@ namespace IMS.Views
         {
             try
             {
-                var data = await ApiService.GetAsync<List<DemandModel.DemandResponse>>("/demand/");
+                var data = await ApiService.GetAsync<List<DemandResponse>>("/demand/");
 
                 if (data == null)
                 {
@@ -44,13 +44,13 @@ namespace IMS.Views
                     return;
                 }
 
-                DemandList = new ObservableCollection<DemandModel.DemandResponse>(data);
+                DemandList = new ObservableCollection<DemandResponse>(data);
 
                 _view = CollectionViewSource.GetDefaultView(DemandList);
                 LedgerDataGrid.ItemsSource = _view;
 
                 EquipmentList = new ObservableCollection<string>(
-                    data.Select(x => x.equipment).Distinct()
+                    data.Select(x => x.eqpt_name).Distinct()
                 );
 
                 Equipments.ItemsSource = EquipmentList;
@@ -70,10 +70,10 @@ namespace IMS.Views
 
             _view.Filter = item =>
             {
-                var row = item as DemandModel.DemandResponse;
+                var row = item as DemandResponse;
 
                 bool equipmentMatch =
-                    _selectedEquipment == null || row.equipment == _selectedEquipment;
+                    _selectedEquipment == null || row.eqpt_name == _selectedEquipment;
 
                 bool typeMatch =
                     _selectedDemandType == null || row.demand_type == _selectedDemandType;
@@ -123,7 +123,7 @@ namespace IMS.Views
         // --------------------------------------------------------------------
         private void Analysis_Click(object sender, RoutedEventArgs e)
         {
-            if (LedgerDataGrid.SelectedItem is not DemandModel.DemandResponse row)
+            if (LedgerDataGrid.SelectedItem is not DemandResponse row)
             {
                 MessageBox.Show("Please select a demand first.");
                 return;

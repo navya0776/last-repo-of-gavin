@@ -108,12 +108,28 @@
 
             <!-- Bottom Section -->
             <StackPanel Grid.Row="10" Margin="10,0">
-                <Button Content="Create Report" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
-                <Button Content="Export to MS Excel" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
-                <Button Content="Lock Demand" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
-                <Button Content="Delete Demand" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
-                <Button Content="Auth Signatory" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="0"/>
+                <Button Content="Create Report"
+            Background="Transparent" BorderBrush="{x:Null}"
+            Foreground="Blue"/>
+
+                <Button Content="Export to MS Excel"
+            Background="Transparent" BorderBrush="{x:Null}"
+            Foreground="Blue"/>
+
+                <Button x:Name="LockButton" Content="Lock Demand"
+            Background="Transparent" BorderBrush="{x:Null}"
+            Foreground="Blue"
+            Click="ToggleLock_Click"/>
+
+                <Button Content="Delete Demand"
+            Background="Transparent" BorderBrush="{x:Null}"
+            Foreground="Blue"
+            Click="DeleteDemand_Click"/>
+
+
+
             </StackPanel>
+
 
         </Grid>
 

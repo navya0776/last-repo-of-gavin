@@ -66,17 +66,31 @@
                                Margin="0 0 0 15"/>
 
                     <Grid Margin="0 0 0 20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="150"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="Username:" FontWeight="SemiBold"/>
-                        <TextBlock x:Name="SelectedUsername" Grid.Column="1"/>
+                        <!-- Username -->
+                        <TextBlock Text="Username:" Grid.Row="0" Grid.Column="0" 
+               FontWeight="SemiBold" VerticalAlignment="Center"/>
 
-                        <TextBlock Text="Role:" Grid.Row="1" FontWeight="SemiBold"/>
-                        <TextBlock x:Name="SelectedRole" Grid.Column="1" Grid.Row="1"/>
+                        <TextBlock x:Name="SelectedUsername" Grid.Row="0" Grid.Column="1"
+               VerticalAlignment="Center"/>
+
+                        <!-- Role -->
+                        <TextBlock Text="Role:" Grid.Row="1" Grid.Column="0"
+               FontWeight="SemiBold" VerticalAlignment="Center"/>
+
+                        <TextBlock x:Name="SelectedRole" Grid.Row="1" Grid.Column="1"
+               VerticalAlignment="Center"/>
                     </Grid>
+
 
                     <TextBlock Text="Permissions"
                                FontWeight="Bold"
@@ -132,10 +146,7 @@
                                FontWeight="Bold"
                                Margin="15 15 0 5"/>
 
-                    <!-- Permissions Grid -->
-                    <UniformGrid Columns="2"
-                                 Rows="7"
-                                 Margin="0 0 0 15">
+                    <UniformGrid Columns="2" Rows="7" Margin="0 0 0 15">
 
                         <!-- Ledger -->
                         <StackPanel Margin="5">
@@ -151,79 +162,78 @@
                             <CheckBox x:Name="ApdWrite" Content="Write"/>
                         </StackPanel>
 
-                        <!-- Overhaul -->
-
-                        <!-- Receive -->
+                        <!-- Recieve Voucher -->
                         <StackPanel Margin="5">
-                            <TextBlock Text="Receive Voucher" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="RecieveRead" Content="Read"/>
-                            <CheckBox x:Name="RecieveWrite" Content="Write"/>
+                            <TextBlock Text="Recieve Voucher" FontWeight="SemiBold"/>
+                            <CheckBox x:Name="Recieve_voucherRead" Content="Read"/>
+                            <CheckBox x:Name="Recieve_voucherWrite" Content="Write"/>
                         </StackPanel>
 
-                        <!-- Issue -->
+                        <!-- Issue Voucher -->
                         <StackPanel Margin="5">
                             <TextBlock Text="Issue Voucher" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="IssueRead" Content="Read"/>
-                            <CheckBox x:Name="IssueWrite" Content="Write"/>
+                            <CheckBox x:Name="Issue_voucherRead" Content="Read"/>
+                            <CheckBox x:Name="Issue_voucherWrite" Content="Write"/>
                         </StackPanel>
 
-                        <!-- Indent -->
+                        <!-- LP Indent -->
                         <StackPanel Margin="5">
                             <TextBlock Text="Local Purchase Indent" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="LPIRead" Content="Read"/>
-                            <CheckBox x:Name="LPIWrite" Content="Write"/>
+                            <CheckBox x:Name="Local_purchase_indentRead" Content="Read"/>
+                            <CheckBox x:Name="Local_purchase_indentWrite" Content="Write"/>
                         </StackPanel>
 
-                        <!-- Quotation -->
+                        <!-- LP Quotation -->
                         <StackPanel Margin="5">
                             <TextBlock Text="Local Purchase Quotation" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="LPQRead" Content="Read"/>
-                            <CheckBox x:Name="LPQWrite" Content="Write"/>
+                            <CheckBox x:Name="Local_purchase_quotationRead" Content="Read"/>
+                            <CheckBox x:Name="Local_purchase_quotationWrite" Content="Write"/>
                         </StackPanel>
 
-                        <!-- Received -->
+                        <!-- LP Received -->
                         <StackPanel Margin="5">
                             <TextBlock Text="Local Purchase Received" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="LPRRead" Content="Read"/>
-                            <CheckBox x:Name="LPRWrite" Content="Write"/>
+                            <CheckBox x:Name="Local_purchase_recievedRead" Content="Read"/>
+                            <CheckBox x:Name="Local_purchase_recievedWrite" Content="Write"/>
                         </StackPanel>
 
-                        <!-- Ordinance -->
+                        <!-- LP Ordinance -->
                         <StackPanel Margin="5">
                             <TextBlock Text="Local Purchase Ordinance" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="LPORead" Content="Read"/>
-                            <CheckBox x:Name="LPOWrite" Content="Write"/>
+                            <CheckBox x:Name="Local_purchase_ordinanceRead" Content="Read"/>
+                            <CheckBox x:Name="Local_purchase_ordinanceWrite" Content="Write"/>
                         </StackPanel>
 
                         <!-- LP Pay -->
                         <StackPanel Margin="5">
                             <TextBlock Text="Local Purchase Pay" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="LPPayRead" Content="Read"/>
-                            <CheckBox x:Name="LPPayWrite" Content="Write"/>
+                            <CheckBox x:Name="Local_purchase_payRead" Content="Read"/>
+                            <CheckBox x:Name="Local_purchase_payWrite" Content="Write"/>
                         </StackPanel>
 
                         <!-- LP Query -->
                         <StackPanel Margin="5">
                             <TextBlock Text="Local Purchase Query" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="LPQyRead" Content="Read"/>
-                            <CheckBox x:Name="LPQyWrite" Content="Write"/>
+                            <CheckBox x:Name="Local_purchase_queryRead" Content="Read"/>
+                            <CheckBox x:Name="Local_purchase_queryWrite" Content="Write"/>
                         </StackPanel>
 
                         <!-- CDS -->
                         <StackPanel Margin="5">
                             <TextBlock Text="CDS" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="CDSRead" Content="Read"/>
-                            <CheckBox x:Name="CDSWrite" Content="Write"/>
+                            <CheckBox x:Name="CdsRead" Content="Read"/>
+                            <CheckBox x:Name="CdsWrite" Content="Write"/>
                         </StackPanel>
 
-                        <!-- Ammend -->
+                        <!-- LP Ammend -->
                         <StackPanel Margin="5">
                             <TextBlock Text="Local Purchase Amend" FontWeight="SemiBold"/>
-                            <CheckBox x:Name="LPARead" Content="Read"/>
-                            <CheckBox x:Name="LPAWrite" Content="Write"/>
+                            <CheckBox x:Name="Local_purchase_ammendRead" Content="Read"/>
+                            <CheckBox x:Name="Local_purchase_ammendWrite" Content="Write"/>
                         </StackPanel>
 
                     </UniformGrid>
+
 
                     <Button Content="Create User"
                             Style="{StaticResource LedgerButtonStyle}"
