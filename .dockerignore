@@ -1,0 +1,5 @@
+csv
+dist
+.git
+.github
+.pytest_cache
