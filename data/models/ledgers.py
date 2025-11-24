@@ -147,9 +147,9 @@ class Ledger(Base):
 class JobLedger(Base):
     __tablename__ = "job_ledger"
 
-    job_no: Mapped[str] = mapped_column(
-        String(6),
-        ForeignKey("job_master.job_no"),
+    job_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("job_master.job_id"),
         primary_key=True,
     )
 

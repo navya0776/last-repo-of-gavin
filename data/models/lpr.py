@@ -10,8 +10,8 @@ class LPR(Base):
     lpr_no: Mapped[str] = mapped_column(String(10), primary_key=True)
 
     # ----- FOREIGN KEYS -----
-    job_no: Mapped[str] = mapped_column(
-        String(6), ForeignKey("job_master.job_no"))
+    job_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("job_master.job_id"), nullable=False)
 
     # # ----- FIELDS -----
     # srl: Mapped[int] = mapped_column(Integer, nullable=True)
