@@ -1,55 +1,51 @@
-# Data Migration Guide
+# **Data Migration Guide**
 
-**CSV → PostgreSQL (Docker)**
+**CSV → PostgreSQL (Docker Automated Migration)**
 
-This document explains how to migrate CSV-based data into the project’s PostgreSQL database running inside Docker. Follow each step precisely to ensure correct and repeatable migrations.
+This document explains how CSV-based data is migrated into the project's PostgreSQL database using Docker. The migration process is now fully automated and runs inside the backend container via the entrypoint script.
 
 ---
 
-## Table of Contents
+## **Table of Contents**
 
 1. [Repository Preparation](#1-repository-preparation)
 2. [Build Setup](#2-build-setup)
 3. [Migration File Placement](#3-migration-file-placement)
 4. [Script Responsibilities](#4-script-responsibilities)
 5. [Environment Files](#5-environment-files)
-6. [Migration Execution Flow](#6-migration-execution-flow)
-7. [Windows Notes](#7-windows-specific-notes)
+6. [Automated Migration Flow](#6-automated-migration-flow)
+7. [Windows Notes](#7-windows-notes)
 
 ---
 
-## 1. Repository Preparation
+## **1. Repository Preparation**
 
-1. Ensure your local repository is up to date with the **migration branch**.
+1. Ensure your local repository is up to date with the migration branch.
 2. Stash any uncommitted changes:
 
    ```bash
    git stash
    ```
-3. Switch to the `main` branch and pull upstream changes:
+3. Switch to `main` and pull the latest changes:
 
    ```bash
    git checkout main
    git pull upstream main
    ```
-4. **Do not rebase** at this stage. The migration code is not fully tested yet.
+4. Do **not** rebase at this stage.
 
 ---
 
-## 2. Build Setup
+## **2. Build Setup**
 
-1. Run a full clean:
+Docker packages files at build time. Any changes made *after* building will not appear inside the container.
+
+1. Clean:
 
    ```bash
    make clean
    ```
-2. Ensure all required files are created or updated **before running `make`**.
-   If you change files afterward, they won’t appear inside Docker unless you rebuild:
-
-   ```bash
-   make clean
-   make
-   ```
+2. Ensure all necessary CSV files and generated folders exist *before building*.
 3. Build:
 
    ```bash
@@ -58,17 +54,14 @@ This document explains how to migrate CSV-based data into the project’s Postgr
 
 ---
 
-## 3. Migration File Placement
+## **3. Migration File Placement**
 
-Your project directory must look like this:
+Your repo must follow this structure:
 
 ```
-../
-./
 .git/
 .github/
 backend/
-csv/
 data/
 dist/
 docs/
@@ -87,61 +80,62 @@ LICENSE
 Makefile
 README.md
 docker-compose.yml
-issues.txt
 pyproject.toml
 pytest.ini
 ```
 
-Place the migration scripts inside `scripts/`:
+Migration-related scripts live inside:
 
 ```
 scripts/
   File_creation_1.py
   File_creation_2.py
-  ledger_migration.py
   migration_master_tbl.py
-  store_migrations.sql
+  store_migration.py
+  ledger_migration.py
+  entrypoint.sh
 ```
 
 ---
 
-## 4. Script Responsibilities
+## **4. Script Responsibilities**
 
-### `File_creation_1.py`
+### **File_creation_1.py**
 
-* Loads `mastereqpt.csv`
-* Adds required new row(s)
-* Generates `mastereqpt_processed.csv`
+* Reads `mastereqpt.csv`
+* Adds required new rows
+* Outputs `mastereqpt_processed.csv`
 
-### `File_creation_2.py`
+### **File_creation_2.py**
 
-* Uses `mastereqpt_processed.csv`
-* Creates a new folder for generated ledger data
-* Produces ledger rows containing `store_id` + `ledger_id`
+* Reads `mastereqpt_processed.csv`
+* Creates `ledgers/` output directory
+* Generates ledger entries with `store_id` + `ledger_id`
 
-### Conditions
+### **migration_master_tbl.py**
 
-* If the provided data **already includes**:
+* Imports master table records into PostgreSQL
 
-  * `ledgers/` folder
-  * `mastereqpt.csv`
-    you may skip `File_creation_1.py` and run only the later steps.
+### **insert_stores.py**
 
-* For a **fresh database**, always start with `File_creation_1.py`.
+*(Replaces old `store_migrations.sql`)*
 
-* All generated folders/files must exist **before running `make`** so they are included in Docker.
+* Inserts predefined Store rows via async SQLAlchemy
+
+### **ledger_migration.py**
+
+* Loads ledger data into the database
 
 ---
 
-## 5. Environment Files
+## **5. Environment Files**
 
-Create the following in the repository root.
+Create these in your repo root:
 
 ### `.env_backend`
 
 ```
-#backend_env
-DATABASE_URL=postgresql+psycopg://admin:pass@postgres:5432/ims
+DATABASE_URL=postgresql+psycopg://admin:pass@db:5432/ims
 REDIS_URL=redis://redis:6379/0
 ENV=production
 ```
@@ -155,7 +149,6 @@ DATABASE_URL=postgresql+psycopg://admin:pass@localhost:5432/ims
 ### `.env_db`
 
 ```
-#postgres_env
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=pass
 POSTGRES_DB=ims
@@ -163,76 +156,45 @@ POSTGRES_DB=ims
 
 ---
 
-## 6. Migration Execution Flow
+## **6. Automated Migration Flow**
 
-Run these steps in order:
+All migrations are now executed **automatically** by the backend container during startup.
 
-1. Build containers:
+### **Execution Order**
 
-   ```bash
-   make
-   ```
+1. File_creation_1.py
+2. File_creation_2.py
+3. migration_master_tbl.py
+4. store_migration.py
+5. ledger_migration.py
+6. Backend server starts automatically
 
-2. Enter data directory:
+### **Start Everything**
 
-   ```bash
-   cd data
-   ```
+```
+make
+```
 
-3. Apply Alembic migrations:
+### **Run migration-only mode**
 
-   ```bash
-   make
-   ```
+Runs only:
 
-   Before running this, **delete all existing Alembic version files**:
+* migration_master_tbl.py
+* ledger_migration.py
 
-   ```
-   data/alembic/versions/*.py
-   ```
+Command:
 
-4. Open the backend container:
-
-   ```bash
-   make login_app
-   ```
-
-5. Run master table migration:
-
-   ```bash
-   python -m scripts.migration_master_tbl
-   ```
-
-6. Open the DB container:
-
-   ```bash
-   make login_db
-   ```
-
-7. Execute store migration SQL:
-
-   * Paste content from `scripts/store_migrations.sql`
-
-8. Login to app again:
-
-   ```bash
-   make login_app
-   ```
-
-9. Run ledger migration:
-
-   ```bash
-   python -m scripts.ledger_migration
-   ```
+```
+make migrate_only
+```
 
 ---
 
-## 7. Windows-Specific Notes
+## **7. Windows Notes**
 
-If migrations fail due to database connection issues on Windows, you may have **two PostgreSQL instances** running:
+If PostgreSQL fails to connect, ensure you are not running two database instances:
 
 * Local PostgreSQL service
 * Docker PostgreSQL container
 
-Disable the local PostgreSQL service and allow Docker’s instance to run exclusively.
-
+Disable the local Windows PostgreSQL service and retry.
