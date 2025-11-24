@@ -118,18 +118,18 @@ class JobMaster(Base):
     tgt_date_12: Mapped[date | None] = mapped_column(Date, nullable=True)
     
     # unit
-    unit_1: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_2: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_3: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_4: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_5: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_6: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_7: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_8: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_9: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_10: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_11: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    unit_12: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    unit_1: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_2: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_3: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_4: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_5: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_6: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_7: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_8: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_9: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_10: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_11: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    unit_12: Mapped[str | None] = mapped_column(String(20), nullable=True)
     
     # eng_no
     eng_no_1: Mapped[str | None] = mapped_column(String(20), nullable=True)
@@ -257,6 +257,7 @@ class JobMaster(Base):
     gang_ldr_10: Mapped[str | None] = mapped_column(String(50), nullable=True)
     gang_ldr_11: Mapped[str | None] = mapped_column(String(50), nullable=True)
     gang_ldr_12: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    em_no: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
 
     # ---- Relationships ----
