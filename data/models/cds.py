@@ -154,8 +154,8 @@ class CdsJunction(Base):
     ledger_page_id: Mapped[int] = mapped_column(Integer,
                                             primary_key=True)
     demand_no: Mapped[int] = mapped_column(Integer, ForeignKey("cds.dem_id"))
-    ledger_page: Mapped[str] = mapped_column(String(20),
-                                             ForeignKey("ledger.ledger_page"),
+    ledger_id: Mapped[int] = mapped_column(Integer,
+                                             ForeignKey("ledger.ledger_id"),
                                              )
     ohs_no: Mapped[int] = mapped_column(Integer, nullable=True)
     part_number: Mapped[str] = mapped_column(String(50), nullable=True)

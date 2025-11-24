@@ -1,6 +1,16 @@
-all:
+all: data
 	@echo "Building docker containers backend"
-	@docker compose up -d --build
+	@docker compose up -d --build backend
+
+data: db
+	@echo "Building docker containers backend"
+	@make -C data
+	@sleep 2
+
+db:
+	@echo "Starting postgres and redis"
+	@docker compose up -d db redis
+	@sleep 2
 
 logs:
 	@echo "Showing docker compose logs"
@@ -10,3 +20,7 @@ clean:
 	@echo "Stopping and removing docker containers"
 	@docker compose down -v
 	@rm -rf data/alembic/versions/*.py
+
+
+
+

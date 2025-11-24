@@ -35,7 +35,7 @@ class MasterTable(Base):
 
     cds_Eqpt: Mapped["CDS"] = relationship("CDS", back_populates="Eqpt_cds")
 
-    legder: Mapped["Ledger"] = relationship(
+    legder: Mapped[list["Ledger"]] = relationship(
         "Ledger",
         back_populates="Eqpt",
         cascade="all, delete",
