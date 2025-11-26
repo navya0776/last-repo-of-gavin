@@ -319,6 +319,8 @@ class CdsJunction(Base):
     ledger_id: Mapped[int] = mapped_column(Integer,
                                              ForeignKey("ledger.ledger_id"),
                                              )
+    cds_id: Mapped[int] = mapped_column(Integer, ForeignKey("cds_table.cds_id"),
+                                         )
     ohs_no: Mapped[int] = mapped_column(Integer, nullable=True)
     part_number: Mapped[str] = mapped_column(String(50), nullable=True)
     spart_no: Mapped[str] = mapped_column(String(50), nullable=True)
@@ -355,6 +357,8 @@ class CdsJunction(Base):
         "CDS", back_populates="cds_cdsJunc")
     ledger_cds: Mapped["Ledger"] = relationship(
         "Ledger", back_populates="cds_ledger")
+    cdsJunc_cdsTable: Mapped["cds_table"] = relationship(
+        "cds_table", back_populates="cds_cdsJunc")
 
 
 # ===========================
@@ -400,3 +404,5 @@ class cds_table(Base):
     eqpt: Mapped["MasterTable"] = relationship(
         "MasterTable",
         back_populates="added_eqpt", foreign_keys=[Master_id])
+    cds_cdsJunc: Mapped[list["CdsJunction"]] = relationship(
+        "CdsJunction", back_populates="cdsJunc_cdsTable")
