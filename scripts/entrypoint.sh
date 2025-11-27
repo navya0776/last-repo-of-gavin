@@ -44,6 +44,8 @@ run_script "File_creation_4.py"
 run_script "jobmaster_migration.py"
 run_script "File_creation_5.py"
 run_script "cds_migration.py"
+run_script "File_creation_6.py"
+run_script "File_creation_7.py"
 
 # Hand off to CMD (exec to replace shell with the process)
 exec "$@"

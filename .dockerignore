@@ -3,3 +3,6 @@ dist
 .git
 .github
 .pytest_cache
+issues.txt
+dataset
+test_csv
