@@ -1,103 +1,126 @@
 import os
-import pandas as pd
-from datetime import datetime
-from typing import List
+import csv
+from collections import defaultdict
 
-# -------- USER CONFIG --------
-INPUT_FOLDER = "migrations/prov"
-OUTPUT_FOLDER = "migrations/provision"
+#This is the file that is used add the master id with the files that have been converted using the File_creation_7.py and only add those ledger which are present in master_tbl rather than all the ledgers 
+# ---------------- USER CONFIG ----------------
+MASTER_FILE = "migrations/msteqpt_processed.csv"   # reference file with L_CODE -> master_id
+LEDGER_FOLDER = "migrations/provision"            # folder containing ledger CSVs
+OUTPUT_FOLDER = "migrations/cds_provision"               # output folder
 
-# This is a general filter file that reads all the files in a directory and filter them in the basis of date that are mentioned in DATE_COLUMNS 
-# If the files contain many date col then you can add all of them 
-# The script will only filter those rows and add them to the file that contains the date above the CUTOFF_DATE in any of the date_col 
+REF_LCODE_COL = "Ledger_code"         # column in reference file for code
+REF_MASTER_ID_COL = "master_id"  # column containing master ID
 
+CDS_LCODE_COL = "L_CODE"      # ledger column to detect L_CODE
 
-# input the col that need to be applied filter on 
-DATE_COLUMNS: List[str] = [
-    "P_STOCK_DT",
-    "DEM_DT",
-    "IV_DT1",
-    "IV_DT2",
-    "IV_DT3",
-    "DEP_CTRLDT",
-    "SO_DT",
-] 
-
-
-
-CUTOFF_DATE = datetime(2023, 1, 1)  # cutoff is exclusive (>) — change to >= if you want inclusive
-CHUNKSIZE = 100_000
-# -----------------------------
+PREPEND_MASTER_COLUMN = True     # master_id goes in front; else at end
+# ---------------------------------------------
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 
-def process_file(file_path: str, out_path: str, date_cols: List[str]):
-    fname = os.path.basename(file_path)
-    print(f"\nProcessing: {fname}")
+def load_reference(master_path):
+    """Load L_CODE -> [master_id,...] mapping."""
+    mapping = defaultdict(list)
 
-    # read only header
-    try:
-        df_head = pd.read_csv(file_path, nrows=0)
-    except Exception as e:
-        print(f" ❌ Failed to read header: {e}")
-        return
+    with open(master_path, newline="") as f:
+        reader = csv.DictReader(f)
+        header_map = {h.strip().lower(): h for h in reader.fieldnames}
 
-    # determine which of the requested date columns exist in this file
-    existing = [c for c in date_cols if c in df_head.columns]
-    if not existing:
-        print(f" ❌ Skipped: none of the requested date columns found ({date_cols}).")
-        return
+        ref_code_col = header_map.get(REF_LCODE_COL.lower())
+        ref_mid_col = header_map.get(REF_MASTER_ID_COL.lower())
 
-    print(f" ✔ Found date columns to check: {existing}")
+        if ref_code_col is None or ref_mid_col is None:
+            raise ValueError(
+                f"Columns '{REF_LCODE_COL}' and '{REF_MASTER_ID_COL}' must exist in reference file."
+            )
 
-    # remove old output
-    if os.path.exists(out_path):
-        os.remove(out_path)
+        for row in reader:
+            code = (row.get(ref_code_col, "") or "").strip().upper()
+            mid = (row.get(ref_mid_col, "") or "").strip()
+            if code and mid:
+                mapping[code].append(mid)
 
-    wrote = False
-    total_out = 0
+    return mapping
 
-    # iterate in chunks
-    for chunk in pd.read_csv(file_path, chunksize=CHUNKSIZE, low_memory=False):
-        # convert only the existing date columns to datetimes (coerce invalid -> NaT)
-        for col in existing:
-            # avoid KeyError if a column disappears between header read and chunk read
-            if col in chunk.columns:
-                chunk[col] = pd.to_datetime(chunk[col], errors="coerce")
-            else:
-                # column unexpectedly missing in this chunk — treat as all-NaT
-                chunk[col] = pd.NaT
 
-        # build boolean mask: True if ANY of the date columns > cutoff
-        mask = chunk[existing].gt(CUTOFF_DATE).any(axis=1)
+def find_column_index(header, target):
+    """Case-insensitive column match."""
+    target = target.lower()
+    for i, col in enumerate(header):
+        if col.lower() == target:
+            return i
+    return None
 
-        filtered = chunk[mask]
 
-        if not filtered.empty:
-            if not wrote:
-                filtered.to_csv(out_path, index=False, mode="w")
-                wrote = True
-            else:
-                filtered.to_csv(out_path, index=False, mode="a", header=False)
-            total_out += len(filtered)
+def process_ledgers(mapping):
+    for fname in sorted(os.listdir(LEDGER_FOLDER)):
+        if not fname.lower().endswith(".csv"):
+            continue
 
-    if wrote:
-        print(f" ✔ Saved filtered file: {out_path}   Rows kept: {total_out}")
-    else:
-        print(" ⚠ No rows matched; no output created.")
+        in_path = os.path.join(LEDGER_FOLDER, fname)
+
+        with open(in_path, newline="") as f:
+            reader = csv.reader(f)
+
+            try:
+                header = next(reader)
+            except StopIteration:
+                continue  # empty file, ignore
+
+            # detect L_CODE column index
+            lcode_idx = find_column_index(header, CDS_LCODE_COL)
+            if lcode_idx is None:
+                continue  # skip files without L_CODE column entirely
+
+            # read FIRST data row to get the ledger’s L_CODE
+            first_row = None
+            for r in reader:
+                if len(r) == 0 or all(x.strip() == "" for x in r):
+                    continue
+                first_row = r
+                break
+
+            if first_row is None:
+                continue  # no rows, skip file
+
+            file_code = (first_row[lcode_idx] or "").strip().upper()
+            master_ids = mapping.get(file_code, [])
+
+            # -------- SKIP output files with no matching L_CODE --------
+            if not master_ids:
+                continue
+
+            # Re-read entire ledger from start since we consumed rows
+            with open(in_path, newline="") as lf, \
+                 open(os.path.join(OUTPUT_FOLDER, fname), "w", newline="") as of:
+
+                reader2 = csv.reader(lf)
+                writer = csv.writer(of)
+
+                next(reader2, None)  # skip header again
+
+                master_col = REF_MASTER_ID_COL
+                if PREPEND_MASTER_COLUMN:
+                    new_header = [master_col] + header
+                else:
+                    new_header = header + [master_col]
+
+                writer.writerow(new_header)
+
+                for row in reader2:
+                    # duplicate full ledger rows for each master_id
+                    for mid in master_ids:
+                        if PREPEND_MASTER_COLUMN:
+                            writer.writerow([mid] + row)
+                        else:
+                            writer.writerow(row + [mid])
 
 
 def main():
-    files = [f for f in os.listdir(INPUT_FOLDER) if f.lower().endswith(".csv")]
-    if not files:
-        print("No CSV files in input folder.")
-        return
-
-    for fname in files:
-        in_path = os.path.join(INPUT_FOLDER, fname)
-        out_path = os.path.join(OUTPUT_FOLDER, fname)
-        process_file(in_path, out_path, DATE_COLUMNS)
+    mapping = load_reference(MASTER_FILE)
+    process_ledgers(mapping)
+    print("Done.")
 
 
 if __name__ == "__main__":
