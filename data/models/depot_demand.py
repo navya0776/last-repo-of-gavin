@@ -1,6 +1,7 @@
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String, Boolean
+from sqlalchemy import Enum, Float, ForeignKey, Integer, String,Date,Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
+from datetime import date
 
 from .base import Base
 
@@ -24,7 +25,7 @@ class Demand(Base):
     )
 
     # assumed not unique as multiple demands can be raised for same equipment
-    demand_no: Mapped[int] = mapped_column(Integer,
+    demand_no: Mapped[int] = mapped_column(String(10),
                                            nullable=False)
 
     demand_type: Mapped[Enum] = mapped_column(
@@ -32,21 +33,32 @@ class Demand(Base):
     )
 
     eqpt_name: Mapped[str] = mapped_column(
-        String(11), nullable=False)
+        String(20), nullable=False)
 
     fin_year: Mapped[str] = mapped_column(
         String(9), nullable=False, index=True, doc="Financial year in format YYYY-YYYY"
     )
-
+    dem_dt: Mapped[date] = mapped_column(Date, nullable=False)
     # existing / previously present fields
     demand_auth: Mapped[Optional[str]] = mapped_column(String(100))
+    dem: Mapped[int] = mapped_column(Integer, default=0)
     full_received: Mapped[int] = mapped_column(Integer, default=0)
+    no_eqpt: Mapped[int] = mapped_column(Integer, default=0)
     part_received: Mapped[int] = mapped_column(Integer, default=0)
     outstanding: Mapped[int] = mapped_column(Integer, default=0)
     percent_received: Mapped[float] = mapped_column(Float, default=0.0)
-    remarks: Mapped[Optional[str]] = mapped_column(String(255))
-    is_locked: Mapped[bool] = mapped_column(Boolean,
-                                            nullable=False)
+    
+    is_locked: Mapped[str] = mapped_column(String(5),
+                                            nullable=True)
+    critical: Mapped[int] = mapped_column(Integer, default=0)
+    critical_na: Mapped[int] = mapped_column(Integer, default=0)
+    ved: Mapped[int] = mapped_column(Integer, default=0)
+    ved_full: Mapped[int] = mapped_column(Integer, default=0)
+    ved_part: Mapped[int] = mapped_column(Integer, default=0)
+    ved_outstanding: Mapped[int] = mapped_column(Integer, default=0)
+    ved_percent: Mapped[float] = mapped_column(Float, default=0.0)
+    ved_cri: Mapped[int] = mapped_column(Integer, default=0)
+    ved_cri_na: Mapped[int] = mapped_column(Integer, default=0)
 
     # --- RELATIONSHIPS ---- #
 

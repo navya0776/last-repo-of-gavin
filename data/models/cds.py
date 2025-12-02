@@ -288,9 +288,11 @@ class CDS(Base):
     # ---- FOREIGN KEYS ---- #
     job_id: Mapped[int] = mapped_column(Integer, ForeignKey("job_master.job_id"
                                                               ))
-    master_id: Mapped[int] = mapped_column(Integer,
-                                           ForeignKey("master_table.Master_id"
-                                                      ))
+    cds_id: Mapped[int] = mapped_column(Integer, ForeignKey("cds_table.cds_id"
+                                                              ))
+    # master_id: Mapped[int] = mapped_column(Integer,
+    #                                        ForeignKey("job_master.master_id"
+    #                                                   ))
     dem_no: Mapped[int] = mapped_column(Integer, nullable=False)
 
     eqpt_code: Mapped[str] = mapped_column(String(4), nullable=False)
@@ -299,11 +301,13 @@ class CDS(Base):
     dem_date: Mapped[date | None] = mapped_column(Date)
 
     demands: Mapped["JobMaster"] = relationship("JobMaster", back_populates="jobs")
-    Eqpt_cds: Mapped["MasterTable"] = relationship(
-        "MasterTable", back_populates="cds_Eqpt")
+    # Eqpt_cds: Mapped["MasterTable"] = relationship(
+    #     "MasterTable", back_populates="cds_Eqpt")
 
     cds_cdsJunc: Mapped["CdsJunction"] = relationship("CdsJunction",
                                                       back_populates="cdsJunc_cds")
+    cds_table_cds: Mapped["cds_table"] = relationship("cds_table",
+                                                     back_populates="cds_cds_table")
 
 
 # ===========================
@@ -406,3 +410,5 @@ class cds_table(Base):
         back_populates="added_eqpt", foreign_keys=[Master_id])
     cds_cdsJunc: Mapped[list["CdsJunction"]] = relationship(
         "CdsJunction", back_populates="cdsJunc_cdsTable")
+    cds_cds_table: Mapped[list["CDS"]] = relationship(
+        "CDS", back_populates="cds_table_cds")
