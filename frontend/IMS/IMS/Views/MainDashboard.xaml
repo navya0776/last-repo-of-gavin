@@ -5,8 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:IMS.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="MainDashboard" Background="White">
+      Title="MainDashboard" Background="White"
+      >
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -60,10 +60,10 @@
                                 VerticalAlignment="Center"
                                 Margin="20,15,0,0"/>
             </TextBlock>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="60,0,0,0">
-                <Button Content="Store" Width="180" Height="180" Margin="10" Style="{DynamicResource DashboardButtonStyle}" Click="Ledger_click" />
-                <Button Content="CDS" Width="180" Height="180" Margin="10" Style="{DynamicResource DashboardButtonStyle}" Click="Provisioning_click"/>
-                <Button Content="Admin Dashboard" Width="180" Height="180" Margin="10" Style="{DynamicResource DashboardButtonStyle}" Click="AdminDashboard_click"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="0,0,0,0">
+                <Button Content="Store" Width="300" Height="300" Margin="10,10,50,10" Style="{DynamicResource DashboardButtonStyle}" Click="Ledger_click" />
+                <Button Content="CDS" Width="300" Height="300" Margin="10,10,50,10" Style="{DynamicResource DashboardButtonStyle}" Click="Provisioning_click"/>
+                <Button Content="Admin Dashboard" Width="300" Height="300" Margin="10,10,50,10" Style="{DynamicResource DashboardButtonStyle}" Click="AdminDashboard_click"/>
             </StackPanel>
         </Grid>
 

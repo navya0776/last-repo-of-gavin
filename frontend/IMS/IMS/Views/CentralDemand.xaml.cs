@@ -15,18 +15,66 @@ namespace IMS.Views
             LoadMasterList();
         }
 
+        private static Random R = new Random();
+
         private async void LoadMasterList()
         {
             try
             {
-                var list = await ApiService.GetCDSAsync();
-                MasterGrid.ItemsSource = list;
+                // Instead of calling backend:
+                // var list = await ApiService.GetCDSAsync();
+                // MasterGrid.ItemsSource = list;
+
+                MasterGrid.ItemsSource = GenerateMockMasterList(120); // generate 120 rows
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to load master list:\n" + ex.Message);
+                //MessageBox.Show("Failed to load master list:\n" + ex.Message);
             }
         }
+        private List<MasterListItem> GenerateMockMasterList(int count)
+        {
+            string[] ledgerHeads =
+            {
+        "Electrical", "Mechanical", "Instrumentation", "Power",
+        "Cooling", "Hydraulics", "Safety", "Precision", "Fabrication"
+    };
+
+            string[] equipmentNames =
+            {
+        "Generator",
+        "Air Compressor",
+        "Cooling Assembly",
+        "Power Regulator",
+        "Sensor Array",
+        "Valve Pack",
+        "Hydraulic Pump",
+        "Ignition Panel",
+        "Control Unit",
+        "Stabilizer",
+        "Transmission Set"
+    };
+
+            var list = new List<MasterListItem>();
+
+            for (int i = 1; i <= count; i++)
+            {
+                string eqCode = $"EQP-{R.Next(100, 999)}";
+                string ledgerCode = $"LCD-{R.Next(1000, 9999)}";
+                string nameBase = equipmentNames[R.Next(equipmentNames.Length)];
+
+                list.Add(new MasterListItem
+                {
+                    ledger_code = ledgerCode,
+                    eqpt_code = eqCode,
+                    ledger_name = $"{nameBase} Master {R.Next(1, 50)}",
+                    head = ledgerHeads[R.Next(ledgerHeads.Length)]
+                });
+            }
+
+            return list;
+        }
+
 
         private void AddEqpt_Click(object sender, RoutedEventArgs e)
         {

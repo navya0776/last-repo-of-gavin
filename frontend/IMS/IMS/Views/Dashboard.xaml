@@ -6,7 +6,6 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:IMS.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
       Title="Dashboard" Background="#F5F6FA">
 
     <Grid>
@@ -58,12 +57,12 @@
                                 Margin="20,15,0,0"/>
             </TextBlock>
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2" Margin="0,0,0,0">
-                <Button Content="Ledger &amp; OS" Width="180" Height="180"
+                <Button Content="Ledger &amp; OS" Width="300" Height="300"
 
             Style="{DynamicResource DashboardButtonStyle}" Click="Ledger_click" />
 
-                <Button Content="Provisioning" Width="180" Height="180" Style="{DynamicResource DashboardButtonStyle}" Click="Provisioning_Click"/>
-                <Button Content="Reciept" Width="180" Height="180" Style="{DynamicResource DashboardButtonStyle}" Click="Reciept_click"/>
+                <Button Content="Provisioning" Width="300" Height="300" VerticalAlignment="Center" Style="{DynamicResource DashboardButtonStyle}" Click="Provisioning_Click"/>
+                <Button Content="Reciept" Width="300" Height="300" Style="{DynamicResource DashboardButtonStyle}" Click="Reciept_click"/>
             </StackPanel>
 
         </Grid>

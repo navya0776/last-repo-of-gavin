@@ -1,0 +1,100 @@
+﻿<Page x:Class="IMS.Views.DemandAnalysis"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:IMS.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DemandAnalysis">
+
+    <Grid>
+        <DataGrid x:Name="DemandGrid"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          FontSize="11"
+          GridLinesVisibility="All"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+            <DataGrid.Columns>
+
+                <!-- BASIC -->
+                <DataGridTextColumn Header="Demand No" Binding="{Binding DemandNo}" Width="90"/>
+                <DataGridTextColumn Header="Date" Binding="{Binding DemandDate}" Width="90"/>
+                <DataGridTextColumn Header="Equipment" Binding="{Binding Equipment}" Width="160"/>
+                <DataGridTextColumn Header="No Eqpt" Binding="{Binding NoEqpt}" Width="60"/>
+                <DataGridTextColumn Header="Fin Year" Binding="{Binding FinYear}" Width="80"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding DemandType}" Width="60"/>
+
+                <!-- DEM / RECD -->
+                <DataGridTextColumn Header="Dem" Binding="{Binding Dem}" Width="60"/>
+                <DataGridTextColumn Header="Full Recd" Binding="{Binding FullRecd}" Width="70"/>
+                <DataGridTextColumn Header="Part Recd" Binding="{Binding PartRecd}" Width="70"/>
+                <DataGridTextColumn Header="Outs" Binding="{Binding Outs}" Width="60"/>
+                <DataGridTextColumn Header="% Recd" Binding="{Binding PercentRecd,StringFormat={}{0:F2}%}" Width="70"/>
+                <DataGridCheckBoxColumn Header="Deleted" Binding="{Binding Deleted}" Width="60"/>
+
+                <!-- IIL / CVIL -->
+                <DataGridCheckBoxColumn Header="In IIL" Binding="{Binding InIIL}" Width="60"/>
+                <DataGridCheckBoxColumn Header="In CVIL" Binding="{Binding InCVIL}" Width="60"/>
+                <DataGridTextColumn Header="Ctrl No" Binding="{Binding CtrlNo}" Width="80"/>
+                <DataGridCheckBoxColumn Header="Critical" Binding="{Binding Critical}" Width="70"/>
+
+                <!-- SCALE -->
+                <DataGridTextColumn Header="Dem Scale" Binding="{Binding DemScale}" Width="80"/>
+                <DataGridTextColumn Header="Recd Scale Full" Binding="{Binding RecdScaleFull}" Width="100"/>
+                <DataGridTextColumn Header="Recd Scale Part" Binding="{Binding RecdScalePart}" Width="100"/>
+
+                <!-- NS -->
+                <DataGridTextColumn Header="Dem NS" Binding="{Binding DemNS}" Width="70"/>
+                <DataGridTextColumn Header="Recd NS Full" Binding="{Binding RecdNSFull}" Width="90"/>
+                <DataGridTextColumn Header="Recd NS Part" Binding="{Binding RecdNSPart}" Width="90"/>
+                <DataGridTextColumn Header="Dem NS In Stk" Binding="{Binding DemNSInStock}" Width="110"/>
+
+                <!-- MC -->
+                <DataGridTextColumn Header="Dem MC" Binding="{Binding DemMC}" Width="70"/>
+                <DataGridTextColumn Header="Recd MC Full" Binding="{Binding RecdMCFull}" Width="100"/>
+                <DataGridTextColumn Header="Recd MC Part" Binding="{Binding RecdMCPart}" Width="100"/>
+
+                <!-- SC -->
+                <DataGridTextColumn Header="Dem SC" Binding="{Binding DemSC}" Width="70"/>
+                <DataGridTextColumn Header="Recd SC Full" Binding="{Binding RecdSCFull}" Width="100"/>
+
+                <!-- CC -->
+                <DataGridTextColumn Header="Dem CC" Binding="{Binding DemCC}" Width="70"/>
+                <DataGridTextColumn Header="Recd CC Full" Binding="{Binding RecdCCFull}" Width="100"/>
+                <DataGridTextColumn Header="Recd CC Part" Binding="{Binding RecdCCPart}" Width="100"/>
+
+                <!-- VED -->
+                <DataGridTextColumn Header="VED Full" Binding="{Binding VedFull}" Width="70"/>
+                <DataGridTextColumn Header="VED Part" Binding="{Binding VedPart}" Width="70"/>
+                <DataGridTextColumn Header="VED Outs" Binding="{Binding VedOuts}" Width="70"/>
+                <DataGridTextColumn Header="VED % Recd" Binding="{Binding VedPercent,StringFormat={}{0:F2}%}" Width="90"/>
+                <DataGridCheckBoxColumn Header="VED Del" Binding="{Binding VedDeleted}" Width="70"/>
+                <DataGridCheckBoxColumn Header="VED IIL" Binding="{Binding VedIIL}" Width="70"/>
+                <DataGridCheckBoxColumn Header="VED CVIL" Binding="{Binding VedCVIL}" Width="70"/>
+                <DataGridCheckBoxColumn Header="VED Critical" Binding="{Binding VedCritical}" Width="90"/>
+                <DataGridTextColumn Header="VED Ctrl No" Binding="{Binding VedCtrlNo}" Width="90"/>
+
+                <!-- VIT -->
+                <DataGridTextColumn Header="Dem (VIT)" Binding="{Binding DemVIT}" Width="80"/>
+                <DataGridTextColumn Header="Recd (VIT) Full" Binding="{Binding RecdVITFull}" Width="110"/>
+                <DataGridTextColumn Header="Recd (VIT) Part" Binding="{Binding RecdVITPart}" Width="110"/>
+
+                <!-- ESS -->
+                <DataGridTextColumn Header="Dem (ESS)" Binding="{Binding DemESS}" Width="80"/>
+                <DataGridTextColumn Header="Recd (ESS) Full" Binding="{Binding RecdESSFull}" Width="110"/>
+                <DataGridTextColumn Header="Recd (ESS) Part" Binding="{Binding RecdESSPart}" Width="110"/>
+
+                <!-- DES -->
+                <DataGridTextColumn Header="Dem (DES)" Binding="{Binding DemDES}" Width="80"/>
+                <DataGridTextColumn Header="Recd (DES) Full" Binding="{Binding RecdDESFull}" Width="110"/>
+                <DataGridTextColumn Header="Recd (DES) Part" Binding="{Binding RecdDESPart}" Width="110"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+    </Grid>
+</Page>

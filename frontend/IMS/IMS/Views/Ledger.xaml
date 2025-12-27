@@ -19,7 +19,6 @@
         <!-- Main Layout -->
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
-            <RowDefinition Height="50"/>
             <!-- Header -->
             <RowDefinition Height="*"/>
             <!-- Table -->
@@ -32,27 +31,147 @@
 
         <!-- Example store buttons -->
         <!-- LEFT SIDEBAR: Stores -->
-        <TreeView 
-    x:Name="StoresTree"
-    Grid.Row="2"
-            Grid.ColumnSpan="32"
-    Grid.Column="0"
-    Background="#498CE3"
-    BorderThickness="1"
-    BorderBrush="Gray"
-    SelectedItemChanged="StoresTree_SelectedItemChanged">
-            <TreeView.ItemContainerStyle>
-                <Style TargetType="TreeViewItem">
-                    <Setter Property="Foreground" Value="white"/>
-                    <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
-            </TreeView.ItemContainerStyle>
-        </TreeView>
+        <!-- LEDGER TREEVIEW PANEL -->
+        <Border Grid.Row="1" Grid.Column="0"
+                Grid.RowSpan="2"
+        Margin="10"
+        Background="White"
+        CornerRadius="8"
+        BorderBrush="#D0D0D0"
+        BorderThickness="1"
+        Padding="0">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- SIDEBAR TITLE -->
+                <Border Background="#3B6FC4"
+                CornerRadius="8,8,0,0"
+                Grid.Row="0">
+                    <TextBlock Text="Ledger"
+                       FontSize="22"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="White"/>
+                </Border>
+
+                <!-- YOUR STORE → SUBSTORE TREEVIEW -->
+                <TreeView x:Name="StoresTree"
+                  Grid.Row="1"
+                  Background="White"
+                  BorderThickness="0"
+                  SelectedItemChanged="StoresTree_SelectedItemChanged">
+
+                    <TreeView.Resources>
+
+                        <!-- Store node style -->
+                        <Style TargetType="TreeViewItem">
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Padding" Value="6"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Foreground" Value="#444"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TreeViewItem">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Expander arrow -->
+                                            <ToggleButton x:Name="Expander"
+                                                  ClickMode="Press"
+                                                 
+                                                  IsChecked="{Binding IsExpanded,
+                                                    RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                                            <!-- Header -->
+                                            <Border x:Name="Bd"
+                                            Grid.Column="1"
+                                            Background="White"
+                                            CornerRadius="4"
+                                            Padding="4">
+                                                <ContentPresenter x:Name="PART_Header"
+                                                          ContentSource="Header"/>
+                                            </Border>
+
+                                            <!-- Children -->
+                                            <ItemsPresenter x:Name="ItemsHost"
+                                                    Grid.Column="1"
+                                                    Margin="26,2,2,2"/>
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd"
+                                                Property="Background"
+                                                Value="#EEF4FF"/>
+                                            </Trigger>
+
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Bd"
+                                                Property="Background"
+                                                Value="#D9E6FF"/>
+                                                <Setter TargetName="Bd"
+                                                Property="BorderBrush"
+                                                Value="#3B6FC4"/>
+                                            </Trigger>
+
+                                            <Trigger Property="HasItems" Value="False">
+                                                <Setter TargetName="Expander"
+                                                Property="Visibility"
+                                                Value="Hidden"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                        <!-- Expander Triangle -->
+                        <Style x:Key="ToggleStyle" TargetType="ToggleButton">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Grid Width="14" Height="14">
+                                            <Path x:Name="Arrow"
+                                          Fill="#666"
+                                          Data="M 4 6 L 10 6 L 7 10 Z"/>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter TargetName="Arrow"
+                                                Property="RenderTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="90"
+                                                                 CenterX="7"
+                                                                 CenterY="7"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+
+                    </TreeView.Resources>
+                </TreeView>
+
+            </Grid>
+        </Border>
 
 
         <!-- HEADER -->
         <DockPanel Grid.Row="0" Background="#242D3C" LastChildFill="True" Grid.ColumnSpan="99"  >
+
             <TextBlock Text="LEDGER MAINTAINANCE"
                    Foreground="White"
                        FontFamily="CorpSansRd"
@@ -60,7 +179,6 @@
                    FontSize="24"
                    VerticalAlignment="Center"
                    Margin="10,0,0,0" HorizontalAlignment="Center"/>
-
 
 
         </DockPanel>
@@ -89,7 +207,7 @@
         </StackPanel>
 -->
         <StackPanel Orientation="Horizontal"
-                    Grid.Row="1"
+                    Grid.Row="0"
                     Grid.ColumnSpan="99"
             
              Height="36"
@@ -168,28 +286,44 @@
 
 
         <!-- DATA GRID (AUTO WIDTH COLUMNS) -->
-        <ScrollViewer  Grid.Row="2" Grid.Column="1" VerticalScrollBarVisibility="Auto" >
-            <DataGrid Grid.Row="1"
+        <DataGrid Grid.Row="1"
           Grid.Column="1"
           Name="LedgerDataGrid"
+
           AutoGenerateColumns="False"
-                      CanUserSortColumns="True"
-                        CanUserAddRows="False"
-                     
-          HeadersVisibility="Column"
-                      CanUserResizeRows="True"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          CanUserSortColumns="True"
+          CanUserResizeRows="True"
+
+          IsReadOnly="True"       
+
+            RowHeight="35"
           ColumnWidth="*"
-          SelectionChanged="LedgerDataGrid_SelectionChanged">
-                <DataGrid.ColumnHeaderStyle>
+          HeadersVisibility="Column"
+          EnableRowVirtualization="True"
+          EnableColumnVirtualization="True"
+          VirtualizingPanel.ScrollUnit="Pixel"
+
+
+          ScrollViewer.VerticalScrollBarVisibility="Visible"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          ScrollViewer.CanContentScroll="False"
+
+            PreviewMouseWheel="LedgerDataGrid_PreviewMouseWheel">
+
+
+            <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="Background" Value="#81B5F7"/>
-                        <Setter Property="Foreground" Value="black"/>
+                        <Setter Property="Background" Value="#3B6FC4"/>
+                        <Setter Property="Foreground" Value="White"/>
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="0.5"/>
                         <Setter Property="FontSize" Value="20"/>
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
                         <Setter Property="VerticalContentAlignment" Value="Center"/>
                         <Setter Property="Height" Value="60"/>
+          
                         <Setter Property="FontFamily" Value="CorpSansRd" />
                         <Setter Property="Template">
                             <Setter.Value>
@@ -209,38 +343,37 @@
                 </DataGrid.ColumnHeaderStyle>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Index" Binding="{Binding idx}" Width="Auto" />
-                    <DataGridTextColumn Header="Ledger Page" Binding="{Binding ledger_page}" Width="Auto" />
-                    <DataGridTextColumn Header="OHS No" Binding="{Binding ohs_number}" Width="Auto" />
-                    <DataGridTextColumn Header="ISG No" Binding="{Binding isg_number}" Width="Auto" />
-                    <DataGridTextColumn Header="SSG No" Binding="{Binding ssg_number}" Width="Auto" />
-                    <DataGridTextColumn Header="Part No" Binding="{Binding part_number}" Width="Auto" />
-                    <DataGridTextColumn Header="Nomenclature" Binding="{Binding nomenclature}" Width="Auto" />
-                    <DataGridTextColumn Header="A/U" Binding="{Binding a_u}" Width="Auto" />
-                    <DataGridTextColumn Header="No Off" Binding="{Binding no_off}" Width="Auto" />
-                    <DataGridTextColumn Header="Scl Auth" Binding="{Binding scl_auth}" Width="Auto" />
-                    <DataGridTextColumn Header="Unsv Stock" Binding="{Binding unsv_stock}" Width="Auto" />
-                    <DataGridTextColumn Header="Rep Stock" Binding="{Binding rep_stock}" Width="Auto" />
-                    <DataGridTextColumn Header="Serv Stock" Binding="{Binding serv_stock}" Width="Auto" />
-                    <DataGridTextColumn Header="MSC" Binding="{Binding msc}" Width="Auto" />
-                    <DataGridTextColumn Header="VED" Binding="{Binding ved}" Width="Auto" />
-                    <DataGridTextColumn Header="In-House" Binding="{Binding in_house}" Width="Auto" />
-                    <DataGridTextColumn Header="Bin No" Binding="{Binding bin_number}" Width="Auto" />
-                    <DataGridTextColumn Header="Group" Binding="{Binding group}" Width="Auto" />
-                    <DataGridTextColumn Header="CDS Unsv" Binding="{Binding cds_unsv_stock}" Width="Auto" />
-                    <DataGridTextColumn Header="CDS Rep" Binding="{Binding cds_rep_stock}" Width="Auto" />
-                    <DataGridTextColumn Header="CDS Serv" Binding="{Binding cds_serv_stock}" Width="Auto" />
-                    <DataGridTextColumn Header="LPP" Binding="{Binding lpp}" Width="Auto" />
-                    <DataGridTextColumn Header="Rate" Binding="{Binding rate}" Width="Auto" />
-                    <DataGridTextColumn Header="Remarks" Binding="{Binding rmks}" Width="Auto" />
-                    <DataGridTextColumn Header="LPP Date" Binding="{Binding lpp_dt}" Width="Auto" />
+                    <DataGridTextColumn Header="Index" Binding="{Binding idx}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="Ledger Page" Binding="{Binding ledger_page}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="OHS No" Binding="{Binding ohs_number}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="ISG No" Binding="{Binding isg_number}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="SSG No" Binding="{Binding ssg_number}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="Part No" Binding="{Binding part_number}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="Nomenclature" Binding="{Binding nomenclature}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="A/U" Binding="{Binding a_u}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="No Off" Binding="{Binding no_off}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="Scl Auth" Binding="{Binding scl_auth}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="Unsv Stock" Binding="{Binding unsv_stock}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="Rep Stock" Binding="{Binding rep_stock}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="Serv Stock" Binding="{Binding serv_stock}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="MSC" Binding="{Binding msc}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="VED" Binding="{Binding ved}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="In-House" Binding="{Binding in_house}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="Bin No" Binding="{Binding bin_number}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="Group" Binding="{Binding group}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="CDS Unsv" Binding="{Binding cds_unsv_stock}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="CDS Rep" Binding="{Binding cds_rep_stock}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="CDS Serv" Binding="{Binding cds_serv_stock}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="LPP" Binding="{Binding lpp}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="Rate" Binding="{Binding rate}" Width="Auto" FontSize="14"/>
+                    <DataGridTextColumn Header="Remarks" Binding="{Binding rmks}" Width="Auto" FontSize="14" />
+                    <DataGridTextColumn Header="LPP Date" Binding="{Binding lpp_dt}" Width="Auto" FontSize="14" />
                 </DataGrid.Columns>
             </DataGrid>
 
 
-        </ScrollViewer>
         <!-- FOOTER BUTTONS -->
-        <Grid Grid.Row="3" Grid.Column="0"  Background="#F5F5F5" Grid.ColumnSpan="99">
+        <Grid Grid.Row="3" Grid.Column="1"  Background="#F5F5F5" Grid.ColumnSpan="99">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

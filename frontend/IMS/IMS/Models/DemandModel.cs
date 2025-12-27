@@ -11,7 +11,7 @@ namespace IMS.Models
         public string eqpt_name { get; set; }
         public string fin_year { get; set; }
         public string demand_type { get; set; }
-
+       
         public string demand_auth { get; set; }
         public int full_received { get; set; }
         public int part_received { get; set; }

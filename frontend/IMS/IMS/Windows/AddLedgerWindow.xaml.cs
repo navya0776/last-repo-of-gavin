@@ -10,6 +10,9 @@ namespace IMS.Windows
     {
         public LedgerItem CreatedLedger { get; private set; }
 
+        // 🔥 Mock mode toggle (backend disabled)
+        private bool UseMock = true;
+
         public AddLedgerWindow()
         {
             InitializeComponent();
@@ -19,6 +22,17 @@ namespace IMS.Windows
         {
             try
             {
+                // ⭐ SAFE PARSING (prevents 422)
+                int.TryParse(NoOff.Text, out int noOffVal);
+                int.TryParse(SclAuth.Text, out int sclVal);
+                int.TryParse(UnsvStock.Text, out int unsvVal);
+                int.TryParse(RepStock.Text, out int repVal);
+                int.TryParse(ServStock.Text, out int servVal);
+                int.TryParse(ReOrdLvl.Text, out int reOrdVal);
+                int.TryParse(SafetyStock.Text, out int safetyVal);
+                double.TryParse(OldPgRef.Text, out double oldPgVal);
+
+                // ⭐ BUILD LEDGER ITEM SAFELY
                 var ledger = new LedgerItem
                 {
                     idx = 0,
@@ -29,36 +43,64 @@ namespace IMS.Windows
                     part_number = PartNo.Text,
                     nomenclature = Nomen.Text,
                     a_u = AU.Text,
-                    no_off = int.TryParse(NoOff.Text, out var noOffVal) ? noOffVal : 0,
-                    scl_auth = int.TryParse(SclAuth.Text, out var sclVal) ? sclVal : 0,
-                    unsv_stock = int.TryParse(UnsvStock.Text, out var unsvVal) ? unsvVal : 0,
-                    rep_stock = int.TryParse(RepStock.Text, out var repVal) ? repVal : 0,
-                    serv_stock = int.TryParse(ServStock.Text, out var servVal) ? servVal : 0,
-                    msc = (MSC.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "M",
-                    ved = (VED.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "V",
-                    in_house = (InHouse.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "in_house",
+
+                    no_off = noOffVal,
+                    scl_auth = sclVal,
+                    unsv_stock = unsvVal,
+                    rep_stock = repVal,
+                    serv_stock = servVal,
+
+                    msc = (MSC.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "M",
+                    ved = (VED.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "V",
+                    in_house = (InHouse.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "001",
+
                     bin_number = BinNumber.Text,
                     group = Group.Text,
+
                     cos_sec = COSSec.Text,
                     cab_no = CabNo.Text,
-                    old_pg_ref = double.TryParse(OldPgRef.Text, out var oldRef) ? oldRef : 0,
-                    Assy_Comp = (AssyComp.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "Assembly",
-                    Re_ord_lvl = int.TryParse(ReOrdLvl.Text, out var reOrdVal) ? reOrdVal : 0,
-                    safety_stk = int.TryParse(SafetyStock.Text, out var safetyVal) ? safetyVal : 0
+                    old_pg_ref = oldPgVal,
+                    Assy_Comp = (AssyComp.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "COMP",
+
+                    Re_ord_lvl = reOrdVal,
+                    safety_stk = safetyVal,
+
+                    // These backend fields are normally auto-filled.
+                    // For mock mode we can set defaults so UI works.
+                    cds_unsv_stock = 0,
+                    cds_rep_stock = 0,
+                    cds_serv_stock = 0,
+                    lpp = "000",
+                    rate = 0,
+                    rmks = "",
+                    lpp_dt = DateTime.Now.ToString("dd-MM-yyyy")
                 };
 
-                var result = await ApiService.CreateLedgerAsync(ledger);
+                LedgerItem result = null;
+
+                if (UseMock)
+                {
+                    // ❤️ Offline mode success
+                    result = ledger;
+                }
+                else
+                {
+                    // REAL API CALL (DISABLED FOR NOW)
+                    /*
+                    result = await ApiService.CreateLedgerAsync(ledger);
+                    */
+                }
 
                 if (result != null)
                 {
-                    MessageBox.Show("✅ Ledger entry added successfully!");
                     CreatedLedger = result;
+                    MessageBox.Show("✅ Ledger entry added successfully!");
                     DialogResult = true;
                     Close();
                 }
                 else
                 {
-                    MessageBox.Show("❌ Failed to add ledger entry. Check backend logs.");
+                    MessageBox.Show("❌ Failed to add ledger entry.");
                 }
             }
             catch (Exception ex)

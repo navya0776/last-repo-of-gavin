@@ -20,8 +20,46 @@ namespace IMS.Helpers
 
         internal static void Export(string fileName, IEnumerable<LedgerItem> items, List<string> selectedHeaders, List<object> propNames)
         {
-            throw new NotImplementedException();
+            using (var workbook = new XLWorkbook())
+            {
+                var ws = workbook.Worksheets.Add("Ledger Export");
+
+                // ---------------------------
+                // Write headers
+                // ---------------------------
+                for (int i = 0; i < selectedHeaders.Count; i++)
+                {
+                    ws.Cell(1, i + 1).Value = selectedHeaders[i];
+                    ws.Cell(1, i + 1).Style.Font.Bold = true;
+                    ws.Cell(1, i + 1).Style.Fill.BackgroundColor = XLColor.LightGray;
+                }
+
+                // ---------------------------
+                // Write row data
+                // ---------------------------
+                int row = 2;
+                foreach (var item in items)
+                {
+                    for (int col = 0; col < propNames.Count; col++)
+                    {
+                        string propName = propNames[col].ToString();
+                        var prop = item.GetType().GetProperty(propName);
+
+                        if (prop != null)
+                        {
+                            var value = prop.GetValue(item);
+                            ws.Cell(row, col + 1).Value = value?.ToString() ?? "";
+                        }
+                    }
+
+                    row++;
+                }
+
+                ws.Columns().AdjustToContents();
+                workbook.SaveAs(fileName);
+            }
         }
+
 
         private static DataTable ToDataTable<T>(List<T> items)
         {

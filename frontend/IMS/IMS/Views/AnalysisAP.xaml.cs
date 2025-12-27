@@ -24,18 +24,30 @@ namespace IMS.Views
         // ---------------------------
         // LOAD JUNCTION DETAILS
         // ---------------------------
-        private async void LoadDemandDetails()
+        private async Task LoadDemandDetails()
         {
-            var rows = await ApiService.GetAsync<List<DmdJunctionResponse>>($"demand/detail/{_demandNo}");
+            try
+            {
+                var rows = await ApiService.GetAsync<List<DmdJunctionResponse>>(
+                    $"demand/detail/{_demandNo}"
+                );
 
-            LedgerDataGrid.ItemsSource = rows;
+                // Always normalize null to empty list
+                rows ??= new List<DmdJunctionResponse>();
 
-            // set initial lock state from backend
-            if (rows.Count > 0)
-                _isLocked = rows[0].is_locked;
+                LedgerDataGrid.ItemsSource = rows;
 
-            LockButton.Content = _isLocked ? "Unlock Demand" : "Lock Demand";
+                _isLocked = rows.Any() && rows[0].is_locked;
+
+                LockButton.Content = _isLocked ? "Unlock Demand" : "Lock Demand";
+                LockButton.IsEnabled = rows.Any();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load demand details.\n{ex.Message}");
+            }
         }
+
 
 
         // ---------------------------
@@ -110,7 +122,7 @@ namespace IMS.Views
                     await ApiService.PostAsync<object>($"demand/{_demandNo}/lock", new { });
                     _isLocked = true;
 
-                    MessageBox.Show("Demand locked.");
+                    //MessageBox.Show("Demand locked.");
                     (sender as Button).Content = "Unlock Demand"; // change button label
                 }
                 else
@@ -119,7 +131,7 @@ namespace IMS.Views
                     await ApiService.PostAsync<object>($"demand/{_demandNo}/unlock", new { });
                     _isLocked = false;
 
-                    MessageBox.Show("Demand unlocked.");
+                    //MessageBox.Show("Demand unlocked.");
                     (sender as Button).Content = "Lock Demand"; // change button label
                 }
             }
@@ -133,6 +145,36 @@ namespace IMS.Views
         private void LedgerDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // You can display selected row info here (optional)
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DemandAnalysisButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CreateReportButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void C(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ExportToExcelButton(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

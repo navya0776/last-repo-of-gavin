@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IMS.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,5 +33,26 @@ namespace IMS.UserControls
             ToggleSidebarRequested?.Invoke(this, EventArgs.Empty);
 
         }
+
+
+        private async void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool success = await ApiService.LogoutAsync();
+
+            if (success)
+            {
+                MessageBox.Show("Logged out successfully.");
+
+                var login = new IMS.Windows.LoginWindow();
+                login.Show();
+
+                Window.GetWindow(this)?.Close();
+            }
+            else
+            {
+                MessageBox.Show("Logout failed.");
+            }
+        }
+
     }
 }

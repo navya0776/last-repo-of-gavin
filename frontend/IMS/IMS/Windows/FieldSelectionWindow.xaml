@@ -1,8 +1,8 @@
 ﻿<Window x:Class="IMS.Windows.FieldSelectionWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Select Fields to Export" Height="450" Width="350"
-        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Title="Select Fields to Export" Height="450" Width="500"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>

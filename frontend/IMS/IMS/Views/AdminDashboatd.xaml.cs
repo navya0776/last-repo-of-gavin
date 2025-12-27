@@ -28,7 +28,7 @@ namespace IMS.Views
         {
             try
             {
-                var users = await ApiClient.GetAsync<List<UserResponse>>("admin/users/");
+                var users = await ApiService.GetAsync<List<UserResponse>>("admin/users/");
 
                 if (users == null || users.Count == 0)
                 {
@@ -37,12 +37,11 @@ namespace IMS.Views
                     return;
                 }
 
-                // Bind usernames to the ListBox
                 UsersList.ItemsSource = users;
-                UsersList.DisplayMemberPath = "username"; // 👈 shows username
-                UsersList.SelectedValuePath = "username"; // 👈 easy to get selection
+                UsersList.DisplayMemberPath = "username"; 
+                UsersList.SelectedValuePath = "username"; 
 
-                MessageBox.Show($"✅ Loaded {users.Count} users successfully!");
+                //MessageBox.Show($"✅ Loaded {users.Count} users successfully!");
             }
             catch (Exception ex)
             {
@@ -57,7 +56,7 @@ namespace IMS.Views
             {
                 SelectedUsername.Text = selectedUser.username;
                 SelectedRole.Text = selectedUser.role;
-                MessageBox.Show(JsonSerializer.Serialize(selectedUser.permissions));
+                //MessageBox.Show(JsonSerializer.Serialize(selectedUser.permissions));
 
                 PermissionsPanel.Children.Clear();
 
@@ -146,7 +145,7 @@ namespace IMS.Views
                 permissions = BuildPermissions()
             };
 
-            var result = await ApiClient.PostAsync<object>("admin/user", newUser);
+            var result = await ApiService.PostAsync<object>("admin/user", newUser);
             MessageBox.Show(result != null ? "User created successfully!" : "Failed to create user.");
         }
 
@@ -161,7 +160,6 @@ namespace IMS.Views
                 return;
             }
 
-            // Prevent admin from deleting themselves (optional)
             if (selectedUser.username == "admin")
             {
                 MessageBox.Show("Admin user cannot be deleted!");
@@ -196,6 +194,7 @@ namespace IMS.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to delete user: {ex.Message}");
+               
             }
         }
 

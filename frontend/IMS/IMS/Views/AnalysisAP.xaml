@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:IMS.Views"
       mc:Ignorable="d"
-      Title="AnalysisAP" Height="466" Width="1422">
+      Title="AnalysisAP" >
 
     <Grid Background="White">
         <Grid.ColumnDefinitions>
@@ -90,14 +90,14 @@
                     <CheckBox VerticalAlignment="Center"/>
                     <TextBlock Text="With Consumption" Margin="2,0"/>
                 </StackPanel>
-                <Button Content="Print Demand" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue"/>
+                <Button Content="Print Demand" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Click="Button_Click_1"/>
             </StackPanel>
             <StackPanel Grid.Row="3">
                 <!-- Demand Analysis -->
-                <Button  Content="Demand Analysis" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+                <Button  Content="Demand Analysis" Click="DemandAnalysisButton" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
 
                 <!-- Category (MSC) -->
-                <Button  Content="Category (M S C)" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
+                <Button  Content="Category (M S C)" Click="C" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
 
                 <!-- Category (VED) -->
                 <Button  Content="Category (V E D)" Background="Transparent" BorderBrush="{x:Null}" Foreground="Blue" Margin="10,0"/>
@@ -108,15 +108,15 @@
 
             <!-- Bottom Section -->
             <StackPanel Grid.Row="10" Margin="10,0">
-                <Button Content="Create Report"
+                <Button Content="Create Report" Click="CreateReportButton"
             Background="Transparent" BorderBrush="{x:Null}"
             Foreground="Blue"/>
 
-                <Button Content="Export to MS Excel"
+                <Button Content="Export to MS Excel" Click="ExportToExcelButton"
             Background="Transparent" BorderBrush="{x:Null}"
             Foreground="Blue"/>
 
-                <Button x:Name="LockButton" Content="Lock Demand"
+                <Button x:Name="LockButton" Content="Lock Demand" 
             Background="Transparent" BorderBrush="{x:Null}"
             Foreground="Blue"
             Click="ToggleLock_Click"/>

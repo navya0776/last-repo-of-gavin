@@ -10,13 +10,57 @@
         </Grid.RowDefinitions>
 
         <!-- DataGrid -->
-        <DataGrid x:Name="MasterGrid"
-                  AutoGenerateColumns="False"
-                  Margin="5"
-                  HeadersVisibility="Column"
-                  CanUserAddRows="False"
-                  IsReadOnly="True"
-                  MouseDoubleClick="MasterGrid_MouseDoubleClick">
+        <DataGrid Grid.Row="0"
+          Grid.Column="1"
+          Name="MasterGrid"
+
+          AutoGenerateColumns="False"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          CanUserSortColumns="True"
+          CanUserResizeRows="True"
+          MouseDoubleClick="MasterGrid_MouseDoubleClick"
+
+          IsReadOnly="True"       
+
+            RowHeight="35"
+          ColumnWidth="*"
+          HeadersVisibility="Column"
+
+          ScrollViewer.VerticalScrollBarVisibility="Visible"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          ScrollViewer.CanContentScroll="False"
+
+            >
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#3B6FC4"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="0.5"/>
+                    <Setter Property="FontSize" Value="20"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Height" Value="60"/>
+
+                    <Setter Property="FontFamily" Value="CorpSansRd" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="6">
+                                    <TextBlock Text="{TemplateBinding Content}"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Ledger Code" Binding="{Binding ledger_code}" Width="*"/>
@@ -28,10 +72,10 @@
 
         <!-- Buttons -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
-            <Button Content="Add Eqpt" Margin="5" Click="AddEqpt_Click"/>
-            <Button Content="Job Master" Margin="5" Click="JobMaster_Click"/>
-            <Button Content="Report" Margin="5"/>
-            <Button Content="Close" Margin="5" Click="Close_Click"/>
+            <Button Content="Add Eqpt" Margin="5,0,5,0" Click="AddEqpt_Click" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button Content="Job Master" Margin="5,0,5,0" Click="JobMaster_Click" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button Content="Report" Margin="5,0" Style="{DynamicResource LedgerButtonStyle}"/>
+            <Button Content="Close" Margin="5,0" Click="Close_Click" Style="{DynamicResource LedgerButtonStyle}"/>
         </StackPanel>
 
     </Grid>

@@ -11,8 +11,16 @@ namespace IMS.Services
     {
         // Single shared HttpClient instance
         public static HttpClient _client;
-        private static HttpClientHandler _handler;  // ✅ Add this line
+        private static HttpClientHandler _handler;
 
+        private static void AttachSessionCookie()
+        {
+            if (!string.IsNullOrEmpty(SessionCookie))
+            {
+                _client.DefaultRequestHeaders.Remove("Cookie");
+                _client.DefaultRequestHeaders.Add("Cookie", SessionCookie);
+            }
+        }
 
         static ApiClient()
         {
@@ -45,19 +53,31 @@ namespace IMS.Services
 
         // Generic POST
 
+        public static string? SessionCookie { get; private set; }
+
         public static async Task<T?> PostAsync<T>(string url, object payload)
         {
             try
             {
                 var response = await _client.PostAsJsonAsync(url, payload);
                 Debug.WriteLine($"➡️ POST {url} -> {response.StatusCode}");
-                PrintCookies();
+
+                // ⭐ Extract session cookie
+                if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
+                {
+                    var cookie = cookies.FirstOrDefault(c => c.StartsWith("session_id="));
+                    if (cookie != null)
+                    {
+                        SessionCookie = cookie;
+                        Debug.WriteLine($"Stored Session Cookie: {SessionCookie}");
+                    }
+                }
 
                 if (!response.IsSuccessStatusCode)
                 {
                     var text = await response.Content.ReadAsStringAsync();
                     Debug.WriteLine($"Failed: {text}");
-                   return default;
+                    return default;
                 }
 
                 return await response.Content.ReadFromJsonAsync<T>();
@@ -68,6 +88,7 @@ namespace IMS.Services
                 return default;
             }
         }
+
 
 
 
@@ -107,3 +128,5 @@ namespace IMS.Services
     }
 
 }
+
+

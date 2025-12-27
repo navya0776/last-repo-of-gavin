@@ -8,66 +8,28 @@
 
     <Grid x:Name="SideBar" Visibility="Collapsed">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="SidebarColumn" Width="200"/>
+            <ColumnDefinition x:Name="SidebarColumn" Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar -->
-        <StackPanel Background="#498CE3" Grid.Column="0" x:Name="SidebarStack" >
+        <StackPanel Background="#242D3C" Grid.Column="0" x:Name="SidebarStack">
             <!-- Sidebar Buttons -->
             <StackPanel x:Name="MenuButtons">
-                <Expander Header="STORE"  Margin="5" AutomationProperties.IsColumnHeader="True" FontSize="18" >
-                    <StackPanel>
-                        <Expander Header="LEDGER AND OS">
-                        <StackPanel>
+                <Expander Header="STORE" Foreground="White" Margin="5" AutomationProperties.IsColumnHeader="True" FontSize="18" >
+                    <StackPanel Margin="5">
                             <Button Content="LEDGER MAINTAINANCE" Click="ledger_Click" Style="{DynamicResource SidebarButtonStyle}" />
-                            <Button Content="OVERHAUL SCALE" Style="{DynamicResource SidebarButtonStyle}"
- />
-                        </StackPanel>
-                    </Expander>
-                    <Expander Header="PROVISIONING">
-                        <StackPanel>
-                            <Button Content="ADV PROV DEMAND" Click="APprovisioning_Click" Style="{DynamicResource SidebarButtonStyle}" />
-                                <Button Content="SUPPLY DEMAND" Style="{DynamicResource SidebarButtonStyle}" />
-                            </StackPanel>
-                    </Expander>
-                        <Expander Header="RECEIPT" >
-                            <Expander.HeaderTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding}" Foreground="Black" FontSize="18"/>
-                                </DataTemplate>
-                            </Expander.HeaderTemplate>
-                            <StackPanel>
-                                <Button Content="SERVICABLE STORES" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="REPAIRABLE STORES" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="PRINT RECEIPT VOUCHERS" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="GENERATE CRV" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="PRINT CRV" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="LINK INDENT WITH EQPT" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="INSP AND REJECTION NOTE" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="LP ITEM QUERY" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="AUTO PAGE LINK" Style="{DynamicResource SidebarButtonStyle}"/>
-                            </StackPanel>
-                        </Expander>
-                        <Expander Header="ISSUE" >
-                            <StackPanel>
-                                <Button Content="ISSUE ON SELECTION" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="AUTO ISSUE" Style="{DynamicResource SidebarButtonStyle}" />
-                                <Button Content="TRANSFER OF ITEMS" Style="{DynamicResource SidebarButtonStyle}" />
-                                <Button Content="ISS REPAIRABLE ITEMS" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="PRINT IV FORMAT (1)" Style="{DynamicResource SidebarButtonStyle}" />
-                                <Button Content="PRINT IV FORMAT (2)" Style="{DynamicResource SidebarButtonStyle}"/>
-                                <Button Content="PRINT Tfr VOUCHER" Style="{DynamicResource SidebarButtonStyle}" />
 
-                            </StackPanel>
-                        </Expander>
-                        <Button Content="Alert" />
+
+                         <Button Content="ADV PROV DEMAND" Click="APprovisioning_Click" Style="{DynamicResource SidebarButtonStyle}" />
+
+
+
+                        <Button Content="ALERT" Style="{DynamicResource SidebarButtonStyle}" />
                     </StackPanel>
                 </Expander>
-                <Expander Header="CDS" Margin="5" FontSize="18" />
-                <Expander Header="PURCHASE" Margin="5" FontSize="18" />
-                <Expander Header="SALE" Margin="5" FontSize="18" />
-                <Expander Header="REPORTS" Margin="5" FontSize="18" />
+                <Button x:Name="CDS" Content="CDS" Style="{DynamicResource SidebarButtonStyle}" Click="CDS_Click"/>
+
             </StackPanel>
         </StackPanel>
 

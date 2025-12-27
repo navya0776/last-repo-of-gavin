@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Views="clr-namespace:IMS.Views"
         xmlns:uc="clr-namespace:IMS.UserControls"
-        Title="GAVIN-SPARK" Height="600" Width="900" Background="#F5F7FA">
+        Title="GAVIN-SPARK" ResizeMode="CanMinimize" WindowState="Maximized" WindowStartupLocation="CenterScreen" Background="#F5F7FA">
 
     <Grid>
         <DockPanel>

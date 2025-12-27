@@ -107,41 +107,142 @@ namespace IMS.Views
             mainPart.Document = new Document();
             var body = mainPart.Document.AppendChild(new Body());
 
-            var titlePara = new WordParagraph(
-                new Run(new Text(TitleBlock.Text))
+            // ================= PAGE SETUP =================
+            var sectionProps = new SectionProperties(
+                new PageSize
+                {
+                    Width = 12240,   // A4
+                    Height = 15840,
+                    Orient = PageOrientationValues.Portrait
+                },
+                new PageMargin
+                {
+                    Top = 720,
+                    Bottom = 720,
+                    Left = 720,
+                    Right = 720
+                }
+            );
+
+            // ================= HEADER =================
+            var headerPart = mainPart.AddNewPart<HeaderPart>();
+            headerPart.Header = new Header(
+                new Paragraph(
+                    new ParagraphProperties(
+                        new Justification { Val = JustificationValues.Center }
+                    ),
+                    new Run(
+                        new RunProperties(new Bold()),
+                        new Text("IMS REPORT")
+                    )
+                )
+            );
+
+            sectionProps.Append(new HeaderReference
+            {
+                Type = HeaderFooterValues.Default,
+                Id = mainPart.GetIdOfPart(headerPart)
+            });
+
+            // ================= FOOTER =================
+            var footerPart = mainPart.AddNewPart<FooterPart>();
+            footerPart.Footer = new Footer(
+                new Paragraph(
+                    new ParagraphProperties(
+                        new Justification { Val = JustificationValues.Center }
+                    ),
+                    new Run(new Text($"Generated on {DateTime.Now:dd-MMM-yyyy}"))
+                )
+            );
+
+            sectionProps.Append(new FooterReference
+            {
+                Type = HeaderFooterValues.Default,
+                Id = mainPart.GetIdOfPart(footerPart)
+            });
+
+            // ================= TITLE =================
+            var titlePara = new Paragraph(
+                new ParagraphProperties(
+                    new Justification { Val = JustificationValues.Center },
+                    new SpacingBetweenLines { After = "400" }
+                ),
+                new Run(
+                    new RunProperties(
+                        new Bold(),
+                        new FontSize { Val = "36" } // 18pt
+                    ),
+                    new Text(TitleBlock.Text)
+                )
             );
             body.Append(titlePara);
 
-            var table = new WordTable();
+            // ================= TABLE =================
+            var table = new Table();
 
-            // Header
-            var header = new WordRow();
+            table.AppendChild(new TableProperties(
+                new TableWidth { Width = "5000", Type = TableWidthUnitValues.Pct },
+                new TableBorders(
+                    new TopBorder { Val = BorderValues.Single, Size = 6 },
+                    new BottomBorder { Val = BorderValues.Single, Size = 6 },
+                    new LeftBorder { Val = BorderValues.Single, Size = 6 },
+                    new RightBorder { Val = BorderValues.Single, Size = 6 },
+                    new InsideHorizontalBorder { Val = BorderValues.Single, Size = 6 },
+                    new InsideVerticalBorder { Val = BorderValues.Single, Size = 6 }
+                )
+            ));
+
+            // ---------- HEADER ROW ----------
+            var headerRow = new TableRow();
             foreach (var col in ReportGrid.Columns)
             {
-                header.Append(new WordCell(new WordParagraph(new WordRun(new WordText(col.Header?.ToString())))));
+                headerRow.Append(
+                    new TableCell(
+                        new Paragraph(
+                            new ParagraphProperties(
+                                new Justification { Val = JustificationValues.Center }
+                            ),
+                            new Run(
+                                new RunProperties(new Bold()),
+                                new Text(col.Header?.ToString() ?? "")
+                            )
+                        )
+                    )
+                );
             }
-            table.Append(header);
+            table.Append(headerRow);
 
-            // Rows
+            // ---------- DATA ROWS ----------
             foreach (var item in ReportGrid.Items)
             {
                 if (item == CollectionView.NewItemPlaceholder) continue;
 
-                var row = new WordRow();
+                var row = new TableRow();
 
                 foreach (var col in ReportGrid.Columns)
                 {
-                    string val = "";
-                    if (col.GetCellContent(item) is TextBlock tb) val = tb.Text;
+                    string value = "";
+                    if (col.GetCellContent(item) is TextBlock tb)
+                        value = tb.Text;
 
-                    row.Append(new WordCell(new WordParagraph(new WordRun(new WordText(val)))));
+                    row.Append(
+                        new TableCell(
+                            new Paragraph(
+                                new ParagraphProperties(
+                                    new Justification { Val = JustificationValues.Left }
+                                ),
+                                new Run(new Text(value))
+                            )
+                        )
+                    );
                 }
-
                 table.Append(row);
             }
 
             body.Append(table);
+            body.Append(sectionProps);
         }
+
 
         // ==== EXPORT CSV ====
         private void ExportExcel_Click(object sender, RoutedEventArgs e)

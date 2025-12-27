@@ -40,48 +40,47 @@ namespace IMS.Windows
             Remarks.Text = it.rmks;
         }
 
+
+
         // ✅ Update logic with safe conversions and backend integration
         private async void Update_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                // Parse numeric safely
-                int.TryParse(SclAuth.Text, out int sclAuthValue);
-                int.TryParse(ReOrdLvl.Text, out int reordValue);
-                int.TryParse(SafetyStock.Text, out int safetyValue);
-                int.TryParse(RepStock.Text, out int repValue);
-                double.TryParse(OldPgRef.Text, out double oldPgValue);
 
-                // Build updated LedgerItem
-                var updated = new LedgerItem
-                {
-                    ledger_page = LedgerPage.Text,
-                    ohs_number = OHSNo.Text,
-                    isg_number = ISGNo.Text,
-                    ssg_number = SSGNo.Text,
-                    part_number = PartNo.Text,
-                    nomenclature = Nomen.Text,
-                    a_u = AU.Text,
-                    scl_auth = sclAuthValue,
-                    rep_stock = repValue,
-                    cos_sec = COSSec.Text,
-                    Assy_Comp = AssyComp.Text,
-                    cab_no = CabNo.Text,
-                    bin_number = BinNo.Text,
-                    old_pg_ref = oldPgValue,
-                    group = ItemGroup.Text,
-                    Re_ord_lvl = reordValue,
-                    safety_stk = safetyValue,
-                    rmks = Remarks.Text,
-                    Store = _item.Store,
-                    SubStore = _item.SubStore
-                };
 
-                await ApiService.UpdateLedgerAsync(updated.ledger_page, updated);
-                MessageBox.Show("✅ Ledger updated successfully!", "Success", MessageBoxButton.OK);
-                DialogResult = true;
-                Close();
-            }
+    try
+    {
+        // Build updated object from UI
+        var updated = new LedgerItem();
+        updated.CopyFrom(_item);   // copies all existing values
+
+        // Now override only editable fields
+        updated.ledger_page = LedgerPage.Text;
+        updated.ohs_number = OHSNo.Text;
+        updated.isg_number = ISGNo.Text;
+        updated.ssg_number = SSGNo.Text;
+        updated.part_number = PartNo.Text;
+        updated.nomenclature = Nomen.Text;
+        updated.a_u = AU.Text;
+        updated.bin_number = BinNo.Text;
+        updated.group = ItemGroup.Text;
+        updated.rmks = Remarks.Text;
+
+        int tempInt;
+        double tempDouble;
+
+        if (int.TryParse(SclAuth.Text, out tempInt)) updated.scl_auth = tempInt;
+        if (int.TryParse(ReOrdLvl.Text, out tempInt)) updated.Re_ord_lvl = tempInt;
+        if (int.TryParse(SafetyStock.Text, out tempInt)) updated.safety_stk = tempInt;
+        if (int.TryParse(RepStock.Text, out tempInt)) updated.rep_stock = tempInt;
+        if (double.TryParse(OldPgRef.Text, out tempDouble)) updated.old_pg_ref = tempDouble;
+
+        // Call backend (or mock)
+        //await ApiService.UpdateLedgerAsync(updated);
+        _item.CopyFrom(updated); // Update original item with new values
+        MessageBox.Show("Updated successfully!");
+        DialogResult = true;
+        Close();
+    }
             catch (Exception ex)
             {
                 MessageBox.Show($"❌ Update failed: {ex.Message}");

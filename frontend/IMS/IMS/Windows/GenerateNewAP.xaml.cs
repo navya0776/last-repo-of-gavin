@@ -37,7 +37,7 @@ namespace IMS.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to load equipments: " + ex.Message);
+                //MessageBox.Show("Failed to load equipments: " + ex.Message);
             }
         }
 

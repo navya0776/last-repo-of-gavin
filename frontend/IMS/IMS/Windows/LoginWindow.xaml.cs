@@ -69,7 +69,7 @@ namespace IMS.Windows
                 password = PasswordBox.Password
             };
 
-            var data = await ApiClient.PostAsync<LoginResponse>("auth/login", payload);
+            var data = await ApiService.PostAsync<LoginResponse>("auth/login", payload);
 
             if (data == null)
             {

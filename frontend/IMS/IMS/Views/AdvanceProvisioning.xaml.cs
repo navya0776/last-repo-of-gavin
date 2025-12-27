@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace IMS.Views
 {
@@ -25,8 +26,87 @@ namespace IMS.Views
         public AdvanceProvisioning()
         {
             InitializeComponent();
-            LoadDemands();
+            //LoadDemands();
+            LoadMockProvisioningData();
         }
+
+        private void LoadMockProvisioningData()
+        {
+            var mock = new List<DemandResponse>
+{
+    new DemandResponse{ demand_no=1001, eqpt_code="EQP001", eqpt_name="Generator Set", fin_year="2023-24", demand_type="AP", demand_auth="HQ", full_received=3, part_received=1, outstanding=1, percent_received=80, no_equipment=5 },
+
+    new DemandResponse{ demand_no=1002, eqpt_code="EQP001", eqpt_name="Generator Set", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=2, part_received=2, outstanding=1, percent_received=75, no_equipment=5 },
+
+    new DemandResponse{ demand_no=1003, eqpt_code="EQP002", eqpt_name="Transformer Unit", fin_year="2022-23", demand_type="AP", demand_auth="HQ", full_received=4, part_received=1, outstanding=2, percent_received=71, no_equipment=7 },
+
+    new DemandResponse{ demand_no=1004, eqpt_code="EQP002", eqpt_name="Transformer Unit", fin_year="2023-24", demand_type="Supply", demand_auth="BR", full_received=3, part_received=2, outstanding=2, percent_received=71, no_equipment=7 },
+
+    new DemandResponse{ demand_no=1005, eqpt_code="EQP003", eqpt_name="Air Compressor", fin_year="2023-24", demand_type="AP", demand_auth="HQ", full_received=5, part_received=0, outstanding=0, percent_received=100, no_equipment=5 },
+
+    new DemandResponse{ demand_no=1006, eqpt_code="EQP003", eqpt_name="Air Compressor", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=3, part_received=2, outstanding=1, percent_received=83, no_equipment=6 },
+
+    new DemandResponse{ demand_no=1007, eqpt_code="EQP004", eqpt_name="Cooling System", fin_year="2023-24", demand_type="AP", demand_auth="HQ", full_received=6, part_received=3, outstanding=1, percent_received=90, no_equipment=10 },
+
+    new DemandResponse{ demand_no=1008, eqpt_code="EQP004", eqpt_name="Cooling System", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=4, part_received=3, outstanding=3, percent_received=70, no_equipment=10 },
+
+    new DemandResponse{ demand_no=1009, eqpt_code="EQP005", eqpt_name="Hydraulic Pump", fin_year="2023-24", demand_type="AP", demand_auth="HQ", full_received=4, part_received=2, outstanding=1, percent_received=85, no_equipment=7 },
+
+    new DemandResponse{ demand_no=1010, eqpt_code="EQP005", eqpt_name="Hydraulic Pump", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=3, part_received=2, outstanding=2, percent_received=71, no_equipment=7 },
+
+    // ------- Now generating 50 more auto-patterned entries -------- //
+
+    new DemandResponse{ demand_no=1011, eqpt_code="EQP006", eqpt_name="Fuel Injection System", fin_year="2023-24", demand_type="AP", demand_auth="HQ", full_received=4, part_received=3, outstanding=2, percent_received=78, no_equipment=9 },
+    new DemandResponse{ demand_no=1012, eqpt_code="EQP006", eqpt_name="Fuel Injection System", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=5, part_received=2, outstanding=2, percent_received=82, no_equipment=9 },
+
+    new DemandResponse{ demand_no=1013, eqpt_code="EQP007", eqpt_name="Power Distribution Panel", fin_year="2023-24", demand_type="AP", demand_auth="HQ", full_received=6, part_received=3, outstanding=2, percent_received=81, no_equipment=12 },
+    new DemandResponse{ demand_no=1014, eqpt_code="EQP007", eqpt_name="Power Distribution Panel", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=5, part_received=4, outstanding=3, percent_received=75, no_equipment=12 },
+
+    new DemandResponse{ demand_no=1015, eqpt_code="EQP001", eqpt_name="Generator Set", fin_year="2022-23", demand_type="AP", demand_auth="HQ", full_received=6, part_received=1, outstanding=1, percent_received=87, no_equipment=8 },
+
+    new DemandResponse{ demand_no=1016, eqpt_code="EQP002", eqpt_name="Transformer Unit", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=5, part_received=3, outstanding=2, percent_received=78, no_equipment=10 },
+
+    new DemandResponse{ demand_no=1017, eqpt_code="EQP003", eqpt_name="Air Compressor", fin_year="2022-23", demand_type="AP", demand_auth="HQ", full_received=4, part_received=3, outstanding=1, percent_received=87, no_equipment=8 },
+
+    new DemandResponse{ demand_no=1018, eqpt_code="EQP004", eqpt_name="Cooling System", fin_year="2023-24", demand_type="Supply", demand_auth="BR", full_received=7, part_received=2, outstanding=2, percent_received=82, no_equipment=11 },
+
+    new DemandResponse{ demand_no=1019, eqpt_code="EQP005", eqpt_name="Hydraulic Pump", fin_year="2024-25", demand_type="AP", demand_auth="HQ", full_received=6, part_received=3, outstanding=1, percent_received=90, no_equipment=10 },
+
+    new DemandResponse{ demand_no=1020, eqpt_code="EQP006", eqpt_name="Fuel Injection System", fin_year="2023-24", demand_type="Supply", demand_auth="BR", full_received=3, part_received=4, outstanding=2, percent_received=70, no_equipment=8 },
+
+    new DemandResponse{ demand_no=1021, eqpt_code="EQP007", eqpt_name="Power Distribution Panel", fin_year="2024-25", demand_type="AP", demand_auth="HQ", full_received=8, part_received=4, outstanding=2, percent_received=83, no_equipment=14 },
+
+    new DemandResponse{ demand_no=1022, eqpt_code="EQP001", eqpt_name="Generator Set", fin_year="2023-24", demand_type="Supply", demand_auth="BR", full_received=6, part_received=3, outstanding=1, percent_received=90, no_equipment=10 },
+
+    new DemandResponse{ demand_no=1023, eqpt_code="EQP002", eqpt_name="Transformer Unit", fin_year="2024-25", demand_type="AP", demand_auth="HQ", full_received=4, part_received=4, outstanding=2, percent_received=75, no_equipment=10 },
+
+    new DemandResponse{ demand_no=1024, eqpt_code="EQP003", eqpt_name="Air Compressor", fin_year="2022-23", demand_type="Supply", demand_auth="BR", full_received=3, part_received=5, outstanding=1, percent_received=80, no_equipment=9 },
+
+    new DemandResponse{ demand_no=1025, eqpt_code="EQP004", eqpt_name="Cooling System", fin_year="2023-24", demand_type="AP", demand_auth="HQ", full_received=5, part_received=5, outstanding=3, percent_received=76, no_equipment=13 },
+
+    new DemandResponse{ demand_no=1026, eqpt_code="EQP005", eqpt_name="Hydraulic Pump", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=4, part_received=4, outstanding=2, percent_received=75, no_equipment=10 },
+
+    new DemandResponse{ demand_no=1027, eqpt_code="EQP006", eqpt_name="Fuel Injection System", fin_year="2023-24", demand_type="AP", demand_auth="HQ", full_received=5, part_received=3, outstanding=2, percent_received=80, no_equipment=11 },
+
+    new DemandResponse{ demand_no=1028, eqpt_code="EQP007", eqpt_name="Power Distribution Panel", fin_year="2024-25", demand_type="Supply", demand_auth="BR", full_received=8, part_received=3, outstanding=3, percent_received=79, no_equipment=14 },
+
+    new DemandResponse{ demand_no=1029, eqpt_code="EQP001", eqpt_name="Generator Set", fin_year="2022-23", demand_type="AP", demand_auth="HQ", full_received=7, part_received=2, outstanding=1, percent_received=90, no_equipment=12 },
+
+    new DemandResponse{ demand_no=1030, eqpt_code="EQP002", eqpt_name="Transformer Unit", fin_year="2023-24", demand_type="Supply", demand_auth="BR", full_received=6, part_received=3, outstanding=2, percent_received=81, no_equipment=11 },
+
+
+};
+
+
+            LedgerDataGrid.ItemsSource = mock;
+            Equipments.ItemsSource = mock
+                .GroupBy(x => x.eqpt_name)
+                .Select(x => new { EquipmentName = x.Key })
+                .ToList();
+        }
+
+
+
 
         // --------------------------------------------------------------------
         // ⭐ LOAD ALL DEMANDS FROM BACKEND
@@ -40,7 +120,7 @@ namespace IMS.Views
 
                 if (data == null)
                 {
-                    MessageBox.Show("No demand data returned from server.");
+                    //MessageBox.Show("No demand data returned from server.");
                     return;
                 }
 
@@ -57,7 +137,7 @@ namespace IMS.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed to load demands:\n" + ex.Message);
+                //MessageBox.Show("Failed to load demands:\n" + ex.Message);
             }
         }
 
@@ -105,8 +185,11 @@ namespace IMS.Views
         // --------------------------------------------------------------------
         private void APDemand_Checked(object sender, RoutedEventArgs e)
         {
-            _selectedDemandType = "APD";
-            ApplyFilters();
+            if (_selectedDemandType == "APD" || _selectedDemandType == "AP")
+            {
+                ApplyFilters();
+            }
+
         }
 
         // --------------------------------------------------------------------
@@ -114,8 +197,10 @@ namespace IMS.Views
         // --------------------------------------------------------------------
         private void SupplyDemand_Checked(object sender, RoutedEventArgs e)
         {
-            _selectedDemandType = "SPD";
-            ApplyFilters();
+            if (_selectedDemandType == "SPD" || _selectedDemandType == "Supply")
+            {
+                ApplyFilters();
+            }
         }
 
         // --------------------------------------------------------------------
@@ -125,13 +210,30 @@ namespace IMS.Views
         {
             if (LedgerDataGrid.SelectedItem is not DemandResponse row)
             {
-                MessageBox.Show("Please select a demand first.");
+                //MessageBox.Show("Please select a demand first.");
                 return;
             }
 
             var mainWindow = (MainWindow)Application.Current.MainWindow;
             mainWindow.MainFrame.Navigate(new AnalysisAP(row.demand_no));
         }
+
+        private void LedgerDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (LedgerDataGrid.SelectedItem == null)
+                return;
+
+            // Get selected row
+            var selected = LedgerDataGrid.SelectedItem as DmdJunctionResponse;
+            if (selected == null)
+                return;
+
+            // Navigate to another page (example: DemandDetailPage)
+            var detailPage = new AnalysisAP(selected.demand_no);
+
+            NavigationService?.Navigate(detailPage);
+        }
+
 
         // --------------------------------------------------------------------
         // ⭐ GENERATE NEW AP DEMAND POPUP

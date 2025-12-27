@@ -35,5 +35,11 @@ namespace IMS.UserControls
             var mainWindow = Application.Current.MainWindow as MainWindow;
             mainWindow.MainFrame.Navigate(new Views.AdvanceProvisioning());
         }
+
+        private void CDS_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            mainWindow.MainFrame.Navigate(new Views.CentralDemand());
+        }
     }
 }
