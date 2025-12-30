@@ -7,7 +7,7 @@ class FloatingIndent(Base):
     __tablename__ = "floating_indent"
 
     indent_no: Mapped[int] = mapped_column(Integer, primary_key=True)
-    lpr_no: Mapped[str] = mapped_column(String(10), ForeignKey("lpr.lpr_no"))
+    lpr_id: Mapped[str] = mapped_column(Integer, ForeignKey("lpr.lpr_id"))
 
     prev_indent: Mapped[int | None] = mapped_column(Integer)
     job_no: Mapped[str | None] = mapped_column(String(6))

@@ -73,35 +73,43 @@ class Demand(Base):
 
 class Dmd_junction(Base):
     __tablename__ = "demand_junc_ledger"
+
+    dmd_junction_id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True)
     # ---- PRIMARY KEY ---- #
     Page_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("ledger.ledger_id"), nullable=False, primary_key=True
+        Integer, ForeignKey("ledger.ledger_id"), nullable=True
     )
     # ---- FOREIGN KEYS ---- #
     dmd_id: Mapped[int] = mapped_column(
         Integer,
         ForeignKey("Demand_table.eqpt_id")
     )
-    demand_no: Mapped[int] = mapped_column(Integer,
-                                           nullable=False)
+    demand_no: Mapped[str] = mapped_column(String(20), nullable=False)
 
 
-    Scale_no: Mapped[str] = mapped_column(String(10), nullable=False)
-    Part_no: Mapped[str] = mapped_column(String(10), nullable=False)
-    Nomenclature: Mapped[str] = mapped_column(String(10), nullable=False)
-    A_u: Mapped[str] = mapped_column(String(10), nullable=False)
-    Auth: Mapped[int] = mapped_column(Integer, nullable=False)
-    Curr_stk_bal: Mapped[int] = mapped_column(Integer, nullable=False)
-    Dues_in: Mapped[int] = mapped_column(Integer, nullable=False)
-    Outs_Reqd: Mapped[int] = mapped_column(Integer, nullable=False)
+    Scale_no: Mapped[str] = mapped_column(String(30), nullable=True)
+    Part_no: Mapped[str] = mapped_column(String(30), nullable=True)
+    Nomenclature: Mapped[str] = mapped_column(String(255), nullable=True)
+    A_u: Mapped[str] = mapped_column(String(30), nullable=True)
+    Auth: Mapped[int] = mapped_column(Integer, nullable=True)
+    Curr_stk_bal: Mapped[int] = mapped_column(Integer, nullable=True)
+    Dues_in: Mapped[int] = mapped_column(Integer, nullable=True)
+    Outs_Reqd: Mapped[int] = mapped_column(Integer, nullable=True)
     stk_N_yr: Mapped[int] = mapped_column(Integer, default=0)
     Reqd_as_OHS: Mapped[int] = mapped_column(Integer, default=0)
-    Cons_pattern: Mapped[str] = mapped_column(String(6), default="0/0")
-    qty_dem: Mapped[int] = mapped_column(Integer, default=0)
-    Recd: Mapped[int] = mapped_column(Integer, default=0)
-    Dept_ctrl: Mapped[str] = mapped_column(String(10), default=0)
-    Dept_ctrl_dt: Mapped[str | None] = mapped_column(String(10), nullable=True)
-
+    Cons_qty: Mapped[str] = mapped_column(Integer, default=0)
+    Cons_eqpt: Mapped[str] = mapped_column(Integer, nullable=True)
+    Reqd_as_cons: Mapped[str] = mapped_column(Integer, default=0, nullable=True)
+    qty_dem: Mapped[int] = mapped_column(Integer, default=0, nullable=True)
+    Recd: Mapped[int] = mapped_column(Integer, default=0, nullable=True)
+    Dept_ctrl: Mapped[str] = mapped_column(String(20), default=0, nullable=True)
+    Dept_ctrl_dt: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    sub_dem_no: Mapped[str] = mapped_column(String(20), nullable=True) # Changed from Integer
+    iil_srl: Mapped[str] = mapped_column(String(20), nullable=True)    # Changed from Integer
+    civil_srl: Mapped[str] = mapped_column(String(20), nullable=True)
+    d_out_cancel: Mapped[int] = mapped_column(Integer, nullable=True)
+    date_nr: Mapped[date | None] = mapped_column(Date, nullable=True)
     # ---- RELATIONSHIPS ---- #
     dmd_ledgers: Mapped["Ledger"] = relationship(
         "Ledger", back_populates="ledger_dmd", foreign_keys=[Page_id]

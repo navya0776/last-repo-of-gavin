@@ -120,6 +120,10 @@ class Ledger(Base):
 
     ledger_lpr_junc: Mapped["LPR_Junction"] = relationship(
         "LPR_Junction", back_populates="lpr_ledger_junc")
+    
+    ledger_lpr_closed: Mapped["LprClosed"] = relationship(
+        "LprClosed", back_populates="lpr_closed_ledger")
+   
 
     # Many-to-many relationship to JobMaster via association table `job_ledger`
     jobs: Mapped[list["JobMaster"]] = relationship(
