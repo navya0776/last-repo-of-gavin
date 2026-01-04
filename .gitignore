@@ -214,3 +214,4 @@ csv
 migrations
 dataset
 test_csv
+frontend/
