@@ -7,10 +7,10 @@ from datetime import date
 class LPR_Junction(Base):
     __tablename__ = "lpr_junction"
 
-    lpr_no: Mapped[int] = mapped_column(Integer, ForeignKey("lpr.lpr_no"),
+    lpr_no: Mapped[str] = mapped_column(String(10), ForeignKey("lpr.lpr_no"),
                                         primary_key=True)
-    ledger_page: Mapped[str] = mapped_column(String(20),
-                                             ForeignKey("ledger.ledger_page"),
+    ledger_id: Mapped[int] = mapped_column(Integer,
+                                             ForeignKey("ledger.ledger_id"),
                                              nullable=False,
                                              primary_key=True)
     srl: Mapped[int] = mapped_column(Integer, nullable=True)

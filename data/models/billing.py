@@ -16,9 +16,9 @@ class Billing(Base):
         nullable=False
     )
 
-    ledger_page: Mapped[str] = mapped_column(
-        String(20),
-        ForeignKey("ledger.ledger_page"),
+    ledger_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("ledger.ledger_id"),
         nullable=False
     )
 

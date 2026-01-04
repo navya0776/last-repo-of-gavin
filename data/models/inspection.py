@@ -8,12 +8,12 @@ class Inspection(Base):
 
     inspection_id: Mapped[str] = mapped_column(String(30), primary_key=True)
 
-    ledger_page: Mapped[str] = mapped_column(
-        String(20), ForeignKey("ledger.ledger_page"), nullable=False
+    ledger_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("ledger.ledger_id"), nullable=False
     )
 
-    job_no: Mapped[str] = mapped_column(
-        String(6), ForeignKey("job_master.job_no"), nullable=False
+    job_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("job_master.job_id"), nullable=False
     )
 
     order_no: Mapped[int] = mapped_column(
