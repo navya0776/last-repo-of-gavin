@@ -283,8 +283,7 @@ class JobMaster(Base):
 class CDS(Base):
     __tablename__ = "cds"
     # ---- PRIMARY KEY ---- #
-    dem_id: Mapped[int] = mapped_column(Integer, primary_key=True,
-                                        autoincrement=True)
+    dem_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     # ---- FOREIGN KEYS ---- #
     job_id: Mapped[int] = mapped_column(Integer, ForeignKey("job_master.job_id"
                                                               ))
@@ -293,12 +292,13 @@ class CDS(Base):
     # master_id: Mapped[int] = mapped_column(Integer,
     #                                        ForeignKey("job_master.master_id"
     #                                                   ))
-    dem_no: Mapped[int] = mapped_column(Integer, nullable=False)
+    dem_no: Mapped[str] = mapped_column(String(20), nullable=True)
+    dem_date: Mapped[date | None] = mapped_column(Date)
 
     eqpt_code: Mapped[str] = mapped_column(String(4), nullable=False)
 
     job_date: Mapped[date] = mapped_column(Date, nullable=False)
-    dem_date: Mapped[date | None] = mapped_column(Date)
+    
 
     demands: Mapped["JobMaster"] = relationship("JobMaster", back_populates="jobs")
     # Eqpt_cds: Mapped["MasterTable"] = relationship(

@@ -20,8 +20,8 @@ class Inspection(Base):
         Integer, ForeignKey("orders.order_no"), nullable=False
     )
 
-    vendor_code: Mapped[int] = mapped_column(
-        Integer, ForeignKey("vendor_master.vendor_code"), nullable=False
+    vendor_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("vendor_master.vendor_id"), nullable=False
     )
 
     sup1: Mapped[int | None] = mapped_column(Integer)

@@ -21,7 +21,6 @@ class LPR_Junction(Base):
     scale: Mapped[str] = mapped_column(String(50), nullable=True)
     nomenclature: Mapped[str] = mapped_column(String(100), nullable=True)
     au: Mapped[str] = mapped_column(String(10), nullable=True)
-    qty: Mapped[int] = mapped_column(Integer, nullable=True)
     lpr_qty: Mapped[int] = mapped_column(Integer, nullable=True)
     so_qty: Mapped[int] = mapped_column(Integer, nullable=True)
     recd_qty: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -30,8 +29,8 @@ class LPR_Junction(Base):
     so_no: Mapped[str] = mapped_column(String(20), nullable=True)
     so_date: Mapped[date] = mapped_column(Date, nullable=True)
     vendor: Mapped[str] = mapped_column(String(100), nullable=True)
-    grp: Mapped[str] = mapped_column(String(20), nullable=True)
-    lpr_date: Mapped[date] = mapped_column(Date, nullable=True)
+    
+    
 
     # ----- RELATIONSHIPS -----
     lpr: Mapped["LPR"] = relationship("LPR", back_populates="lpr_junctions")
