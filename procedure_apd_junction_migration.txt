@@ -1,5 +1,0 @@
-first run ap_sorting file
-then dmd_with indx
-then ledger with indx
-then apd_finaljunctiona_file2.py
-then apd_junction_migration.py
