@@ -12,6 +12,6 @@ from .inspection import Inspection,Challan
 from .billing import Billing
 from .lock import Lock, LockDetails
 
-__all__ = ["Base", "Ledger", "Stores", "MasterTable", "JobLedger","LprClosed",
+__all__ = ["Base", "Ledger", "Stores", "MasterTable", "JobLedger","LprClosed", "Lock", "LockDetails",
            "User", "JobMaster", "CdsJunction", "CDS", "cds_table", "Demand", "Dmd_junction", "FloatingIndent", "VendorMaster", "LPR", "LPR_Junction",
               "OrderJunction", "Orders", "ShortCloseOrder", "Billing", "Inspection", "Challan"]  
