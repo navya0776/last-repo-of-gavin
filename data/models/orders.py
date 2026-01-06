@@ -10,9 +10,14 @@ class Orders(Base):
 
     order_no: Mapped[int] = mapped_column(Integer, primary_key=True)
 
+    curr_indent_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("floating_indent.indent_id"),
+        nullable=False
+    )
+
     curr_indent: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("floating_indent.indent_no"),
         nullable=False
     )
 
@@ -61,6 +66,9 @@ class OrderJunction(Base):
         Integer, ForeignKey("ledger.ledger_id"), primary_key=True
     )
     vendor_code: Mapped[int] = mapped_column(
+        Integer
+    )
+    vendor_id: Mapped[int] = mapped_column(
         Integer
     )
     cost:Mapped[Float] = mapped_column(Float)
@@ -122,9 +130,9 @@ class ShortCloseOrder(Base):
         nullable=False
     )
 
-    vendor_code: Mapped[int] = mapped_column(
+    vendor_id: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("vendor_master.vendor_code"),
+        ForeignKey("vendor_master.vendor_id"),
         nullable=False
     )
 
