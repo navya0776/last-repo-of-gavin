@@ -33,7 +33,7 @@ class MasterTable(Base):
         foreign_keys=[Demand.master_id]
     )
 
-    cds_Eqpt: Mapped["CDS"] = relationship("CDS", back_populates="Eqpt_cds")
+    # cds_Eqpt: Mapped["CDS"] = relationship("CDS", back_populates="Eqpt_cds")
 
     legder: Mapped[list["Ledger"]] = relationship(
         "Ledger",
