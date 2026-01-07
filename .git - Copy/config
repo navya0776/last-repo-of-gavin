@@ -1,0 +1,50 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = https://github.com/navya0776/GAVIN-SPARK.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+	vscode-merge-base = origin/main
+[branch "integration"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/integration
+[remote "upstream"]
+	url = https://github.com/PhantomTroupeDev/GAVIN-SPARK.git
+	fetch = +refs/heads/*:refs/remotes/upstream/*
+	gh-resolved = base
+[branch "komal_sapeaaFolder"]
+	vscode-merge-base = origin/main
+[branch "apd"]
+	remote = https://github.com/CodingWithSaksham/GAVIN-SPARK.git
+	pushRemote = https://github.com/CodingWithSaksham/GAVIN-SPARK.git
+	merge = refs/heads/apd
+	vscode-merge-base = origin/main
+[branch "frontendHard"]
+	vscode-merge-base = origin/main
+[branch "APIntegrate"]
+	vscode-merge-base = origin/main
+[branch "cds-flow"]
+	remote = origin
+	pushRemote = https://github.com/CodingWithSaksham/GAVIN-SPARK.git
+	vscode-merge-base = origin/main
+	merge = refs/heads/cds-flow
+[branch "JatinGa/main"]
+	remote = https://github.com/JatinGa/GAVIN-SPARK.git
+	pushRemote = https://github.com/JatinGa/GAVIN-SPARK.git
+	merge = refs/heads/main
+	vscode-merge-base = origin/main
+[branch "integrationFinalNavya"]
+	vscode-merge-base = origin/cds-flow
+[branch "KovyaSAPEAA"]
+	remote = https://github.com/kkakkarbe24-oss/GAVIN-SPARK.git
+	pushRemote = https://github.com/kkakkarbe24-oss/GAVIN-SPARK.git
+	merge = refs/heads/KovyaSAPEAA
+	vscode-merge-base = origin/main

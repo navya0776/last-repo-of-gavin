@@ -1,0 +1,164 @@
+0000000000000000000000000000000000000000 67e6ac410365df880adb9e8753724b151a7ee9bd navya0776 <navya0776arora@gmail.com> 1762174969 +0530	clone: from https://github.com/navya0776/GAVIN-SPARK.git
+67e6ac410365df880adb9e8753724b151a7ee9bd c6b5ad76a1c285e476195864c48094b264d2409a navya0776 <navya0776arora@gmail.com> 1762175212 +0530	pull origin main: Fast-forward
+c6b5ad76a1c285e476195864c48094b264d2409a c6b5ad76a1c285e476195864c48094b264d2409a navya0776 <navya0776arora@gmail.com> 1762177735 +0530	checkout: moving from main to frontend
+c6b5ad76a1c285e476195864c48094b264d2409a a04c3d52ab79652d85cb1c9863fbd942d93aa499 navya0776 <navya0776arora@gmail.com> 1762178091 +0530	commit: frontend added
+a04c3d52ab79652d85cb1c9863fbd942d93aa499 c6b5ad76a1c285e476195864c48094b264d2409a navya0776 <navya0776arora@gmail.com> 1762179192 +0530	checkout: moving from frontend to main
+c6b5ad76a1c285e476195864c48094b264d2409a 1e007ae7b394f0629321afe0c5dc7dbbdd05a451 navya0776 <navya0776arora@gmail.com> 1762179710 +0530	pull origin main: Fast-forward
+1e007ae7b394f0629321afe0c5dc7dbbdd05a451 1e007ae7b394f0629321afe0c5dc7dbbdd05a451 navya0776 <navya0776arora@gmail.com> 1762227584 +0530	checkout: moving from main to integration
+1e007ae7b394f0629321afe0c5dc7dbbdd05a451 f9fc257fd47b463142d9bd443be52c34b4c382e4 navya0776 <navya0776arora@gmail.com> 1762227598 +0530	commit: corrected frontend
+f9fc257fd47b463142d9bd443be52c34b4c382e4 1e007ae7b394f0629321afe0c5dc7dbbdd05a451 navya0776 <navya0776arora@gmail.com> 1762227620 +0530	checkout: moving from integration to main
+1e007ae7b394f0629321afe0c5dc7dbbdd05a451 bf4c6892e119f3fe5505761c5447fbf544c62fbd navya0776 <navya0776arora@gmail.com> 1762227694 +0530	pull origin main: Fast-forward
+bf4c6892e119f3fe5505761c5447fbf544c62fbd f9fc257fd47b463142d9bd443be52c34b4c382e4 navya0776 <navya0776arora@gmail.com> 1762227709 +0530	checkout: moving from main to integration
+f9fc257fd47b463142d9bd443be52c34b4c382e4 bf4c6892e119f3fe5505761c5447fbf544c62fbd navya0776 <navya0776arora@gmail.com> 1762227714 +0530	rebase (start): checkout main
+bf4c6892e119f3fe5505761c5447fbf544c62fbd 750013562f69bd3377ea84197491d672c7d2fbf4 navya0776 <navya0776arora@gmail.com> 1762227714 +0530	rebase (pick): corrected frontend
+750013562f69bd3377ea84197491d672c7d2fbf4 750013562f69bd3377ea84197491d672c7d2fbf4 navya0776 <navya0776arora@gmail.com> 1762227714 +0530	rebase (finish): returning to refs/heads/integration
+750013562f69bd3377ea84197491d672c7d2fbf4 750013562f69bd3377ea84197491d672c7d2fbf4 navya0776 <navya0776arora@gmail.com> 1762239052 +0530	reset: moving to HEAD
+750013562f69bd3377ea84197491d672c7d2fbf4 bf4c6892e119f3fe5505761c5447fbf544c62fbd navya0776 <navya0776arora@gmail.com> 1762239058 +0530	checkout: moving from integration to main
+bf4c6892e119f3fe5505761c5447fbf544c62fbd 750013562f69bd3377ea84197491d672c7d2fbf4 navya0776 <navya0776arora@gmail.com> 1762239092 +0530	checkout: moving from main to integration
+750013562f69bd3377ea84197491d672c7d2fbf4 f3314365b4d0b5e934b73453869f40262350077f navya0776 <navya0776arora@gmail.com> 1762449404 +0530	commit: fronetnd changes
+f3314365b4d0b5e934b73453869f40262350077f bf4c6892e119f3fe5505761c5447fbf544c62fbd navya0776 <navya0776arora@gmail.com> 1762449445 +0530	checkout: moving from integration to main
+bf4c6892e119f3fe5505761c5447fbf544c62fbd e1a2b689e006cb8d75da15deb45bef77a26e8a90 navya0776 <navya0776arora@gmail.com> 1762449536 +0530	pull upstream main: Fast-forward
+e1a2b689e006cb8d75da15deb45bef77a26e8a90 f3314365b4d0b5e934b73453869f40262350077f navya0776 <navya0776arora@gmail.com> 1762449598 +0530	checkout: moving from main to integration
+f3314365b4d0b5e934b73453869f40262350077f 2a5f7a2d6fc298f848109b71b8c65c46db37d965 navya0776 <navya0776arora@gmail.com> 1762449805 +0530	commit (merge): Merge branch 'main' of https://github.com/PhantomTroupeDev/GAVIN-SPARK into integration
+2a5f7a2d6fc298f848109b71b8c65c46db37d965 771aa5a608b79f64d1da86395ea29e4183b2710c navya0776 <navya0776arora@gmail.com> 1762520760 +0530	commit: sapeaa folder created
+771aa5a608b79f64d1da86395ea29e4183b2710c b76be9586e6f8524df22e83853fe08b120d4011e navya0776 <navya0776arora@gmail.com> 1762521001 +0530	pull upstream main --rebase (start): checkout b76be9586e6f8524df22e83853fe08b120d4011e
+b76be9586e6f8524df22e83853fe08b120d4011e 771aa5a608b79f64d1da86395ea29e4183b2710c navya0776 <navya0776arora@gmail.com> 1762521034 +0530	rebase (abort): returning to refs/heads/integration
+771aa5a608b79f64d1da86395ea29e4183b2710c e1a2b689e006cb8d75da15deb45bef77a26e8a90 navya0776 <navya0776arora@gmail.com> 1762521055 +0530	checkout: moving from integration to main
+e1a2b689e006cb8d75da15deb45bef77a26e8a90 b76be9586e6f8524df22e83853fe08b120d4011e navya0776 <navya0776arora@gmail.com> 1762521142 +0530	pull upstream main: Fast-forward
+b76be9586e6f8524df22e83853fe08b120d4011e 771aa5a608b79f64d1da86395ea29e4183b2710c navya0776 <navya0776arora@gmail.com> 1762521149 +0530	checkout: moving from main to integration
+771aa5a608b79f64d1da86395ea29e4183b2710c 771aa5a608b79f64d1da86395ea29e4183b2710c navya0776 <navya0776arora@gmail.com> 1762521450 +0530	reset: moving to HEAD
+771aa5a608b79f64d1da86395ea29e4183b2710c 5f1f15a180902f05ae5702cc932d91415fe396e3 navya0776 <navya0776arora@gmail.com> 1762521844 +0530	commit (merge): Merge branch 'main' of https://github.com/navya0776/GAVIN-SPARK into integration
+5f1f15a180902f05ae5702cc932d91415fe396e3 7ac0b4276ec39ccc4a525c05976c238c971a2957 navya0776 <navya0776arora@gmail.com> 1762593105 +0530	commit: wee
+7ac0b4276ec39ccc4a525c05976c238c971a2957 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762593318 +0530	commit: merge conflicts
+93955d9bda4eda585b76c4d4a105e5b30706f742 5b0c6b628b241d414de0c36c4f755e1faa78b239 navya0776 <navya0776arora@gmail.com> 1762683907 +0530	commit: integration
+5b0c6b628b241d414de0c36c4f755e1faa78b239 62f74432d604b8f2ea07709a323ae7d0df33db5b navya0776 <navya0776arora@gmail.com> 1762683944 +0530	commit: integration
+62f74432d604b8f2ea07709a323ae7d0df33db5b 29cbca6d01b7a5f5fa63a0aa2a100bcf3fb15a43 navya0776 <navya0776arora@gmail.com> 1762713210 +0530	commit (merge): Merge branch 'main' of https://github.com/PhantomTroupeDev/GAVIN-SPARK into integration
+29cbca6d01b7a5f5fa63a0aa2a100bcf3fb15a43 62f74432d604b8f2ea07709a323ae7d0df33db5b navya0776 <navya0776arora@gmail.com> 1762713234 +0530	reset: moving to Head~1
+62f74432d604b8f2ea07709a323ae7d0df33db5b 5b0c6b628b241d414de0c36c4f755e1faa78b239 navya0776 <navya0776arora@gmail.com> 1762713356 +0530	reset: moving to HEAD~1
+5b0c6b628b241d414de0c36c4f755e1faa78b239 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762713522 +0530	reset: moving to HEAD~1
+93955d9bda4eda585b76c4d4a105e5b30706f742 01e1cc54016f20a6a68d687a8e9139637df8da83 navya0776 <navya0776arora@gmail.com> 1762713818 +0530	commit: saksham made me do this
+01e1cc54016f20a6a68d687a8e9139637df8da83 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762765575 +0530	reset: moving to HEAD~1
+93955d9bda4eda585b76c4d4a105e5b30706f742 01e1cc54016f20a6a68d687a8e9139637df8da83 navya0776 <navya0776arora@gmail.com> 1762766154 +0530	reset: moving to HEAD@{1}
+01e1cc54016f20a6a68d687a8e9139637df8da83 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762766188 +0530	reset: moving to HEAD@{1}
+93955d9bda4eda585b76c4d4a105e5b30706f742 01e1cc54016f20a6a68d687a8e9139637df8da83 navya0776 <navya0776arora@gmail.com> 1762766191 +0530	reset: moving to HEAD@{1}
+01e1cc54016f20a6a68d687a8e9139637df8da83 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762766193 +0530	reset: moving to HEAD@{1}
+93955d9bda4eda585b76c4d4a105e5b30706f742 01e1cc54016f20a6a68d687a8e9139637df8da83 navya0776 <navya0776arora@gmail.com> 1762766198 +0530	reset: moving to HEAD@{1}
+01e1cc54016f20a6a68d687a8e9139637df8da83 8481c5dd7590ae67cb1abbf917ec6397e083bbbd navya0776 <navya0776arora@gmail.com> 1762852137 +0530	commit: frontend changes and ledger
+8481c5dd7590ae67cb1abbf917ec6397e083bbbd f5bc580a0611f3ce61256b6eea2c51d5307af3fa navya0776 <navya0776arora@gmail.com> 1762852434 +0530	pull: Merge made by the 'ort' strategy.
+f5bc580a0611f3ce61256b6eea2c51d5307af3fa f5bc580a0611f3ce61256b6eea2c51d5307af3fa navya0776 <navya0776arora@gmail.com> 1762857984 +0530	reset: moving to HEAD
+f5bc580a0611f3ce61256b6eea2c51d5307af3fa 0916838130dff87323236378fa06382234b6d394 navya0776 <navya0776arora@gmail.com> 1762858040 +0530	pull origin integration: Merge made by the 'ort' strategy.
+0916838130dff87323236378fa06382234b6d394 0851f517b67452dd8e897a6680076302d880baac navya0776 <navya0776arora@gmail.com> 1763050978 +0530	commit: analysis
+0851f517b67452dd8e897a6680076302d880baac 0851f517b67452dd8e897a6680076302d880baac navya0776 <navya0776arora@gmail.com> 1763148933 +0530	reset: moving to HEAD
+0851f517b67452dd8e897a6680076302d880baac 95d13d1b75545542da01ce3380f655cb179b9d77 navya0776 <navya0776arora@gmail.com> 1763148976 +0530	checkout: moving from integration to komal_sapeaaFolder
+95d13d1b75545542da01ce3380f655cb179b9d77 95d13d1b75545542da01ce3380f655cb179b9d77 navya0776 <navya0776arora@gmail.com> 1763188596 +0530	reset: moving to HEAD
+95d13d1b75545542da01ce3380f655cb179b9d77 0851f517b67452dd8e897a6680076302d880baac navya0776 <navya0776arora@gmail.com> 1763188596 +0530	checkout: moving from komal_sapeaaFolder to integration
+0851f517b67452dd8e897a6680076302d880baac d8ad5df4e0fe3d685e50864ac4f68e93eccd65aa navya0776 <navya0776arora@gmail.com> 1763197818 +0530	commit (merge): Merge branch 'main' of https://github.com/PhantomTroupeDev/GAVIN-SPARK into integration
+d8ad5df4e0fe3d685e50864ac4f68e93eccd65aa d8ad5df4e0fe3d685e50864ac4f68e93eccd65aa navya0776 <navya0776arora@gmail.com> 1763197824 +0530	reset: moving to HEAD
+d8ad5df4e0fe3d685e50864ac4f68e93eccd65aa b76be9586e6f8524df22e83853fe08b120d4011e navya0776 <navya0776arora@gmail.com> 1763197860 +0530	checkout: moving from integration to main
+b76be9586e6f8524df22e83853fe08b120d4011e 7a4f6f28a899888ed7e2d9717944aaec983c0089 navya0776 <navya0776arora@gmail.com> 1763197872 +0530	pull: Fast-forward
+7a4f6f28a899888ed7e2d9717944aaec983c0089 d8ad5df4e0fe3d685e50864ac4f68e93eccd65aa navya0776 <navya0776arora@gmail.com> 1763197880 +0530	checkout: moving from main to integration
+d8ad5df4e0fe3d685e50864ac4f68e93eccd65aa 271b2076c85b2378f110103ea7cfdf94c04f0e60 navya0776 <navya0776arora@gmail.com> 1763285753 +0530	commit: frintend
+271b2076c85b2378f110103ea7cfdf94c04f0e60 271b2076c85b2378f110103ea7cfdf94c04f0e60 navya0776 <navya0776arora@gmail.com> 1763285821 +0530	reset: moving to HEAD
+271b2076c85b2378f110103ea7cfdf94c04f0e60 de41b60b44e207246894937998df2a0f961ee3b8 navya0776 <navya0776arora@gmail.com> 1763285861 +0530	checkout: moving from integration to apd
+de41b60b44e207246894937998df2a0f961ee3b8 ce9f9093a74db93eb0abc54083ac7d4c808fbfdf navya0776 <navya0776arora@gmail.com> 1763619330 +0530	commit: frontend changes
+ce9f9093a74db93eb0abc54083ac7d4c808fbfdf ce9f9093a74db93eb0abc54083ac7d4c808fbfdf navya0776 <navya0776arora@gmail.com> 1763619356 +0530	checkout: moving from apd to frontendHard
+ce9f9093a74db93eb0abc54083ac7d4c808fbfdf 2124062b54599ed5655ff6ab7e8012d1850cdd89 navya0776 <navya0776arora@gmail.com> 1763661780 +0530	commit: frontend hardcoded
+2124062b54599ed5655ff6ab7e8012d1850cdd89 ce9f9093a74db93eb0abc54083ac7d4c808fbfdf navya0776 <navya0776arora@gmail.com> 1763662097 +0530	checkout: moving from frontendHard to apd
+ce9f9093a74db93eb0abc54083ac7d4c808fbfdf 2b4fc72bd3a9caa7ed2952dbd6f01eb2f61d3e01 navya0776 <navya0776arora@gmail.com> 1763662878 +0530	pull origin main: Merge made by the 'ort' strategy.
+2b4fc72bd3a9caa7ed2952dbd6f01eb2f61d3e01 7a3c511cd9b6361e4599acbac1f66f2d81e25313 navya0776 <navya0776arora@gmail.com> 1763662975 +0530	pull: Merge made by the 'ort' strategy.
+7a3c511cd9b6361e4599acbac1f66f2d81e25313 7a4f6f28a899888ed7e2d9717944aaec983c0089 navya0776 <navya0776arora@gmail.com> 1763663058 +0530	checkout: moving from apd to main
+7a4f6f28a899888ed7e2d9717944aaec983c0089 4aec482e406c6787798f2756082842a1f1909ab6 navya0776 <navya0776arora@gmail.com> 1763663068 +0530	pull: Fast-forward
+4aec482e406c6787798f2756082842a1f1909ab6 4aec482e406c6787798f2756082842a1f1909ab6 navya0776 <navya0776arora@gmail.com> 1763663095 +0530	checkout: moving from main to APIntegrate
+4aec482e406c6787798f2756082842a1f1909ab6 4aec482e406c6787798f2756082842a1f1909ab6 navya0776 <navya0776arora@gmail.com> 1763700814 +0530	reset: moving to HEAD
+4aec482e406c6787798f2756082842a1f1909ab6 3436db5da7a364506b946ba9b2275eac5a1c2cc3 navya0776 <navya0776arora@gmail.com> 1763701010 +0530	checkout: moving from APIntegrate to cds-flow
+3436db5da7a364506b946ba9b2275eac5a1c2cc3 0b0c2938576532dec1ba09e72ab5ca7695d6afd0 navya0776 <navya0776arora@gmail.com> 1763705626 +0530	commit: frontend apd
+0b0c2938576532dec1ba09e72ab5ca7695d6afd0 b30f98a974ed6aeae8e99f16a447c2174ed9cc5c navya0776 <navya0776arora@gmail.com> 1763707120 +0530	commit: login startup
+b30f98a974ed6aeae8e99f16a447c2174ed9cc5c 2124062b54599ed5655ff6ab7e8012d1850cdd89 navya0776 <navya0776arora@gmail.com> 1763707131 +0530	checkout: moving from cds-flow to frontendHard
+2124062b54599ed5655ff6ab7e8012d1850cdd89 315ac331797782a6bb04241be1ca1ab321f13f23 navya0776 <navya0776arora@gmail.com> 1763716674 +0530	commit: CDS working
+315ac331797782a6bb04241be1ca1ab321f13f23 26e193afdef0e84fc1980886215a5d29b59f14b8 navya0776 <navya0776arora@gmail.com> 1763789290 +0530	commit: report
+26e193afdef0e84fc1980886215a5d29b59f14b8 74a5f7f5f9590ef067b07f481e8435b8f1ab81fa navya0776 <navya0776arora@gmail.com> 1763789304 +0530	checkout: moving from frontendHard to JatinGa/main
+74a5f7f5f9590ef067b07f481e8435b8f1ab81fa 7a3c511cd9b6361e4599acbac1f66f2d81e25313 navya0776 <navya0776arora@gmail.com> 1763789400 +0530	checkout: moving from JatinGa/main to apd
+7a3c511cd9b6361e4599acbac1f66f2d81e25313 74a5f7f5f9590ef067b07f481e8435b8f1ab81fa navya0776 <navya0776arora@gmail.com> 1763790045 +0530	checkout: moving from apd to JatinGa/main
+74a5f7f5f9590ef067b07f481e8435b8f1ab81fa 43e9ba4c306dc8675f0845e04d737e2548f1db5e navya0776 <navya0776arora@gmail.com> 1763790487 +0530	commit: stash bc
+43e9ba4c306dc8675f0845e04d737e2548f1db5e 4aec482e406c6787798f2756082842a1f1909ab6 navya0776 <navya0776arora@gmail.com> 1763790509 +0530	checkout: moving from JatinGa/main to APIntegrate
+4aec482e406c6787798f2756082842a1f1909ab6 7a3c511cd9b6361e4599acbac1f66f2d81e25313 navya0776 <navya0776arora@gmail.com> 1763790567 +0530	checkout: moving from APIntegrate to apd
+7a3c511cd9b6361e4599acbac1f66f2d81e25313 b30f98a974ed6aeae8e99f16a447c2174ed9cc5c navya0776 <navya0776arora@gmail.com> 1763790618 +0530	checkout: moving from apd to cds-flow
+b30f98a974ed6aeae8e99f16a447c2174ed9cc5c 271b2076c85b2378f110103ea7cfdf94c04f0e60 navya0776 <navya0776arora@gmail.com> 1763790656 +0530	checkout: moving from cds-flow to integration
+271b2076c85b2378f110103ea7cfdf94c04f0e60 b30f98a974ed6aeae8e99f16a447c2174ed9cc5c navya0776 <navya0776arora@gmail.com> 1763791112 +0530	checkout: moving from integration to cds-flow
+b30f98a974ed6aeae8e99f16a447c2174ed9cc5c d2b1f8179840530f3ed236e396621936acbb0faf navya0776 <navya0776arora@gmail.com> 1763791438 +0530	pull: Merge made by the 'ort' strategy.
+d2b1f8179840530f3ed236e396621936acbb0faf b30f98a974ed6aeae8e99f16a447c2174ed9cc5c navya0776 <navya0776arora@gmail.com> 1763792007 +0530	reset: moving to HEAD~1
+b30f98a974ed6aeae8e99f16a447c2174ed9cc5c d2b1f8179840530f3ed236e396621936acbb0faf navya0776 <navya0776arora@gmail.com> 1763792146 +0530	pull: Fast-forward
+d2b1f8179840530f3ed236e396621936acbb0faf b30f98a974ed6aeae8e99f16a447c2174ed9cc5c navya0776 <navya0776arora@gmail.com> 1763792162 +0530	reset: moving to HEAD~1
+b30f98a974ed6aeae8e99f16a447c2174ed9cc5c d2b1f8179840530f3ed236e396621936acbb0faf navya0776 <navya0776arora@gmail.com> 1763792493 +0530	pull --progress --no-edit --no-stat --recurse-submodules=no origin: Fast-forward
+d2b1f8179840530f3ed236e396621936acbb0faf c6b6564a9c3452156937f12e1439972dccf1999f navya0776 <navya0776arora@gmail.com> 1763793434 +0530	commit: apd frontend integration
+c6b6564a9c3452156937f12e1439972dccf1999f c6b6564a9c3452156937f12e1439972dccf1999f navya0776 <navya0776arora@gmail.com> 1763793514 +0530	checkout: moving from cds-flow to integrationFinalNavya
+c6b6564a9c3452156937f12e1439972dccf1999f 43e9ba4c306dc8675f0845e04d737e2548f1db5e navya0776 <navya0776arora@gmail.com> 1763793616 +0530	checkout: moving from integrationFinalNavya to JatinGa/main
+43e9ba4c306dc8675f0845e04d737e2548f1db5e c6b6564a9c3452156937f12e1439972dccf1999f navya0776 <navya0776arora@gmail.com> 1763793635 +0530	checkout: moving from JatinGa/main to integrationFinalNavya
+c6b6564a9c3452156937f12e1439972dccf1999f 43e9ba4c306dc8675f0845e04d737e2548f1db5e navya0776 <navya0776arora@gmail.com> 1763794414 +0530	checkout: moving from integrationFinalNavya to JatinGa/main
+43e9ba4c306dc8675f0845e04d737e2548f1db5e c6b6564a9c3452156937f12e1439972dccf1999f navya0776 <navya0776arora@gmail.com> 1763794423 +0530	checkout: moving from JatinGa/main to integrationFinalNavya
+c6b6564a9c3452156937f12e1439972dccf1999f c6b6564a9c3452156937f12e1439972dccf1999f navya0776 <navya0776arora@gmail.com> 1763794493 +0530	reset: moving to HEAD
+c6b6564a9c3452156937f12e1439972dccf1999f 43e9ba4c306dc8675f0845e04d737e2548f1db5e navya0776 <navya0776arora@gmail.com> 1763794493 +0530	checkout: moving from integrationFinalNavya to JatinGa/main
+43e9ba4c306dc8675f0845e04d737e2548f1db5e 43e9ba4c306dc8675f0845e04d737e2548f1db5e navya0776 <navya0776arora@gmail.com> 1763794617 +0530	reset: moving to HEAD
+43e9ba4c306dc8675f0845e04d737e2548f1db5e c6b6564a9c3452156937f12e1439972dccf1999f navya0776 <navya0776arora@gmail.com> 1763794619 +0530	checkout: moving from JatinGa/main to integrationFinalNavya
+c6b6564a9c3452156937f12e1439972dccf1999f a40bca07aa66993d100fab30fd56e2892fb7fd2c navya0776 <navya0776arora@gmail.com> 1763794954 +0530	commit: integration
+a40bca07aa66993d100fab30fd56e2892fb7fd2c a40bca07aa66993d100fab30fd56e2892fb7fd2c navya0776 <navya0776arora@gmail.com> 1763813366 +0530	reset: moving to HEAD
+a40bca07aa66993d100fab30fd56e2892fb7fd2c 26e193afdef0e84fc1980886215a5d29b59f14b8 navya0776 <navya0776arora@gmail.com> 1763813368 +0530	checkout: moving from integrationFinalNavya to frontendHard
+26e193afdef0e84fc1980886215a5d29b59f14b8 8ef09f8f3abfdf53da4dd2e96219f64869df9d12 navya0776 <navya0776arora@gmail.com> 1763813592 +0530	commit: hi
+8ef09f8f3abfdf53da4dd2e96219f64869df9d12 8ef09f8f3abfdf53da4dd2e96219f64869df9d12 navya0776 <navya0776arora@gmail.com> 1763813833 +0530	reset: moving to HEAD
+8ef09f8f3abfdf53da4dd2e96219f64869df9d12 a40bca07aa66993d100fab30fd56e2892fb7fd2c navya0776 <navya0776arora@gmail.com> 1763813836 +0530	checkout: moving from frontendHard to integrationFinalNavya
+a40bca07aa66993d100fab30fd56e2892fb7fd2c ceb8eb3c566dfbc3d9cfbb5ef98bcc7e963d0d99 navya0776 <navya0776arora@gmail.com> 1763873409 +0530	pull upstream main: Merge made by the 'ort' strategy.
+ceb8eb3c566dfbc3d9cfbb5ef98bcc7e963d0d99 f7cf64bc9d4be0a9a545b1e12eb50c8709731cda navya0776 <navya0776arora@gmail.com> 1763884834 +0530	commit: reports not tested
+f7cf64bc9d4be0a9a545b1e12eb50c8709731cda 1c9105183f3430945c3e1f98d8b295cc42d2194c navya0776 <navya0776arora@gmail.com> 1763917054 +0530	commit: frontend
+1c9105183f3430945c3e1f98d8b295cc42d2194c 27f4aed3bdc67356a8c09ebf734cbf1ccb24b888 navya0776 <navya0776arora@gmail.com> 1763934632 +0530	commit: frontend
+27f4aed3bdc67356a8c09ebf734cbf1ccb24b888 8ef09f8f3abfdf53da4dd2e96219f64869df9d12 navya0776 <navya0776arora@gmail.com> 1763934699 +0530	checkout: moving from integrationFinalNavya to frontendHard
+8ef09f8f3abfdf53da4dd2e96219f64869df9d12 8ef09f8f3abfdf53da4dd2e96219f64869df9d12 navya0776 <navya0776arora@gmail.com> 1763935099 +0530	reset: moving to HEAD
+8ef09f8f3abfdf53da4dd2e96219f64869df9d12 27f4aed3bdc67356a8c09ebf734cbf1ccb24b888 navya0776 <navya0776arora@gmail.com> 1763935101 +0530	checkout: moving from frontendHard to integrationFinalNavya
+27f4aed3bdc67356a8c09ebf734cbf1ccb24b888 e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 navya0776 <navya0776arora@gmail.com> 1763963954 +0530	commit: gavin spark integrated till cds
+e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 navya0776 <navya0776arora@gmail.com> 1763964016 +0530	checkout: moving from integrationFinalNavya to SAPEAAintegration
+e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 navya0776 <navya0776arora@gmail.com> 1763964645 +0530	checkout: moving from SAPEAAintegration to integrationFinalNavya
+e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 navya0776 <navya0776arora@gmail.com> 1763965195 +0530	checkout: moving from integrationFinalNavya to SAPEAAintegration
+e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 cff9851100732d27cb800313076702367f940870 navya0776 <navya0776arora@gmail.com> 1763965353 +0530	checkout: moving from SAPEAAintegration to KovyaSAPEAA
+cff9851100732d27cb800313076702367f940870 d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 navya0776 <navya0776arora@gmail.com> 1763966267 +0530	commit: yes maybe
+d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 navya0776 <navya0776arora@gmail.com> 1763966283 +0530	checkout: moving from KovyaSAPEAA to integrationFinalNavya
+e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 navya0776 <navya0776arora@gmail.com> 1763966445 +0530	checkout: moving from integrationFinalNavya to KovyaSAPEAA
+d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 navya0776 <navya0776arora@gmail.com> 1763968655 +0530	reset: moving to HEAD
+d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 navya0776 <navya0776arora@gmail.com> 1763968657 +0530	checkout: moving from KovyaSAPEAA to integrationFinalNavya
+e84cbe07b7273ec51c7fc1c0c0aef09d3038ed25 fd7c2399f275b674254ae4d56d336567981d7c19 navya0776 <navya0776arora@gmail.com> 1763970360 +0530	commit: password change
+fd7c2399f275b674254ae4d56d336567981d7c19 d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 navya0776 <navya0776arora@gmail.com> 1763970371 +0530	checkout: moving from integrationFinalNavya to KovyaSAPEAA
+d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 fd7c2399f275b674254ae4d56d336567981d7c19 navya0776 <navya0776arora@gmail.com> 1763983445 +0530	checkout: moving from KovyaSAPEAA to integrationFinalNavya
+fd7c2399f275b674254ae4d56d336567981d7c19 a9fd898f52474a257a65d99db693b1da84f3f75b navya0776 <navya0776arora@gmail.com> 1763983628 +0530	commit: sapeaa
+a9fd898f52474a257a65d99db693b1da84f3f75b 4aec482e406c6787798f2756082842a1f1909ab6 navya0776 <navya0776arora@gmail.com> 1763984096 +0530	checkout: moving from integrationFinalNavya to main
+4aec482e406c6787798f2756082842a1f1909ab6 2ad70fc2255931f9f18ad2592621bc4235951cde navya0776 <navya0776arora@gmail.com> 1763984149 +0530	pull upstream main: Fast-forward
+2ad70fc2255931f9f18ad2592621bc4235951cde d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 navya0776 <navya0776arora@gmail.com> 1763988047 +0530	checkout: moving from main to KovyaSAPEAA
+d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 a9fd898f52474a257a65d99db693b1da84f3f75b navya0776 <navya0776arora@gmail.com> 1763988338 +0530	checkout: moving from KovyaSAPEAA to integrationFinalNavya
+a9fd898f52474a257a65d99db693b1da84f3f75b d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 navya0776 <navya0776arora@gmail.com> 1763988567 +0530	checkout: moving from integrationFinalNavya to KovyaSAPEAA
+d96c86e8246c6f7b76e01ee6b0001f9cefad33e7 938a66500d5482bfce753e4f3d7b22cfe5eda9a2 navya0776 <navya0776arora@gmail.com> 1763989431 +0530	commit: fronted migration store commit
+938a66500d5482bfce753e4f3d7b22cfe5eda9a2 938a66500d5482bfce753e4f3d7b22cfe5eda9a2 navya0776 <navya0776arora@gmail.com> 1763989454 +0530	reset: moving to HEAD
+938a66500d5482bfce753e4f3d7b22cfe5eda9a2 a9fd898f52474a257a65d99db693b1da84f3f75b navya0776 <navya0776arora@gmail.com> 1763989456 +0530	checkout: moving from KovyaSAPEAA to integrationFinalNavya
+a9fd898f52474a257a65d99db693b1da84f3f75b a9fd898f52474a257a65d99db693b1da84f3f75b navya0776 <navya0776arora@gmail.com> 1764003988 +0530	reset: moving to HEAD
+a9fd898f52474a257a65d99db693b1da84f3f75b 8ef09f8f3abfdf53da4dd2e96219f64869df9d12 navya0776 <navya0776arora@gmail.com> 1764003990 +0530	checkout: moving from integrationFinalNavya to frontendHard
+8ef09f8f3abfdf53da4dd2e96219f64869df9d12 a9fd898f52474a257a65d99db693b1da84f3f75b navya0776 <navya0776arora@gmail.com> 1764004305 +0530	checkout: moving from frontendHard to integrationFinalNavya
+a9fd898f52474a257a65d99db693b1da84f3f75b c13f98c941ac72854c11c83a05833129889c4490 navya0776 <navya0776arora@gmail.com> 1766822861 +0530	commit: changes on 27 dec
+c13f98c941ac72854c11c83a05833129889c4490 c13f98c941ac72854c11c83a05833129889c4490 navya0776 <navya0776arora@gmail.com> 1766823633 +0530	reset: moving to HEAD
+c13f98c941ac72854c11c83a05833129889c4490 38275864eeb0a6bfd961f3163d626181f89425fe navya0776 <navya0776arora@gmail.com> 1766823642 +0530	checkout: moving from integrationFinalNavya to KovyaSAPEAA
+38275864eeb0a6bfd961f3163d626181f89425fe 38275864eeb0a6bfd961f3163d626181f89425fe navya0776 <navya0776arora@gmail.com> 1766823813 +0530	reset: moving to HEAD
+38275864eeb0a6bfd961f3163d626181f89425fe 38275864eeb0a6bfd961f3163d626181f89425fe navya0776 <navya0776arora@gmail.com> 1766823894 +0530	reset: moving to FETCH_HEAD
+38275864eeb0a6bfd961f3163d626181f89425fe 38275864eeb0a6bfd961f3163d626181f89425fe navya0776 <navya0776arora@gmail.com> 1767010772 +0530	reset: moving to HEAD
+38275864eeb0a6bfd961f3163d626181f89425fe 487243014e7318929a67888321aead645dd27d98 navya0776 <navya0776arora@gmail.com> 1767011458 +0530	commit (merge): Merge branch 'main' of https://github.com/navya0776/GAVIN-SPARK into KovyaSAPEAA
+487243014e7318929a67888321aead645dd27d98 2ad70fc2255931f9f18ad2592621bc4235951cde navya0776 <navya0776arora@gmail.com> 1767011483 +0530	checkout: moving from KovyaSAPEAA to main
+2ad70fc2255931f9f18ad2592621bc4235951cde 4dd1129c75198d7bf0bd5c5048e84515dcda662b navya0776 <navya0776arora@gmail.com> 1767011511 +0530	rebase (start): checkout upstream/main
+4dd1129c75198d7bf0bd5c5048e84515dcda662b 4dd1129c75198d7bf0bd5c5048e84515dcda662b navya0776 <navya0776arora@gmail.com> 1767011511 +0530	rebase (finish): returning to refs/heads/main
+4dd1129c75198d7bf0bd5c5048e84515dcda662b c13f98c941ac72854c11c83a05833129889c4490 navya0776 <navya0776arora@gmail.com> 1767011555 +0530	checkout: moving from main to integrationFinalNavya
+c13f98c941ac72854c11c83a05833129889c4490 4dd1129c75198d7bf0bd5c5048e84515dcda662b navya0776 <navya0776arora@gmail.com> 1767011563 +0530	rebase (start): checkout main
+4dd1129c75198d7bf0bd5c5048e84515dcda662b bbbdf1dbd113990e38d59b6bfd21699b5cb219c6 navya0776 <navya0776arora@gmail.com> 1767011564 +0530	rebase (pick): frontend apd
+bbbdf1dbd113990e38d59b6bfd21699b5cb219c6 77c36c77be922ec090001807a228da8f35e68fdf navya0776 <navya0776arora@gmail.com> 1767011564 +0530	rebase (pick): login startup
+77c36c77be922ec090001807a228da8f35e68fdf af010176171eb6707f97fbe0aa2e664b568895bd navya0776 <navya0776arora@gmail.com> 1767011564 +0530	rebase (pick): apd frontend integration
+af010176171eb6707f97fbe0aa2e664b568895bd 0ab6b2fb9c1148d939376988a74bd07ad7693207 navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (pick): integration
+0ab6b2fb9c1148d939376988a74bd07ad7693207 75f750c85abe068aa5c53fd259780b6ce53ead2a navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (pick): reports not tested
+75f750c85abe068aa5c53fd259780b6ce53ead2a 67b60a0beadaa74b7b7d73c07151bd88b935627d navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (pick): frontend
+67b60a0beadaa74b7b7d73c07151bd88b935627d ebd642c5fb915a8c1f3c8004fb4400b172fd646e navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (pick): frontend
+ebd642c5fb915a8c1f3c8004fb4400b172fd646e 68e32e33d0a484e3afb4da4e2075fe45789ea480 navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (pick): gavin spark integrated till cds
+68e32e33d0a484e3afb4da4e2075fe45789ea480 7363202744e24ebdc005cb0ee7949fc090a4dad6 navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (pick): password change
+7363202744e24ebdc005cb0ee7949fc090a4dad6 249d57d138bd46dc0f918494b1e02426651f9ffb navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (pick): sapeaa
+249d57d138bd46dc0f918494b1e02426651f9ffb ee2ddbceb0679b56560d0a36a4bfd4d4236a2ded navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (pick): changes on 27 dec
+ee2ddbceb0679b56560d0a36a4bfd4d4236a2ded ee2ddbceb0679b56560d0a36a4bfd4d4236a2ded navya0776 <navya0776arora@gmail.com> 1767011565 +0530	rebase (finish): returning to refs/heads/integrationFinalNavya

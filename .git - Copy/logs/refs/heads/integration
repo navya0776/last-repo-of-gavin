@@ -1,0 +1,28 @@
+0000000000000000000000000000000000000000 1e007ae7b394f0629321afe0c5dc7dbbdd05a451 navya0776 <navya0776arora@gmail.com> 1762227584 +0530	branch: Created from HEAD
+1e007ae7b394f0629321afe0c5dc7dbbdd05a451 f9fc257fd47b463142d9bd443be52c34b4c382e4 navya0776 <navya0776arora@gmail.com> 1762227598 +0530	commit: corrected frontend
+f9fc257fd47b463142d9bd443be52c34b4c382e4 750013562f69bd3377ea84197491d672c7d2fbf4 navya0776 <navya0776arora@gmail.com> 1762227714 +0530	rebase (finish): refs/heads/integration onto bf4c6892e119f3fe5505761c5447fbf544c62fbd
+750013562f69bd3377ea84197491d672c7d2fbf4 f3314365b4d0b5e934b73453869f40262350077f navya0776 <navya0776arora@gmail.com> 1762449404 +0530	commit: fronetnd changes
+f3314365b4d0b5e934b73453869f40262350077f 2a5f7a2d6fc298f848109b71b8c65c46db37d965 navya0776 <navya0776arora@gmail.com> 1762449805 +0530	commit (merge): Merge branch 'main' of https://github.com/PhantomTroupeDev/GAVIN-SPARK into integration
+2a5f7a2d6fc298f848109b71b8c65c46db37d965 771aa5a608b79f64d1da86395ea29e4183b2710c navya0776 <navya0776arora@gmail.com> 1762520760 +0530	commit: sapeaa folder created
+771aa5a608b79f64d1da86395ea29e4183b2710c 5f1f15a180902f05ae5702cc932d91415fe396e3 navya0776 <navya0776arora@gmail.com> 1762521844 +0530	commit (merge): Merge branch 'main' of https://github.com/navya0776/GAVIN-SPARK into integration
+5f1f15a180902f05ae5702cc932d91415fe396e3 7ac0b4276ec39ccc4a525c05976c238c971a2957 navya0776 <navya0776arora@gmail.com> 1762593105 +0530	commit: wee
+7ac0b4276ec39ccc4a525c05976c238c971a2957 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762593318 +0530	commit: merge conflicts
+93955d9bda4eda585b76c4d4a105e5b30706f742 5b0c6b628b241d414de0c36c4f755e1faa78b239 navya0776 <navya0776arora@gmail.com> 1762683907 +0530	commit: integration
+5b0c6b628b241d414de0c36c4f755e1faa78b239 62f74432d604b8f2ea07709a323ae7d0df33db5b navya0776 <navya0776arora@gmail.com> 1762683944 +0530	commit: integration
+62f74432d604b8f2ea07709a323ae7d0df33db5b 29cbca6d01b7a5f5fa63a0aa2a100bcf3fb15a43 navya0776 <navya0776arora@gmail.com> 1762713210 +0530	commit (merge): Merge branch 'main' of https://github.com/PhantomTroupeDev/GAVIN-SPARK into integration
+29cbca6d01b7a5f5fa63a0aa2a100bcf3fb15a43 62f74432d604b8f2ea07709a323ae7d0df33db5b navya0776 <navya0776arora@gmail.com> 1762713234 +0530	reset: moving to Head~1
+62f74432d604b8f2ea07709a323ae7d0df33db5b 5b0c6b628b241d414de0c36c4f755e1faa78b239 navya0776 <navya0776arora@gmail.com> 1762713356 +0530	reset: moving to HEAD~1
+5b0c6b628b241d414de0c36c4f755e1faa78b239 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762713522 +0530	reset: moving to HEAD~1
+93955d9bda4eda585b76c4d4a105e5b30706f742 01e1cc54016f20a6a68d687a8e9139637df8da83 navya0776 <navya0776arora@gmail.com> 1762713818 +0530	commit: saksham made me do this
+01e1cc54016f20a6a68d687a8e9139637df8da83 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762765575 +0530	reset: moving to HEAD~1
+93955d9bda4eda585b76c4d4a105e5b30706f742 01e1cc54016f20a6a68d687a8e9139637df8da83 navya0776 <navya0776arora@gmail.com> 1762766154 +0530	reset: moving to HEAD@{1}
+01e1cc54016f20a6a68d687a8e9139637df8da83 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762766188 +0530	reset: moving to HEAD@{1}
+93955d9bda4eda585b76c4d4a105e5b30706f742 01e1cc54016f20a6a68d687a8e9139637df8da83 navya0776 <navya0776arora@gmail.com> 1762766191 +0530	reset: moving to HEAD@{1}
+01e1cc54016f20a6a68d687a8e9139637df8da83 93955d9bda4eda585b76c4d4a105e5b30706f742 navya0776 <navya0776arora@gmail.com> 1762766193 +0530	reset: moving to HEAD@{1}
+93955d9bda4eda585b76c4d4a105e5b30706f742 01e1cc54016f20a6a68d687a8e9139637df8da83 navya0776 <navya0776arora@gmail.com> 1762766198 +0530	reset: moving to HEAD@{1}
+01e1cc54016f20a6a68d687a8e9139637df8da83 8481c5dd7590ae67cb1abbf917ec6397e083bbbd navya0776 <navya0776arora@gmail.com> 1762852137 +0530	commit: frontend changes and ledger
+8481c5dd7590ae67cb1abbf917ec6397e083bbbd f5bc580a0611f3ce61256b6eea2c51d5307af3fa navya0776 <navya0776arora@gmail.com> 1762852434 +0530	pull: Merge made by the 'ort' strategy.
+f5bc580a0611f3ce61256b6eea2c51d5307af3fa 0916838130dff87323236378fa06382234b6d394 navya0776 <navya0776arora@gmail.com> 1762858040 +0530	pull origin integration: Merge made by the 'ort' strategy.
+0916838130dff87323236378fa06382234b6d394 0851f517b67452dd8e897a6680076302d880baac navya0776 <navya0776arora@gmail.com> 1763050978 +0530	commit: analysis
+0851f517b67452dd8e897a6680076302d880baac d8ad5df4e0fe3d685e50864ac4f68e93eccd65aa navya0776 <navya0776arora@gmail.com> 1763197818 +0530	commit (merge): Merge branch 'main' of https://github.com/PhantomTroupeDev/GAVIN-SPARK into integration
+d8ad5df4e0fe3d685e50864ac4f68e93eccd65aa 271b2076c85b2378f110103ea7cfdf94c04f0e60 navya0776 <navya0776arora@gmail.com> 1763285753 +0530	commit: frintend
